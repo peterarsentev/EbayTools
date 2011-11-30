@@ -48,8 +48,7 @@ public class LoadFileListener implements ActionListener {
             String msg = "";
             if (file.exists()) {
                 File saveFile = new File("SearchItem_"+dateformatter.format(Calendar.getInstance().getTime())+".txt");
-                String data = readFile(file);
-                List<List<String>> table = buildTable(data);
+                List<String> data = readFile(file);
                 StringBuilder sb = new StringBuilder();
                 sb.append("The file is loaded and to be made search.\n");
                 Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
@@ -61,14 +60,20 @@ public class LoadFileListener implements ActionListener {
                 }
                 sb.append(typeSearch);
                 StringBuilder dataForSave = new StringBuilder();
-                for (List<String> ids : table) {
-                    if (TextUtil.isNotNull(ids.get(0))) {
-                        List<SearchItem> items = getResult(sb, pairSorted, ids.get(0), "ReferenceID");
-                        dataForSave.append(buildCsvFile(items,"ReferenceID", ids.get(0), typeSearch));
-                    }
-                    if (TextUtil.isNotNull(ids.get(1))) {
-                        List<SearchItem> items = getResult(sb, pairSorted, ids.get(1), "UPC");
-                        dataForSave.append(buildCsvFile(items, "UPC", ids.get(1),typeSearch));
+                for (String id : data) {
+                    if (TextUtil.isNotNull(id)) {
+                        List<SearchItem> items = getResult(sb, pairSorted, id, "UPC");
+                        if (items.isEmpty()) {
+                            items = getResult(sb, pairSorted, id, "ReferenceID");
+                            if (items.isEmpty()) {
+                                sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n");
+                                dataForSave.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n");
+                            } else {
+                                dataForSave.append(buildCsvFile(items,"ReferenceID", id, typeSearch));
+                            }
+                        } else {
+                            dataForSave.append(buildCsvFile(items, "UPC", id, typeSearch));
+                        }
                     }
                 }
                 SaveListener.save(saveFile, dataForSave.toString());
@@ -114,22 +119,24 @@ public class LoadFileListener implements ActionListener {
     private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type) {
         List<SearchItem> items = new ArrayList<SearchItem>();
         List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type);
-        if (golderSearch.isSelected()) {
-            List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
-            items.addAll(goldenItems);
-        } else {
-            items.addAll(searchItems);
+        if (searchItems != null) {
+            if (golderSearch.isSelected()) {
+                List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
+                items.addAll(goldenItems);
+            } else {
+                items.addAll(searchItems);
+            }
         }
-        sb.append(type).append(" : ").append(id).append("\n") ;
         if (!items.isEmpty()) {
+            sb.append(type).append(" : ").append(id).append("\n") ;
             for (SearchItem item : items) {
                 sb.append(item.getItemId()).append("\n");
                 sb.append(item.getTitle()).append("\n");
                 sb.append(item.getCondition().getConditionDisplayName()).append("\n");
                 sb.append(item.getListingInfo().getListingType()).append("\n\n");
             }
+            sb.append("Total items : ").append(items.size()).append("\n\n");
         }
-        sb.append("Total items : ").append(items.size()).append("\n\n");
         return items;
     }
 
@@ -160,14 +167,14 @@ public class LoadFileListener implements ActionListener {
      * @param file
      * @return
      */
-    public static String readFile(File file) {
-        StringBuilder sb = new StringBuilder();
+    public static List<String> readFile(File file) {
+        List<String> list = new ArrayList<String>();
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fis);
             DataInputStream dis = new DataInputStream(bis);
             while (dis.available() != 0) {
-                sb.append(dis.readLine()).append("|");
+                list.add(dis.readLine());
             }
             fis.close();
             bis.close();
@@ -175,6 +182,6 @@ public class LoadFileListener implements ActionListener {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
-        return sb.toString();
+        return list;
     }
 }

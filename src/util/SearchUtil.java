@@ -149,7 +149,12 @@ public class SearchUtil {
         product.setValue(productId);
         productRequest.setProductId(product);
         FindItemsByProductResponse response = serviceClient.findItemsByProduct(productRequest);
-        return response.getSearchResult().getItem();
+        SearchResult result = response.getSearchResult();
+        if (result != null) {
+            return result.getItem();
+        } else {
+            return null;
+        }
     }
 
     public static List<SearchItem> getGoldenItems(List<SearchItem> sortedItems) {       // after fixing the bug
