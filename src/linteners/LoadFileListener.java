@@ -54,9 +54,9 @@ public class LoadFileListener implements ActionListener {
                 Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
                 String typeSearch = "";
                 if (golderSearch.isSelected()) {
-                    typeSearch = "GoldenItems : \n\n";
+                    typeSearch = "GoldenItems : \n";
                 } else {
-                    typeSearch = "All items : \n\n";
+                    typeSearch = "All items : \n";
                 }
                 sb.append(typeSearch);
                 StringBuilder dataForSave = new StringBuilder();
@@ -66,8 +66,9 @@ public class LoadFileListener implements ActionListener {
                         if (items.isEmpty()) {
                             items = getResult(sb, pairSorted, id, "ReferenceID");
                             if (items.isEmpty()) {
-                                sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n");
-                                dataForSave.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n");
+                                dataForSave.append(typeSearch);
+                                sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
+                                dataForSave.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
                             } else {
                                 dataForSave.append(buildCsvFile(items,"ReferenceID", id, typeSearch));
                             }
