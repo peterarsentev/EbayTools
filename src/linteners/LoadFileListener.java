@@ -2,6 +2,9 @@ package linteners;
 
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
+import com.toedter.calendar.JDateChooser;
+import model.Data;
+import util.FormatterText;
 import util.Pair;
 import util.SearchUtil;
 import util.TextUtil;
@@ -17,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class LoadFileListener implements ActionListener {
-    private static SimpleDateFormat dateformatter = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
     private JFileChooser fc;
     private JPanel main;
     private SearchUtil util;
@@ -26,10 +28,13 @@ public class LoadFileListener implements ActionListener {
     private JTextField listingType;
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox golderSearch;
+    private Data dataModel;
+    private JDateChooser startTime;
+    private JDateChooser endTime;
 
-    public LoadFileListener(SearchUtil util, JPanel main, JTextField condition,
-                            JTextField listingType,
-                            JComboBox<Pair<SortOrderType>> sortedTypeField, JCheckBox golderSearch, JTextArea text) {
+    public LoadFileListener(SearchUtil util, JPanel main, JTextField condition, JTextField listingType,
+                            JComboBox<Pair<SortOrderType>> sortedTypeField, JCheckBox golderSearch,
+                            JTextArea text, Data data, JDateChooser startTime, JDateChooser endTime) {
         this.fc = new JFileChooser();
         this.condition = condition;
         this.listingType = listingType;
@@ -38,6 +43,9 @@ public class LoadFileListener implements ActionListener {
         this.util = util;
         this.text = text;
         this.golderSearch = golderSearch;
+        this.dataModel = data;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     @Override
@@ -47,7 +55,6 @@ public class LoadFileListener implements ActionListener {
             File file = fc.getSelectedFile();
             String msg = "";
             if (file.exists()) {
-                File saveFile = new File("SearchItem_"+dateformatter.format(Calendar.getInstance().getTime())+".txt");
                 List<String> data = readFile(file);
                 StringBuilder sb = new StringBuilder();
                 sb.append("The file is loaded and to be made search.\n");
@@ -59,26 +66,26 @@ public class LoadFileListener implements ActionListener {
                     typeSearch = "All items : \n";
                 }
                 sb.append(typeSearch);
-                StringBuilder dataForSave = new StringBuilder();
+                Map<Pair, List<SearchItem>> map = new LinkedHashMap<Pair, List<SearchItem>>();
                 for (String id : data) {
                     if (TextUtil.isNotNull(id)) {
-                        List<SearchItem> items = getResult(sb, pairSorted, id, "UPC");
+                        List<SearchItem> items = getResult(sb, pairSorted, id, "UPC", dataModel);
                         if (items.isEmpty()) {
-                            items = getResult(sb, pairSorted, id, "ReferenceID");
+                            items = getResult(sb, pairSorted, id, "ReferenceID", dataModel);
                             if (items.isEmpty()) {
-                                dataForSave.append(typeSearch);
                                 sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
-                                dataForSave.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
+                                map.put(new Pair<String>(id, "doesn't have any match by reference and upc id!"), null);
                             } else {
-                                dataForSave.append(buildCsvFile(items,"ReferenceID", id, typeSearch));
+                                FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "ReferenceID");
+                                map.put(new Pair<String>(id, "ReferenceID"), items);
                             }
                         } else {
-                            dataForSave.append(buildCsvFile(items, "UPC", id, typeSearch));
+                            FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "UPC");
+                            map.put(new Pair<String>(id, "UPC"), items);
                         }
                     }
+                    dataModel.setSaveData(map);
                 }
-                SaveListener.save(saveFile, dataForSave.toString());
-                sb.append("Save was done. file : ").append(saveFile.getAbsolutePath()).append("\n");
                 msg = sb.toString();
             } else {
                 msg = "Error this file does not exist file : " + file.getAbsolutePath() + "\n";
@@ -87,39 +94,9 @@ public class LoadFileListener implements ActionListener {
         }
     }
 
-    /**
-     * This method makes specail formats data for file
-     * @param items
-     * @param type
-     * @param id
-     * @return
-     */
-    public static String buildCsvFile(List<SearchItem> items, String type, String id, String typeSearch) {
-        Map<String, List<SearchItem>> listByComdition = new LinkedHashMap<String, List<SearchItem>>(); //this map we use for sort our items by condition
-        for (SearchItem item : items) {
-            String condition = item.getCondition().getConditionDisplayName();
-            List<SearchItem> conditionList = listByComdition.get(condition);
-            if (conditionList == null) {
-                conditionList = new ArrayList<SearchItem>();
-            }
-            conditionList.add(item);
-            listByComdition.put(condition, conditionList);
-        }
-        StringBuilder sb = new StringBuilder("Type search : " + typeSearch);
-        sb.append(type).append(" (").append(id).append(")").append("\n\n");
-        for (Map.Entry<String, List<SearchItem>> entry : listByComdition.entrySet()) {
-            sb.append("Condition (").append(entry.getKey()).append(")").append("\n");
-            for (SearchItem item : entry.getValue()) {
-                sb.append(item.getItemId()).append("\n");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type) {
+    private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
         List<SearchItem> items = new ArrayList<SearchItem>();
-        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type);
+        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, startTime.getCalendar(), endTime.getCalendar());
         if (searchItems != null) {
             if (golderSearch.isSelected()) {
                 List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
@@ -129,13 +106,7 @@ public class LoadFileListener implements ActionListener {
             }
         }
         if (!items.isEmpty()) {
-            sb.append(type).append(" : ").append(id).append("\n") ;
-            for (SearchItem item : items) {
-                sb.append(item.getItemId()).append("\n");
-                sb.append(item.getTitle()).append("\n");
-                sb.append(item.getCondition().getConditionDisplayName()).append("\n");
-                sb.append(item.getListingInfo().getListingType()).append("\n\n");
-            }
+            sb.append(FormatterText.formatForConsole(items, data.getShowOpts(), id, type));
             sb.append("Total items : ").append(items.size()).append("\n\n");
         }
         return items;

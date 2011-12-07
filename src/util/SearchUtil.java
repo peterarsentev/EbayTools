@@ -2,6 +2,7 @@ package util;
 
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.GetItemCall;
+import com.ebay.sdk.util.eBayUtil;
 import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebay.services.finding.SearchItem;
@@ -139,11 +140,23 @@ public class SearchUtil {
         return filter;
     }
 
-    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type) {
+    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Calendar endTimeFrom, Calendar endTimeTo) {
         FindByProduct productRequest = new FindByProduct();
         productRequest.setSortOrder(order);
-        productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
-        productRequest.add(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
+        if (TextUtil.isNotNull(condition)) {
+            productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
+        }
+        if (TextUtil.isNotNull(listingType)) {
+            productRequest.add(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
+        }
+
+        if (TextUtil.isNotNull(endTimeFrom) && Calendar.getInstance().compareTo(endTimeFrom) < 0) {
+            productRequest.add(buildFulter(ItemFilterType.END_TIME_FROM, FormatterText.buildDate(endTimeFrom)));
+        }
+        if (TextUtil.isNotNull(endTimeTo) && Calendar.getInstance().compareTo(endTimeTo) < 0) {
+            productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(endTimeTo)));
+        }
+
         ProductId product = new ProductId();
         product.setType(type);
         product.setValue(productId);
@@ -153,7 +166,7 @@ public class SearchUtil {
         if (result != null) {
             return result.getItem();
         } else {
-            return null;
+            return new ArrayList<SearchItem>();
         }
     }
 
