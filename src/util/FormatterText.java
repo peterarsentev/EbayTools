@@ -1,7 +1,7 @@
 package util;
 
+import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.SearchItem;
-import model.Data;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -154,7 +154,9 @@ public class FormatterText {
                     sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getConvertedCurrentPrice()).append("\n");
                 }
                 if ("currentPrice".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getCurrentPrice()).append("\n");
+                    String value = String.valueOf(item.getSellingStatus().getCurrentPrice().getValue());
+                    String rate = item.getSellingStatus().getCurrentPrice().getCurrencyId();
+                    sb.append(entry.getKey()).append(" : ").append(buildPrice(item.getSellingStatus().getCurrentPrice())).append("\n");
                 }
                 if ("sellingState".equals(entry.getKey())) {
                     sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getSellingState()).append("\n");
@@ -172,9 +174,10 @@ public class FormatterText {
                     sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().isOneDayShippingAvailable()).append("\n");
                 }
                 if ("shippingServiceCost".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().getShippingServiceCost()).append("\n");
+                    sb.append(entry.getKey()).append(" : ").append(buildPrice(item.getShippingInfo().getShippingServiceCost())).append("\n");
                 }
                 if ("shippingType".equals(entry.getKey())) {
+
                     sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().getShippingType()).append("\n");
                 }
                 if ("shipToLocations".equals(entry.getKey())) {
@@ -199,5 +202,15 @@ public class FormatterText {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    private static String buildPrice(Amount amount) {
+        if (amount != null) {
+            String value = String.valueOf(amount.getValue());
+            String rate = amount.getCurrencyId();
+            return value + " " + rate;
+        } else {
+            return null;
+        }
     }
 }
