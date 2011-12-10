@@ -142,6 +142,9 @@ public class SearchUtil {
 
     public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Calendar endTimeFrom, Calendar endTimeTo) {
         FindByProduct productRequest = new FindByProduct();
+        PaginationInput pi = new PaginationInput();
+        pi.setPageNumber(1);
+        productRequest.setPaginationInput(pi);
         productRequest.setSortOrder(order);
         if (TextUtil.isNotNull(condition)) {
             productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
@@ -164,10 +167,35 @@ public class SearchUtil {
         FindItemsByProductResponse response = serviceClient.findItemsByProduct(productRequest);
         SearchResult result = response.getSearchResult();
         if (result != null) {
-            return result.getItem();
+            return getAllItems(productRequest, response, result.getItem());
         } else {
             return new ArrayList<SearchItem>();
         }
+    }
+
+    /**
+     * This method gets all items, because find ebay api doesn't allow to get more then 100 items by one quire,
+     * We get all items from all pages.
+     * @param productRequest
+     * @param response
+     * @param items
+     * @return
+     */
+    private List<SearchItem> getAllItems(FindByProduct productRequest, FindItemsByProductResponse response, List<SearchItem> items) {
+        List<SearchItem> totalItems = new ArrayList<SearchItem>();
+        PaginationOutput outPage = response.getPaginationOutput();
+        if (items.size() < outPage.getTotalEntries()) {
+            totalItems.addAll(items);
+            for (int i=2;i!=outPage.getTotalPages()+1;++i) {
+                PaginationInput pi = new PaginationInput();
+                pi.setPageNumber(i);
+                productRequest.setPaginationInput(pi);
+                response = serviceClient.findItemsByProduct(productRequest);
+                SearchResult result = response.getSearchResult();
+                totalItems.addAll(result.getItem());
+            }
+        }
+        return totalItems;
     }
 
     public static List<SearchItem> getGoldenItems(List<SearchItem> sortedItems) {       // after fixing the bug
