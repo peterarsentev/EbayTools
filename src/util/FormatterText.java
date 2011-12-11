@@ -133,19 +133,24 @@ public class FormatterText {
                     sb.append(entry.getKey()).append(" : ").append(item.getSecondaryCategory().getCategoryName()).append("\n");
                 }
                 if ("feedbackRatingStar".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellerInfo().getFeedbackRatingStar()).append("\n");
+                    String value = item.getSellerInfo() != null ? item.getSellerInfo().getFeedbackRatingStar() : "";
+                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
                 }
                 if ("feedbackScore".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellerInfo().getFeedbackScore()).append("\n");
+                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getFeedbackScore()) : "";
+                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
                 }
                 if ("positiveFeedbackPercent".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellerInfo().getPositiveFeedbackPercent()).append("\n");
+                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getPositiveFeedbackPercent()) : "";
+                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
                 }
                 if ("sellerUserName".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellerInfo().getSellerUserName()).append("\n");
+                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getSellerUserName()) : "";
+                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
                 }
                 if ("topRatedSeller".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellerInfo().isTopRatedSeller()).append("\n");
+                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().isTopRatedSeller()) : "";
+                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
                 }
                 if ("bidCount".equals(entry.getKey())) {
                     sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getBidCount()).append("\n");
