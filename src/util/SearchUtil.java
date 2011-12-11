@@ -184,8 +184,8 @@ public class SearchUtil {
     private List<SearchItem> getAllItems(FindByProduct productRequest, FindItemsByProductResponse response, List<SearchItem> items) {
         List<SearchItem> totalItems = new ArrayList<SearchItem>();
         PaginationOutput outPage = response.getPaginationOutput();
+        totalItems.addAll(items);
         if (items.size() < outPage.getTotalEntries()) {
-            totalItems.addAll(items);
             for (int i=2;i!=outPage.getTotalPages()+1;++i) {
                 PaginationInput pi = new PaginationInput();
                 pi.setPageNumber(i);
