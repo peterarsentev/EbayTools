@@ -4,6 +4,7 @@ import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
 import com.toedter.calendar.JDateChooser;
 import model.Data;
+import panel.SearchPanel;
 import util.FormatterText;
 import util.Pair;
 import util.SearchUtil;
@@ -21,7 +22,7 @@ import java.util.*;
 
 public class LoadFileListener implements ActionListener {
     private JFileChooser fc;
-    private JPanel main;
+    private JFrame main;
     private SearchUtil util;
     private JTextArea text;
     private JTextField condition;
@@ -31,21 +32,21 @@ public class LoadFileListener implements ActionListener {
     private Data dataModel;
     private JDateChooser startTime;
     private JDateChooser endTime;
+    private JTextField daysLeft;
 
-    public LoadFileListener(SearchUtil util, JPanel main, JTextField condition, JTextField listingType,
-                            JComboBox<Pair<SortOrderType>> sortedTypeField, JCheckBox golderSearch,
-                            JTextArea text, Data data, JDateChooser startTime, JDateChooser endTime) {
+    public LoadFileListener(SearchPanel panel) {
         this.fc = new JFileChooser();
-        this.condition = condition;
-        this.listingType = listingType;
-        this.sortedTypeField = sortedTypeField;
-        this.main = main;
-        this.util = util;
-        this.text = text;
-        this.golderSearch = golderSearch;
-        this.dataModel = data;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.condition = panel.getConditionsField();
+        this.listingType = panel.getListTypeField();
+        this.sortedTypeField = panel.getSortedTypeField();
+        this.main = panel.getMain();
+        this.util = panel.getUtil();
+        this.text = panel.getText();
+        this.golderSearch = panel.getGoldenSearch();
+        this.dataModel = panel.getData();
+        this.startTime = panel.getStartData();
+        this.endTime = panel.getEndData();
+        this.daysLeft = panel.getDaysLeft();
     }
 
     @Override
@@ -96,7 +97,7 @@ public class LoadFileListener implements ActionListener {
 
     private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
         List<SearchItem> items = new ArrayList<SearchItem>();
-        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, startTime.getCalendar(), endTime.getCalendar());
+        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, startTime.getCalendar(), endTime.getCalendar(), TextUtil.getIntegerOrNull(daysLeft.getText()));
         if (searchItems != null) {
             if (golderSearch.isSelected()) {
                 List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);

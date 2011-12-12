@@ -2,6 +2,7 @@ package linteners;
 
 import com.ebay.services.finding.SearchItem;
 import model.Data;
+import panel.SearchPanel;
 import util.Pair;
 
 import java.awt.event.ActionEvent;
@@ -16,9 +17,9 @@ public class ClearListener implements ActionListener {
 	private JTextArea text;
     private Data data;
 	
-	public ClearListener(JTextArea text, Data data) {
-		this.text = text;
-        this.data = data;
+	public ClearListener(SearchPanel panel) {
+		this.text = panel.getText();
+        this.data = panel.getData();
 	}
 	
 	@Override

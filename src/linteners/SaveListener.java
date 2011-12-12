@@ -2,6 +2,7 @@ package linteners;
 
 import com.ebay.services.finding.SearchItem;
 import model.Data;
+import panel.SearchPanel;
 import util.Pair;
 import util.SearchUtil;
 
@@ -18,15 +19,15 @@ import java.util.Map;
 
 public class SaveListener implements ActionListener {
     private JFileChooser fc;
-    private JPanel main;
+    private JFrame main;
     private JTextArea text;
     private Data data;
 
-    public SaveListener(JPanel main, JTextArea text, Data data) {
+    public SaveListener(SearchPanel panel) {
         this.fc = new JFileChooser();
-        this.main = main;
-        this.text = text;
-        this.data = data;
+        this.main = panel.getMain();
+        this.text = panel.getText();
+        this.data = panel.getData();
     }
 
     @Override

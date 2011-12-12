@@ -16,35 +16,54 @@ import com.ebay.services.finding.*;
 public class SearchPanel extends JPanel {
     private JFrame main;
     private Data data;
+    private SearchUtil util;
+    private JButton searchReference;
+    private JButton showResultFilter;
+    private JButton clear;
+    private JButton save;
+    private JButton optsButton;
+    private JButton loadReferenceIDList;
+    private JTextField numbersItem;
+    private JTextField referenceId;
+    private JTextField conditionsField;
+    private JTextField listTypeField;
+    private JTextArea text;
+    private JComboBox<Pair<SortOrderType>> sortedTypeField;
+    private JCheckBox goldenSearch;
+    private JDateChooser startData;
+    private JDateChooser endData;
+    private JTextField daysLeft;
+    private SearchPanel panel;
 
     public SearchPanel(JFrame main, Data data) {
         // This section consists from initial objects
         this.main = main;
         this.data = data;
 
-        SearchPanel panel = this;
-        SearchUtil util = new SearchUtil();
-        JButton searchReference = new JButton("Reference");
-        JButton showResultFilter = new JButton("Result");
-        JButton clear = new JButton("Clear");
-        JButton save = new JButton("Save");
-        JButton optsButton = new JButton("Choose opts.");
-        JButton loadReferenceIDList = new JButton("Load");
-        JTextField numbersItem = new JTextField();
-        JTextField referenceId = new JTextField();
+        this.panel = this;
+        this.util = new SearchUtil();
+        this.searchReference = new JButton("Reference");
+        this.showResultFilter = new JButton("Result");
+        this.clear = new JButton("Clear");
+        this.save = new JButton("Save");
+        this.optsButton = new JButton("Choose opts.");
+        this.loadReferenceIDList = new JButton("Load");
+        this.numbersItem = new JTextField();
+        this.referenceId = new JTextField();
         referenceId.setText("77826847");
-        JTextField conditionsField = new JTextField();
+        this.conditionsField = new JTextField();
         conditionsField.setText("Used");
-        JTextField listTypeField = new JTextField();
+        this.listTypeField = new JTextField();
         listTypeField.setText("Auction");
-        JTextArea text = new JTextArea();
-        JComboBox<Pair<SortOrderType>> sortedTypeField = new JComboBox<Pair<SortOrderType>>();
+        this.text = new JTextArea();
+        this.sortedTypeField = new JComboBox<Pair<SortOrderType>>();
         for (SortOrderType sortedType : SortOrderType.values()) {
             sortedTypeField.addItem(new Pair<SortOrderType>(sortedType.value(), sortedType));
         }
-        JCheckBox goldenSearch = new JCheckBox("Golden Search");
-        JDateChooser startData = new JDateChooser();
-        JDateChooser endData = new JDateChooser();
+        this.goldenSearch = new JCheckBox("Golden Search");
+        this.startData = new JDateChooser();
+        this.endData = new JDateChooser();
+        this.daysLeft = new JTextField();
 
         //  In this section we paint own components, We use special layer manager GraphPaperLayout 
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -54,7 +73,7 @@ public class SearchPanel extends JPanel {
         panel.add(numbersItem, new Rectangle(6, 0, 4, 1));
         panel.add(referenceId, new Rectangle(4, 1, 6, 1));
         panel.add(loadReferenceIDList, new Rectangle(24, 1, 3, 1));
-        panel.add(goldenSearch, new Rectangle(11, 2, 5, 1));
+        panel.add(goldenSearch, new Rectangle(11, 1, 5, 1));
         panel.add(searchReference, new Rectangle(11, 0, 5, 1));
         panel.add(new JLabel("Condition"), new Rectangle(0, 2, 5, 1));
         panel.add(conditionsField, new Rectangle(4, 2, 6, 1));
@@ -67,17 +86,95 @@ public class SearchPanel extends JPanel {
         panel.add(new JLabel("Sorted type"), new Rectangle(0, 4, 5, 1));
         panel.add(sortedTypeField, new Rectangle(4, 4, 6, 1));
         panel.add(optsButton, new Rectangle(4, 26, 4, 1));
-        panel.add(new JLabel("Start date"), new Rectangle(11, 3, 3, 1));
-        panel.add(new JLabel("End date"), new Rectangle(11, 4, 3, 1));
-        panel.add(startData, new Rectangle(14, 3, 4, 1));
-        panel.add(endData, new Rectangle(14, 4, 4, 1));
+        panel.add(new JLabel("Start date"), new Rectangle(11, 2, 3, 1));
+        panel.add(new JLabel("End date"), new Rectangle(11, 3, 3, 1));
+        panel.add(startData, new Rectangle(14, 2, 4, 1));
+        panel.add(endData, new Rectangle(14, 3, 4, 1));
+        panel.add(new JLabel("Days Left"), new Rectangle(11, 4, 4, 1));
+        panel.add(daysLeft, new Rectangle(14, 4, 4, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox  
-        searchReference.addActionListener(new ReferenceIDLinteren(util, numbersItem, text));
-        showResultFilter.addActionListener(new ItemsSearchListener(util, referenceId, conditionsField, listTypeField, sortedTypeField, text, goldenSearch, data, startData, endData));
-        clear.addActionListener(new ClearListener(text, data));
-        save.addActionListener(new SaveListener(panel, text, data));
-        loadReferenceIDList.addActionListener(new LoadFileListener(util, panel, conditionsField, listTypeField, sortedTypeField, goldenSearch, text, data, startData, endData));
-        optsButton.addActionListener(new ChooseOptsListener(main, data));
+        searchReference.addActionListener(new ReferenceIDLinteren(panel));
+        showResultFilter.addActionListener(new ItemsSearchListener(panel));
+        clear.addActionListener(new ClearListener(panel));
+        save.addActionListener(new SaveListener(panel));
+        loadReferenceIDList.addActionListener(new LoadFileListener(panel));
+        optsButton.addActionListener(new ChooseOptsListener(panel));
+    }
+
+    public JFrame getMain() {
+        return main;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public SearchUtil getUtil() {
+        return util;
+    }
+
+    public JButton getSearchReference() {
+        return searchReference;
+    }
+
+    public JButton getShowResultFilter() {
+        return showResultFilter;
+    }
+
+    public JButton getClear() {
+        return clear;
+    }
+
+    public JButton getSave() {
+        return save;
+    }
+
+    public JButton getOptsButton() {
+        return optsButton;
+    }
+
+    public JButton getLoadReferenceIDList() {
+        return loadReferenceIDList;
+    }
+
+    public JTextField getNumbersItem() {
+        return numbersItem;
+    }
+
+    public JTextField getReferenceId() {
+        return referenceId;
+    }
+
+    public JTextField getConditionsField() {
+        return conditionsField;
+    }
+
+    public JTextField getListTypeField() {
+        return listTypeField;
+    }
+
+    public JTextArea getText() {
+        return text;
+    }
+
+    public JComboBox<Pair<SortOrderType>> getSortedTypeField() {
+        return sortedTypeField;
+    }
+
+    public JCheckBox getGoldenSearch() {
+        return goldenSearch;
+    }
+
+    public JDateChooser getStartData() {
+        return startData;
+    }
+
+    public JDateChooser getEndData() {
+        return endData;
+    }
+
+    public JTextField getDaysLeft() {
+        return daysLeft;
     }
 }

@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+
+import panel.SearchPanel;
 import util.*;
 
 public class ReferenceIDLinteren implements ActionListener {
@@ -11,10 +13,10 @@ public class ReferenceIDLinteren implements ActionListener {
 	private SearchUtil util;
 	private JTextField field;
 	
-	public ReferenceIDLinteren(SearchUtil util, JTextField field, JTextArea text) {
-		this.text = text;
-		this.util = util;
-		this.field = field;
+	public ReferenceIDLinteren(SearchPanel panel) {
+		this.text = panel.getText();
+		this.util = panel.getUtil();
+		this.field = panel.getNumbersItem();
 	}
 	
 	@Override

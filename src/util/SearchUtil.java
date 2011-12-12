@@ -140,7 +140,7 @@ public class SearchUtil {
         return filter;
     }
 
-    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Calendar endTimeFrom, Calendar endTimeTo) {
+    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Calendar endTimeFrom, Calendar endTimeTo, Integer daysLeft) {
         FindByProduct productRequest = new FindByProduct();
         PaginationInput pi = new PaginationInput();
         pi.setPageNumber(1);
@@ -158,6 +158,11 @@ public class SearchUtil {
         }
         if (TextUtil.isNotNull(endTimeTo) && Calendar.getInstance().compareTo(endTimeTo) < 0) {
             productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(endTimeTo)));
+        }
+        if (TextUtil.isNotNull(daysLeft)) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, daysLeft);
+            productRequest.add(buildFulter(ItemFilterType.END_TIME_FROM, FormatterText.buildDate(cal)));
         }
 
         ProductId product = new ProductId();

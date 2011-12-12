@@ -14,9 +14,9 @@ public class ChooseOptsListener implements ActionListener {
     private JFrame main;
     private Data data;
 
-    public ChooseOptsListener(JFrame main, Data data) {
-        this.main = main;
-        this.data = data;
+    public ChooseOptsListener(SearchPanel panel) {
+        this.main = panel.getMain();
+        this.data = panel.getData();
     }
 
     @Override

@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import com.toedter.calendar.JDateChooser;
 import model.Data;
+import panel.SearchPanel;
 import util.*;
 import com.ebay.services.finding.*;
 import java.util.*;
@@ -22,19 +23,20 @@ public class ItemsSearchListener implements ActionListener {
     private Data data;
     private JDateChooser startTime;
     private JDateChooser endTime;
+    private JTextField daysLeft;
 
-	public ItemsSearchListener(SearchUtil util, JTextField product, JTextField condition,
-                               JTextField listingType, JComboBox<Pair<SortOrderType>> sortedTypeField, JTextArea text, JCheckBox golderSearch, Data data, JDateChooser startTime, JDateChooser endTime) {
-		this.text = text;
-		this.util = util;
-		this.product = product;
-        this.condition = condition;
-        this.listingType = listingType;
-        this.sortedTypeField = sortedTypeField;
-        this.golderSearch = golderSearch;
-        this.data = data;
-        this.startTime = startTime;
-        this.endTime = endTime;
+	public ItemsSearchListener(SearchPanel panel) {
+		this.text = panel.getText();
+		this.util = panel.getUtil();
+		this.product = panel.getReferenceId();
+        this.condition = panel.getConditionsField();
+        this.listingType = panel.getListTypeField();
+        this.sortedTypeField = panel.getSortedTypeField();
+        this.golderSearch = panel.getGoldenSearch();
+        this.data = panel.getData();
+        this.startTime = panel.getStartData();
+        this.endTime = panel.getEndData();
+        this.daysLeft = panel.getDaysLeft();
 	}
 
 	@Override
@@ -42,8 +44,8 @@ public class ItemsSearchListener implements ActionListener {
 		try {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
-            List<SearchItem> items = new ArrayList<SearchItem>();
-            List<SearchItem> searchItems = util.getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", startTime.getCalendar(), endTime.getCalendar());
+            List<SearchItem> items;
+            List<SearchItem> searchItems = util.getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", startTime.getCalendar(), endTime.getCalendar(), TextUtil.getIntegerOrNull(daysLeft.getText()));
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {

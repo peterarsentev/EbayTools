@@ -57,15 +57,15 @@ public class ChooseOpts extends JDialog {
                     ++startApproximate;
                     box = new JCheckBox(entry.getKey().substring(2));
                     box.setSelected(data.getShowOpts().containsKey(entry.getKey().substring(2)));
-                    panel.add(box, new Rectangle(startApproximate, column, 16, 1));
+                    panel.add(box, new Rectangle(startApproximate, column, 15, 1));
                 } else {
                     box = new JCheckBox(entry.getKey());
                     box.setSelected(data.getShowOpts().containsKey(entry.getKey()));
-                    panel.add(box, new Rectangle(start, column, 16, 1));
+                    panel.add(box, new Rectangle(start, column, 15, 1));
                 }
                 boxList.add(box);
             } else {
-                panel.add(new JLabel(entry.getKey().substring(1)), new Rectangle(start, column, 16, 1));
+                panel.add(new JLabel(entry.getKey().substring(1)), new Rectangle(start, column, 15, 1));
             }
             ++column;
         }

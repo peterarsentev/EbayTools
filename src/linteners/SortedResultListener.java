@@ -36,7 +36,7 @@ public class SortedResultListener implements ActionListener {
             String conditionValue = pairCondition != null ? pairCondition.getValue() : null;
             String typeListValue = pairTypeList != null ? pairTypeList.getValue() : null;
             StringBuilder sb = new StringBuilder("GoldenItems : \n");
-            List<SearchItem> searchItems = util.getItemsBySortedType(productField.getText(), conditionValue, typeListValue, pairSorted.getValue(), "ReferenceID", null, null);
+            List<SearchItem> searchItems = util.getItemsBySortedType(productField.getText(), conditionValue, typeListValue, pairSorted.getValue(), "ReferenceID", null, null, null);
             List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
             if (!goldenItems.isEmpty()) {
                 for (SearchItem item : goldenItems) {
