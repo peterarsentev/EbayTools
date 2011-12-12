@@ -3,6 +3,7 @@ package util;
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.SearchItem;
 
+import javax.xml.datatype.Duration;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -167,7 +168,7 @@ public class FormatterText {
                     sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getSellingState()).append("\n");
                 }
                 if ("timeLeft".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getTimeLeft()).append("\n");
+                    sb.append(entry.getKey()).append(" : ").append(buildTime(item.getSellingStatus().getTimeLeft())).append("\n");
                 }
                 if ("expeditedShipping".equals(entry.getKey())) {
                     sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().isExpeditedShipping()).append("\n");
@@ -209,6 +210,11 @@ public class FormatterText {
         return sb.toString();
     }
 
+    private static String buildTime(Duration duration) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(duration.getDays()).append(" days, ").append(duration.getHours()).append(" hours, ").append(duration.getMinutes()).append(" minutes, ").append(duration.getSeconds()).append(" seconds.");
+        return sb.toString();
+    }
     private static String buildPrice(Amount amount) {
         if (amount != null) {
             String value = String.valueOf(amount.getValue());
