@@ -162,7 +162,7 @@ public class SearchUtil {
         if (TextUtil.isNotNull(daysLeft)) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, daysLeft);
-            productRequest.add(buildFulter(ItemFilterType.END_TIME_FROM, FormatterText.buildDate(cal)));
+            productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(cal)));
         }
 
         ProductId product = new ProductId();
