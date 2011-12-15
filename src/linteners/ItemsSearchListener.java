@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import com.toedter.calendar.JDateChooser;
 import model.Data;
 import panel.SearchPanel;
 import util.*;
@@ -21,8 +20,6 @@ public class ItemsSearchListener implements ActionListener {
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox golderSearch;
     private Data data;
-    private JDateChooser startTime;
-    private JDateChooser endTime;
     private JTextField daysLeft;
 
 	public ItemsSearchListener(SearchPanel panel) {
@@ -34,8 +31,6 @@ public class ItemsSearchListener implements ActionListener {
         this.sortedTypeField = panel.getSortedTypeField();
         this.golderSearch = panel.getGoldenSearch();
         this.data = panel.getData();
-        this.startTime = panel.getStartData();
-        this.endTime = panel.getEndData();
         this.daysLeft = panel.getDaysLeft();
 	}
 
@@ -45,7 +40,7 @@ public class ItemsSearchListener implements ActionListener {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
             List<SearchItem> items;
-            List<SearchItem> searchItems = util.getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", startTime.getCalendar(), endTime.getCalendar(), TextUtil.getIntegerOrNull(daysLeft.getText()));
+            List<SearchItem> searchItems = util.getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.getIntegerOrNull(daysLeft.getText()));
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {

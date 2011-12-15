@@ -2,7 +2,6 @@ package util;
 
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.GetItemCall;
-import com.ebay.sdk.util.eBayUtil;
 import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebay.services.finding.SearchItem;
@@ -47,90 +46,39 @@ public class SearchUtil {
 
     /**
      * This method gets reference id by numbers item
-     * @param itemNubmer
-     * @return
-     * @throws Exception
+     * @param itemNubmer item id
+     * @return int reference id
+     * @throws Exception for necessery
      */
-    public Integer getReferenceID(String itemNubmer) throws Exception {
+    public String getReferenceID(String itemNubmer) throws Exception {
         ItemType item = gc.getItem(itemNubmer);
-        String value = item.getProductListingDetails().getProductReferenceID();
-        return Integer.valueOf(value);
+        return item.getProductListingDetails().getProductReferenceID();
     }
 
     /**
-     * This method gets all items which relate to special product by reference id;
-     * @param productId
-     * @return
+     *  This method gets upc id by reference id
+     * @param referenceID Reference ID
+     * @return UPC ID
+     * @throws Exception for necessery
      */
-    public List<SearchItem> getItemsByProductId(String productId) {
-        FindItemsByProductRequest productRequest = new FindItemsByProductRequest();
+    public String getUpcID(String referenceID) throws Exception {
+        FindByProduct productRequest = new FindByProduct();
+        PaginationInput pi = new PaginationInput();
+        pi.setEntriesPerPage(1);
+        pi.setPageNumber(1);
+        productRequest.setPaginationInput(pi);
         ProductId product = new ProductId();
         product.setType("ReferenceID");
-        product.setValue(productId);
+        product.setValue(referenceID);
         productRequest.setProductId(product);
         FindItemsByProductResponse response = serviceClient.findItemsByProduct(productRequest);
-        return response.getSearchResult().getItem();
-    }
-
-    /**
-     * This methods gets all conditions from items.
-     * @param items
-     * @return
-     */
-    public static Set<String> getConditionsHeaders(List<SearchItem> items) {
-        Set<String> conditions = new TreeSet<String>();
-        for (SearchItem item : items) {
-            conditions.add(item.getCondition().getConditionDisplayName());
+        SearchResult result = response.getSearchResult();
+        if (result != null) {
+            ItemType item = gc.getItem(result.getItem().get(0).getItemId());
+            return item.getProductListingDetails().getUPC();
+        } else {
+            return null;
         }
-        return conditions;
-    }
-
-    /**
-     * This method gets list type by special condition.
-     * @param items
-     * @param conditionItem
-     * @return
-     */
-    public static Set<String> getListType(List<SearchItem> items, String conditionItem) {
-        Set<String> listType = new TreeSet<String>();
-        for (SearchItem item : items) {
-            String condition = item.getCondition().getConditionDisplayName();
-            if (condition.equals(conditionItem)) {
-                listType.add(item.getListingInfo().getListingType());
-            }
-        }
-        return listType;
-    }
-
-    /**
-     * This method gets items by special condition and list type; For example Used, Auction
-     * if you want you can change all parameters. for example if you want to get items with only time : end soon. you need to add new params like Calendar and just check special properties items in loop
-     * I mean that here is main idea that we can all items with relate to product, so we can make any select what we want.
-     * @param items
-     * @param conditionItem
-     * @param listTypeItem
-     * @return
-     */
-    public static List<SearchItem> getItemsByConditionAndListType(List<SearchItem> items, String conditionItem, String listTypeItem) {
-        List<SearchItem> searchItems = new ArrayList<SearchItem>();
-        for (SearchItem item : items) {
-            String condition = item.getCondition().getConditionDisplayName();
-            String listType = item.getListingInfo().getListingType();
-            if (conditionItem != null) {
-                if (conditionItem.equals(condition)) {
-                    if (listTypeItem != null) {
-                        if (listTypeItem.equals(listType)) {
-                            searchItems.add(item);
-                        }
-                    } else {
-                        searchItems.add(item);
-                    }
-                }
-            } else {
-                searchItems.add(item);
-            }
-        }
-        return searchItems;
     }
 
     private static ItemFilter buildFulter(ItemFilterType type, String value) {
@@ -140,7 +88,7 @@ public class SearchUtil {
         return filter;
     }
 
-    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Calendar endTimeFrom, Calendar endTimeTo, Integer daysLeft) {
+    public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Integer daysLeft) {
         FindByProduct productRequest = new FindByProduct();
         PaginationInput pi = new PaginationInput();
         pi.setPageNumber(1);
@@ -151,13 +99,6 @@ public class SearchUtil {
         }
         if (TextUtil.isNotNull(listingType)) {
             productRequest.add(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
-        }
-
-        if (TextUtil.isNotNull(endTimeFrom) && Calendar.getInstance().compareTo(endTimeFrom) < 0) {
-            productRequest.add(buildFulter(ItemFilterType.END_TIME_FROM, FormatterText.buildDate(endTimeFrom)));
-        }
-        if (TextUtil.isNotNull(endTimeTo) && Calendar.getInstance().compareTo(endTimeTo) < 0) {
-            productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(endTimeTo)));
         }
         if (TextUtil.isNotNull(daysLeft)) {
             Calendar cal = Calendar.getInstance();
@@ -181,10 +122,10 @@ public class SearchUtil {
     /**
      * This method gets all items, because find ebay api doesn't allow to get more then 100 items by one quire,
      * We get all items from all pages.
-     * @param productRequest
-     * @param response
-     * @param items
-     * @return
+     * @param productRequest find request
+     * @param response find response
+     * @param items first list
+     * @return all items
      */
     private List<SearchItem> getAllItems(FindByProduct productRequest, FindItemsByProductResponse response, List<SearchItem> items) {
         List<SearchItem> totalItems = new ArrayList<SearchItem>();

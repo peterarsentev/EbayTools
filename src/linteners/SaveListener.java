@@ -4,7 +4,6 @@ import com.ebay.services.finding.SearchItem;
 import model.Data;
 import panel.SearchPanel;
 import util.Pair;
-import util.SearchUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,8 +11,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 

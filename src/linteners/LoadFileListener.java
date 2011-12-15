@@ -2,7 +2,6 @@ package linteners;
 
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
-import com.toedter.calendar.JDateChooser;
 import model.Data;
 import panel.SearchPanel;
 import util.FormatterText;
@@ -13,11 +12,7 @@ import util.TextUtil;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
+import java.io.*;
 import java.util.*;
 
 public class LoadFileListener implements ActionListener {
@@ -30,8 +25,6 @@ public class LoadFileListener implements ActionListener {
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox golderSearch;
     private Data dataModel;
-    private JDateChooser startTime;
-    private JDateChooser endTime;
     private JTextField daysLeft;
 
     public LoadFileListener(SearchPanel panel) {
@@ -44,8 +37,6 @@ public class LoadFileListener implements ActionListener {
         this.text = panel.getText();
         this.golderSearch = panel.getGoldenSearch();
         this.dataModel = panel.getData();
-        this.startTime = panel.getStartData();
-        this.endTime = panel.getEndData();
         this.daysLeft = panel.getDaysLeft();
     }
 
@@ -54,13 +45,13 @@ public class LoadFileListener implements ActionListener {
         int returnVal = fc.showOpenDialog(main);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            String msg = "";
+            String msg;
             if (file.exists()) {
                 List<String> data = readFile(file);
                 StringBuilder sb = new StringBuilder();
                 sb.append("The file is loaded and to be made search.\n");
                 Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
-                String typeSearch = "";
+                String typeSearch;
                 if (golderSearch.isSelected()) {
                     typeSearch = "GoldenItems : \n";
                 } else {
@@ -97,7 +88,7 @@ public class LoadFileListener implements ActionListener {
 
     private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
         List<SearchItem> items = new ArrayList<SearchItem>();
-        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, startTime.getCalendar(), endTime.getCalendar(), TextUtil.getIntegerOrNull(daysLeft.getText()));
+        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(daysLeft.getText()));
         if (searchItems != null) {
             if (golderSearch.isSelected()) {
                 List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
@@ -114,44 +105,21 @@ public class LoadFileListener implements ActionListener {
     }
 
     /**
-     * This method parses text from file. It starts with seconds line, because
-     * first line is header
-     *
-     * @param data
-     * @return
-     */
-    public static List<List<String>> buildTable(String data) {
-        List<List<String>> table = new ArrayList<List<String>>();
-        String[] lines = data.split("\\|");
-        for (int i = 1; i != lines.length; ++i) {
-            List<String> row = new ArrayList<String>();
-            for (String value : lines[i].split(";")) {
-                value = value.substring(1, value.length()-1);
-                row.add(value);
-            }
-            table.add(row);
-        }
-        return table;
-    }
-
-    /**
      * This method reads text from a file.
      *
-     * @param file
-     * @return
+     * @param file input file
+     * @return List output data
      */
     public static List<String> readFile(File file) {
         List<String> list = new ArrayList<String>();
         try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            DataInputStream dis = new DataInputStream(bis);
-            while (dis.available() != 0) {
-                list.add(dis.readLine());
+            FileInputStream fstream = new FileInputStream(file);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+            while ((strLine = br.readLine()) != null)   {
+                list.add(strLine);
             }
-            fis.close();
-            bis.close();
-            dis.close();
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }

@@ -9,19 +9,16 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ChooseOpts extends JDialog {
-    private JFrame main;
     private Data data;
     private JDialog dialog;
 
     public ChooseOpts(JFrame main, Data data) {
         dialog = this;
         this.data = data;
-        this.main = main;
         dialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

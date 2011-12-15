@@ -22,7 +22,7 @@ public class ReferenceIDLinteren implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			Integer referenceID = util.getReferenceID(field.getText());
+			String referenceID = util.getReferenceID(field.getText());
 			text.setText(text.getText() + "Reference ID : " + referenceID + "\n");
 		} catch (Exception e) {
 			e.printStackTrace();

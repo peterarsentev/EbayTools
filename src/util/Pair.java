@@ -18,16 +18,8 @@ public class Pair<T> {
 		return key;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
-
     public T getValue() {
         return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 
     @Override
@@ -37,10 +29,7 @@ public class Pair<T> {
 
         Pair pair = (Pair) o;
 
-        if (key != null ? !key.equals(pair.key) : pair.key != null) return false;
-        if (value != null ? !value.equals(pair.value) : pair.value != null) return false;
-
-        return true;
+        return !(key != null ? !key.equals(pair.key) : pair.key != null) && (value != null ? !value.equals(pair.value) : pair.value != null);
     }
 
     @Override

@@ -40,23 +40,7 @@ public class GraphPaperLayout implements LayoutManager2 {
     int hgap;            //horizontal gap
     int vgap;            //vertical gap
     Dimension gridSize;  //grid size in logical units (n x m)
-    Hashtable compTable; //constraints (Rectangles)
-
-    /**
-     * Creates a graph paper layout with a default of a 1 x 1 graph, with no
-     * vertical or horizontal padding.
-     */
-    public GraphPaperLayout() {
-        this(new Dimension(1, 1));
-    }
-
-    /**
-     * Creates a graph paper layout with the given grid size, with no vertical
-     * or horizontal padding.
-     */
-    public GraphPaperLayout(Dimension gridSize) {
-        this(gridSize, 0, 0);
-    }
+    Hashtable<Component, Rectangle> compTable; //constraints (Rectangles)
 
     /**
      * Creates a graph paper layout with the given grid size and padding.
@@ -73,29 +57,9 @@ public class GraphPaperLayout implements LayoutManager2 {
         this.gridSize = new Dimension(gridSize);
         this.hgap = hgap;
         this.vgap = vgap;
-        compTable = new Hashtable();
+        compTable = new Hashtable<Component, Rectangle>();
     }
 
-    /**
-     * @return the size of the graph paper in logical units (n x m)
-     */
-    public Dimension getGridSize() {
-        return new Dimension(gridSize);
-    }
-
-    /**
-     * Set the size of the graph paper in logical units (n x m)
-     */
-    public void setGridSize(Dimension d) {
-        setGridSize(d.width, d.height);
-    }
-
-    /**
-     * Set the size of the graph paper in logical units (n x m)
-     */
-    public void setGridSize(int width, int height) {
-        gridSize = new Dimension(width, height);
-    }
 
     public void setConstraints(Component comp, Rectangle constraints) {
         compTable.put(comp, new Rectangle(constraints));
@@ -188,7 +152,7 @@ public class GraphPaperLayout implements LayoutManager2 {
         Dimension maxCellSize = new Dimension(0, 0);
         for (int i = 0; i < ncomponents; i++) {
             Component c = parent.getComponent(i);
-            Rectangle rect = (Rectangle) compTable.get(c);
+            Rectangle rect = compTable.get(c);
             if (c != null && rect != null) {
                 Dimension componentSize;
                 if (isPreferred) {
@@ -238,7 +202,7 @@ public class GraphPaperLayout implements LayoutManager2 {
 
             for (int i = 0; i < ncomponents; i++) {
                 Component c = parent.getComponent(i);
-                Rectangle rect = (Rectangle) compTable.get(c);
+                Rectangle rect = compTable.get(c);
                 if (rect != null) {
                     int x = insets.left + (totalCellW * rect.x) + hgap;
                     int y = insets.top + (totalCellH * rect.y) + vgap;
