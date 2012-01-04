@@ -1,4 +1,4 @@
-package panel;
+package com.ebaytools.gui.panel;
 
 import java.awt.*;
 import java.util.Hashtable;
@@ -84,7 +84,7 @@ public class GraphPaperLayout implements LayoutManager2 {
 
     /**
      * Calculates the preferred size dimensions for the specified
-     * panel given the components in the specified parent container.
+     * com.ebaytools.gui.panel given the components in the specified parent container.
      *
      * @param parent the component to be laid out
      * @see #minimumLayoutSize
@@ -95,7 +95,7 @@ public class GraphPaperLayout implements LayoutManager2 {
 
     /**
      * Calculates the minimum size dimensions for the specified
-     * panel given the components in the specified parent container.
+     * com.ebaytools.gui.panel given the components in the specified parent container.
      *
      * @param parent the component to be laid out
      * @see #preferredLayoutSize

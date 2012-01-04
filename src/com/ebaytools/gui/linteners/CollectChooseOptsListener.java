@@ -1,6 +1,6 @@
-package linteners;
+package com.ebaytools.gui.linteners;
 
-import model.Data;
+import com.ebaytools.gui.model.Data;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

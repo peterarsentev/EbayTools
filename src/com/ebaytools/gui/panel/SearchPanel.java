@@ -1,19 +1,18 @@
-package panel;
+package com.ebaytools.gui.panel;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import javax.swing.*;
 
-import linteners.*;
-import model.Data;
-import util.*;
+import com.ebaytools.gui.linteners.*;
+import com.ebaytools.gui.model.Data;
+import com.ebaytools.util.*;
 import com.ebay.services.finding.*;
 
 public class SearchPanel extends JPanel {
     private JFrame main;
     private Data data;
-    private SearchUtil util;
     private JTextField numbersItem;
     private JTextField referenceId;
     private JTextField conditionsField;
@@ -29,7 +28,6 @@ public class SearchPanel extends JPanel {
         this.data = data;
 
         SearchPanel panel = this;
-        this.util = new SearchUtil();
         JButton searchReference = new JButton("Reference");
         JButton showResultFilter = new JButton("Result");
         JButton clear = new JButton("Clear");
@@ -93,10 +91,6 @@ public class SearchPanel extends JPanel {
 
     public Data getData() {
         return data;
-    }
-
-    public SearchUtil getUtil() {
-        return util;
     }
 
     public JTextField getNumbersItem() {

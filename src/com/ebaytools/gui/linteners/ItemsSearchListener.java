@@ -1,19 +1,18 @@
-package linteners;
+package com.ebaytools.gui.linteners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import model.Data;
-import panel.SearchPanel;
-import util.*;
+import com.ebaytools.gui.model.Data;
+import com.ebaytools.gui.panel.SearchPanel;
+import com.ebaytools.util.*;
 import com.ebay.services.finding.*;
 import java.util.*;
 
 public class ItemsSearchListener implements ActionListener {
 	private JTextArea text;
-	private SearchUtil util;
 	private JTextField product;
     private JTextField condition;
     private JTextField listingType;
@@ -24,7 +23,6 @@ public class ItemsSearchListener implements ActionListener {
 
 	public ItemsSearchListener(SearchPanel panel) {
 		this.text = panel.getText();
-		this.util = panel.getUtil();
 		this.product = panel.getReferenceId();
         this.condition = panel.getConditionsField();
         this.listingType = panel.getListTypeField();
@@ -40,7 +38,7 @@ public class ItemsSearchListener implements ActionListener {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
             List<SearchItem> items;
-            List<SearchItem> searchItems = util.getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.getIntegerOrNull(daysLeft.getText()));
+            List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.getIntegerOrNull(daysLeft.getText()));
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {

@@ -1,4 +1,4 @@
-package util;
+package com.ebaytools.util;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.SearchItem;
@@ -203,6 +203,9 @@ public class FormatterText {
                 }
                 if ("viewItemURL".equals(entry.getKey())) {
                     sb.append(entry.getKey()).append(" : ").append(item.getViewItemURL()).append("\n");
+                }
+                if ("description".equals(entry.getKey())) {
+                    sb.append(entry.getKey()).append(" : ").append(SearchUtil.getInstance().getProductByItemNumber(item.getItemId()).getDescription()).append("\n");
                 }
             }
             sb.append("\n");

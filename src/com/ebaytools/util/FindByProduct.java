@@ -1,4 +1,4 @@
-package util;
+package com.ebaytools.util;
 
 import java.util.ArrayList;
 

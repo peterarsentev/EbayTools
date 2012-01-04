@@ -1,8 +1,8 @@
-package dialog;
+package com.ebaytools.gui.dialog;
 
-import linteners.CollectChooseOptsListener;
-import model.Data;
-import panel.*;
+import com.ebaytools.gui.linteners.CollectChooseOptsListener;
+import com.ebaytools.gui.model.Data;
+import com.ebaytools.gui.panel.*;
 
 import javax.swing.*;
 import java.awt.*;

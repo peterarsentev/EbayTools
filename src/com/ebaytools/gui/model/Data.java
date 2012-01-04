@@ -1,13 +1,13 @@
-package model;
+package com.ebaytools.gui.model;
 
 import com.ebay.services.finding.SearchItem;
-import util.Pair;
+import com.ebaytools.util.Pair;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * This is model for data. We will be to use it every way in a project
+ * This is com.ebaytools.gui.model for data. We will be to use it every way in a project
  */
 public class Data {
     private Map<String, Boolean> showOpts; //this map consists from options which we can see

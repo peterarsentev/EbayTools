@@ -1,4 +1,4 @@
-package util;
+package com.ebaytools.util;
 
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.GetItemCall;
@@ -23,9 +23,21 @@ public class SearchUtil {
     private FindingServicePortType serviceClient;
 
     /**
+     * is used singleton pattern, because this instance is needed in difference place in this project
+     */
+    private static SearchUtil instance;
+
+    public static synchronized SearchUtil getInstance() {
+        if (instance == null) {
+            instance = new SearchUtil();
+        }
+        return instance;
+    }
+
+    /**
      * This constructor initial special configurations for sdk ebay API
      */
-    public SearchUtil() {
+    private SearchUtil() {
         ClientConfig config = new ClientConfig();
         config.setApplicationId("TrackStu-c3e1-4e31-90e0-7ae139cd3650");
         this.serviceClient = FindingServiceClientFactory.getServiceClient(config);
@@ -47,12 +59,15 @@ public class SearchUtil {
     /**
      * This method gets reference id by numbers item
      * @param itemNubmer item id
-     * @return int reference id
-     * @throws Exception for necessery
+     * @return ItemType product
      */
-    public String getReferenceID(String itemNubmer) throws Exception {
-        ItemType item = gc.getItem(itemNubmer);
-        return item.getProductListingDetails().getProductReferenceID();
+    public ItemType getProductByItemNumber(String itemNubmer) {
+        try {
+            return gc.getItem(itemNubmer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

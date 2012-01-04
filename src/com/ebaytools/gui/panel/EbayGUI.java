@@ -1,6 +1,6 @@
-package panel;
+package com.ebaytools.gui.panel;
 
-import model.Data;
+import com.ebaytools.gui.model.Data;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 
 /**
- * This is main frame. There we can show all gui components. 
+ * This is main frame. There we can show all com.ebaytools.gui components.
  * @author Admin
  *
  */
@@ -113,5 +113,6 @@ public class EbayGUI extends JFrame {
         fields.put("subtitle", false);
         fields.put("title", false);
         fields.put("viewItemURL", false);
+        fields.put("description", false);
     }
 }

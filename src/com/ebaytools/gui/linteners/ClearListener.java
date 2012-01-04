@@ -1,9 +1,9 @@
-package linteners;
+package com.ebaytools.gui.linteners;
 
 import com.ebay.services.finding.SearchItem;
-import model.Data;
-import panel.SearchPanel;
-import util.Pair;
+import com.ebaytools.gui.model.Data;
+import com.ebaytools.gui.panel.SearchPanel;
+import com.ebaytools.util.Pair;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

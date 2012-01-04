@@ -1,13 +1,13 @@
-package linteners;
+package com.ebaytools.gui.linteners;
 
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
-import model.Data;
-import panel.SearchPanel;
-import util.FormatterText;
-import util.Pair;
-import util.SearchUtil;
-import util.TextUtil;
+import com.ebaytools.gui.model.Data;
+import com.ebaytools.gui.panel.SearchPanel;
+import com.ebaytools.util.FormatterText;
+import com.ebaytools.util.Pair;
+import com.ebaytools.util.SearchUtil;
+import com.ebaytools.util.TextUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +18,6 @@ import java.util.*;
 public class LoadFileListener implements ActionListener {
     private JFileChooser fc;
     private JFrame main;
-    private SearchUtil util;
     private JTextArea text;
     private JTextField condition;
     private JTextField listingType;
@@ -33,7 +32,6 @@ public class LoadFileListener implements ActionListener {
         this.listingType = panel.getListTypeField();
         this.sortedTypeField = panel.getSortedTypeField();
         this.main = panel.getMain();
-        this.util = panel.getUtil();
         this.text = panel.getText();
         this.golderSearch = panel.getGoldenSearch();
         this.dataModel = panel.getData();
@@ -88,7 +86,7 @@ public class LoadFileListener implements ActionListener {
 
     private List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
         List<SearchItem> items = new ArrayList<SearchItem>();
-        List<SearchItem> searchItems = util.getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(daysLeft.getText()));
+        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, condition.getText(), listingType.getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(daysLeft.getText()));
         if (searchItems != null) {
             if (golderSearch.isSelected()) {
                 List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);

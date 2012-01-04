@@ -1,4 +1,4 @@
-package util;
+package com.ebaytools.util;
 
 /**
  * This is helper class, which help in JComboBox
