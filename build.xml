@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="EbayTools">
+
+    <property name="project.dir" value="${basedir}"/>
+    <property name="lib.dir" value="${project.dir}/lib"/>
+    <property name="temp.dir" value="${project.dir}/temp"/>
+    <property name="src.dir" value="${project.dir}/src"/>
+
+    <path id="compile.classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <property name="classpath.dir" refid="compile.classpath"/>
+
+    <target name="clean">
+        <delete dir="${temp.dir}"/>
+        <delete dir="${project.dir}/ebaytools.jar"/>
+    </target>
+
+    <target name="build" depends="clean">
+        <mkdir dir="${temp.dir}"/>
+        <javac source="1.6" target="1.6"
+               includeantruntime="false" classpath="${classpath.dir}"
+               destdir="${temp.dir}" srcdir="${src.dir}" debug="true" optimize="false"
+               fork="yes" nowarn="true" deprecation="no" memoryInitialSize="126m" memoryMaximumSize="512m">
+        </javac>
+
+        <jar basedir="${temp.dir}" jarfile="${project.dir}/ebaytools.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.ebaytools.start.RunGUI"/>
+                <attribute name="Class-Path" value="${classpath.dir}"/>
+            </manifest>
+        </jar>
+        <delete dir="${temp.dir}"/>
+    </target>
+
+
+</project>
