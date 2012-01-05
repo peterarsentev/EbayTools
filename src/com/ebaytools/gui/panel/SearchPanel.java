@@ -35,6 +35,7 @@ public class SearchPanel extends JPanel {
         JButton optsButton = new JButton("Choose opts.");
         JButton loadReferenceIDList = new JButton("Load");
         JButton searchUPC = new JButton("RefID to UPC");
+        JButton saveResultToDb = new JButton("Save result to DB");
         this.numbersItem = new JTextField();
         this.referenceId = new JTextField();
         referenceId.setText("77826847");
@@ -49,6 +50,15 @@ public class SearchPanel extends JPanel {
         }
         this.goldenSearch = new JCheckBox("Search single item");
         this.daysLeft = new JTextField();
+
+        data.setNumbersItem(numbersItem);
+        data.setReferenceId(referenceId);
+        data.setConditionsField(conditionsField);
+        data.setListTypeField(listTypeField);
+        data.setText(text);
+        data.setSortedTypeField(sortedTypeField);
+        data.setGoldenSearch(goldenSearch);
+        data.setDaysLeft(daysLeft);
 
         //  In this section we paint own components, We use special layer manager GraphPaperLayout 
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -66,7 +76,8 @@ public class SearchPanel extends JPanel {
         panel.add(new JLabel("List Type"), new Rectangle(0, 3, 5, 1));
         panel.add(listTypeField, new Rectangle(4, 3, 6, 1));
         panel.add(showResultFilter, new Rectangle(24, 4, 3, 1));
-        panel.add(new JScrollPane(text), new Rectangle(0, 5, 27, 21));
+        panel.add(new JScrollPane(text), new Rectangle(0, 5, 16, 21));
+        panel.add(new ProductPanel(main, data), new Rectangle(16, 5, 12, 26));
         panel.add(clear, new Rectangle(0, 26, 3, 1));
         panel.add(save, new Rectangle(24, 0, 3, 1));
         panel.add(new JLabel("Sorted type"), new Rectangle(0, 4, 5, 1));
@@ -74,6 +85,7 @@ public class SearchPanel extends JPanel {
         panel.add(optsButton, new Rectangle(4, 26, 4, 1));
         panel.add(new JLabel("Days Left"), new Rectangle(11, 3, 4, 1));
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
+        panel.add(saveResultToDb, new Rectangle(9, 26, 5, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox  
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
@@ -83,6 +95,7 @@ public class SearchPanel extends JPanel {
         loadReferenceIDList.addActionListener(new LoadFileListener(panel));
         optsButton.addActionListener(new ChooseOptsListener(panel));
         searchUPC.addActionListener(new UPCSearchListener(panel));
+        saveResultToDb.addActionListener(new SaveToDbListener(main, data));
     }
 
     public JFrame getMain() {

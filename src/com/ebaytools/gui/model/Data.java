@@ -1,8 +1,10 @@
 package com.ebaytools.gui.model;
 
 import com.ebay.services.finding.SearchItem;
+import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.util.Pair;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,78 @@ public class Data {
     private List<SearchItem> items; // search result
     private List<String> loadId;
     private Map<Pair, List<SearchItem>> saveData; // data for save
+    private JTextField numbersItem;
+    private JTextField referenceId;
+    private JTextField conditionsField;
+    private JTextField listTypeField;
+    private JTextArea text;
+    private JComboBox<Pair<SortOrderType>> sortedTypeField;
+    private JCheckBox goldenSearch;
+    private JTextField daysLeft;
+
+    public JTextField getNumbersItem() {
+        return numbersItem;
+    }
+
+    public void setNumbersItem(JTextField numbersItem) {
+        this.numbersItem = numbersItem;
+    }
+
+    public JTextField getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(JTextField referenceId) {
+        this.referenceId = referenceId;
+    }
+
+    public JTextField getConditionsField() {
+        return conditionsField;
+    }
+
+    public void setConditionsField(JTextField conditionsField) {
+        this.conditionsField = conditionsField;
+    }
+
+    public JTextField getListTypeField() {
+        return listTypeField;
+    }
+
+    public void setListTypeField(JTextField listTypeField) {
+        this.listTypeField = listTypeField;
+    }
+
+    public JTextArea getText() {
+        return text;
+    }
+
+    public void setText(JTextArea text) {
+        this.text = text;
+    }
+
+    public JComboBox<Pair<SortOrderType>> getSortedTypeField() {
+        return sortedTypeField;
+    }
+
+    public void setSortedTypeField(JComboBox<Pair<SortOrderType>> sortedTypeField) {
+        this.sortedTypeField = sortedTypeField;
+    }
+
+    public JCheckBox getGoldenSearch() {
+        return goldenSearch;
+    }
+
+    public void setGoldenSearch(JCheckBox goldenSearch) {
+        this.goldenSearch = goldenSearch;
+    }
+
+    public JTextField getDaysLeft() {
+        return daysLeft;
+    }
+
+    public void setDaysLeft(JTextField daysLeft) {
+        this.daysLeft = daysLeft;
+    }
 
     public Map<String, Boolean> getShowOpts() {
         return showOpts;

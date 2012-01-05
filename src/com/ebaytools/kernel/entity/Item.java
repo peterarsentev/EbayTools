@@ -1,0 +1,91 @@
+package com.ebaytools.kernel.entity;
+
+import com.ebaytools.util.FormatterText;
+
+import java.util.Calendar;
+import java.util.List;
+
+public class Item {
+    private Long id;
+    private String ebayItemId;
+    private Long productId;
+    private Calendar createDate;
+    private List<ItemProperties> properties;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEbayItemId() {
+        return ebayItemId;
+    }
+
+    public void setEbayItemId(String ebayItemId) {
+        this.ebayItemId = ebayItemId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Calendar getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Calendar createDate) {
+        this.createDate = createDate;
+    }
+
+    public List<ItemProperties> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<ItemProperties> properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", ebayItemId='" + ebayItemId + '\'' +
+                ", productId=" + productId +
+                ", createDate=" + FormatterText.dateformatter.format(createDate) +
+                ", properties=" + properties +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (createDate != null ? !createDate.equals(item.createDate) : item.createDate != null) return false;
+        if (ebayItemId != null ? !ebayItemId.equals(item.ebayItemId) : item.ebayItemId != null) return false;
+        if (id != null ? !id.equals(item.id) : item.id != null) return false;
+        if (productId != null ? !productId.equals(item.productId) : item.productId != null) return false;
+        if (properties != null ? !properties.equals(item.properties) : item.properties != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (ebayItemId != null ? ebayItemId.hashCode() : 0);
+        result = 31 * result + (productId != null ? productId.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (properties != null ? properties.hashCode() : 0);
+        return result;
+    }
+}

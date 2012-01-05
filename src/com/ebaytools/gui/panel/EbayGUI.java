@@ -1,14 +1,15 @@
 package com.ebaytools.gui.panel;
 
+import com.ebaytools.gui.linteners.OpenProductIDDialogListener;
+import com.ebaytools.gui.linteners.OpenShowProductDialogListener;
 import com.ebaytools.gui.model.Data;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * This is main frame. There we can show all com.ebaytools.gui components.

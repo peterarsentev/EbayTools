@@ -10,6 +10,7 @@ import com.ebay.services.client.ClientConfig;
 import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.*;
 import com.ebay.services.finding.FindingServicePortType;
+import com.ebaytools.gui.model.Data;
 
 import javax.xml.datatype.Duration;
 
@@ -175,5 +176,57 @@ public class SearchUtil {
             }
         }
         return incorrectDuration;
+    }
+    
+    public static String buildSearchByMultiIDs(Data dataModel) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("The file is loaded and to be made search.\n");
+        Pair<SortOrderType> pairSorted = dataModel.getSortedTypeField().getItemAt(dataModel.getSortedTypeField().getSelectedIndex());
+        String typeSearch;
+        if (dataModel.getGoldenSearch().isSelected()) {
+            typeSearch = "GoldenItems : \n";
+        } else {
+            typeSearch = "All items : \n";
+        }
+        sb.append(typeSearch);
+        Map<Pair, List<SearchItem>> map = new LinkedHashMap<Pair, List<SearchItem>>();
+        for (String id : dataModel.getLoadId()) {
+            if (TextUtil.isNotNull(id)) {
+                List<SearchItem> items = getResult(sb, pairSorted, id, "UPC", dataModel);
+                if (items.isEmpty()) {
+                    items = getResult(sb, pairSorted, id, "ReferenceID", dataModel);
+                    if (items.isEmpty()) {
+                        sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
+                        map.put(new Pair<String>(id, "doesn't have any match by reference and upc id!"), null);
+                    } else {
+                        FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "ReferenceID");
+                        map.put(new Pair<String>(id, "ReferenceID"), items);
+                    }
+                } else {
+                    FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "UPC");
+                    map.put(new Pair<String>(id, "UPC"), items);
+                }
+            }
+            dataModel.setSaveData(map);
+        }
+        return sb.toString();
+    }
+
+    private static List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
+        List<SearchItem> items = new ArrayList<SearchItem>();
+        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, data.getConditionsField().getText(), data.getListTypeField().getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(data.getDaysLeft().getText()));
+        if (searchItems != null) {
+            if (data.getGoldenSearch().isSelected()) {
+                List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
+                items.addAll(goldenItems);
+            } else {
+                items.addAll(searchItems);
+            }
+        }
+        if (!items.isEmpty()) {
+            sb.append(FormatterText.formatForConsole(items, data.getShowOpts(), id, type));
+            sb.append("Total items : ").append(items.size()).append("\n\n");
+        }
+        return items;
     }
 }

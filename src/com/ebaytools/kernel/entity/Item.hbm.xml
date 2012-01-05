@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.ebaytools.kernel.entity.Item" proxy="com.ebaytools.kernel.entity.Item" table="item">
+        <cache usage="nonstrict-read-write"/>
+
+        <id name="id" column="id"  type="java.lang.Long" unsaved-value="null">
+            <generator class="increment"/>
+        </id>
+
+        <property name="ebayItemId" column="ebayItemId" type="java.lang.String"/>
+        <property name="productId" column="productId" type="java.lang.Long"/>
+        <property name="createDate" column="createDate" type="java.util.Calendar"/>
+        <set name="properties" lazy="true" inverse="true" cascade="all">
+            <key column="properties"/>
+            <one-to-many class="com.ebaytools.kernel.entity.ItemProperties"/>
+        </set>
+    </class>
+</hibernate-mapping>
