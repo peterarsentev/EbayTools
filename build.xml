@@ -43,7 +43,7 @@
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
         </jar>
-        <!--<delete dir="${temp.dir}"/>-->
+        <delete dir="${temp.dir}"/>
     </target>
 
 
