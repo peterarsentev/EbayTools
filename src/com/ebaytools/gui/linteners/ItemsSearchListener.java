@@ -45,7 +45,7 @@ public class ItemsSearchListener implements ActionListener {
                 items = searchItems;
             }
             data.setItems(items);
-            sb.append(FormatterText.formatForConsole(data.getItems(), data.getShowOpts(), product.getText(), "ReferenceID"));
+            sb.append(FormatterText.formatForConsole(data.getItems(), product.getText(), "ReferenceID"));
             sb.append("Total items : ").append(items.size());
             text.setText(text.getText() + sb.toString() + "\n");
             Map<Pair, List<SearchItem>> saveData = new LinkedHashMap<Pair, List<SearchItem>>();

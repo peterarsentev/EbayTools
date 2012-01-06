@@ -20,9 +20,6 @@ public class RunGUI {
             public void run() {
                 ManagerDAO.getInstance();
                 Data data = new Data();
-                Map<String, Boolean> showOps = new LinkedHashMap<String, Boolean>();
-                showOps.put("itemId", true);
-                data.setShowOpts(showOps);
             	EbayGUI gui = new EbayGUI(data);
                 gui.init();
                 gui.setVisible(true);

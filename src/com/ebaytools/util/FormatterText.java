@@ -2,6 +2,7 @@ package com.ebaytools.util;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.SearchItem;
+import com.ebaytools.kernel.dao.ManagerDAO;
 
 import javax.xml.datatype.Duration;
 import java.text.SimpleDateFormat;
@@ -47,165 +48,165 @@ public class FormatterText {
     }
 
 
-    public static String formatForConsole(List<SearchItem> items, Map<String, Boolean> showOpts, String id, String type) {
+    public static String formatForConsole(List<SearchItem> items, String id, String type) {
         StringBuilder sb = new StringBuilder();
         sb.append(type).append(" (").append(id).append(")").append("\n\n");
         for (SearchItem item : items)  {
-            for (Map.Entry<String, Boolean> entry : showOpts.entrySet()) {
-                if ("autoPay".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(String.valueOf(item.isAutoPay())).append("\n");
+            for (String valueOpt : ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue()) {
+                if ("autoPay".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(String.valueOf(item.isAutoPay())).append("\n");
                 }
-                if ("charityId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getCharityId()).append("\n");
+                if ("charityId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getCharityId()).append("\n");
                 }
-                if ("compatibility".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getCompatibility()).append("\n");
+                if ("compatibility".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getCompatibility()).append("\n");
                 }
-                if ("conditionDisplayName".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getCondition().getConditionDisplayName()).append("\n");
+                if ("conditionDisplayName".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getCondition().getConditionDisplayName()).append("\n");
                 }
-                if ("country".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getCountry()).append("\n");
+                if ("country".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getCountry()).append("\n");
                 }
-                if ("distance".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getDistance()).append("\n");
+                if ("distance".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getDistance()).append("\n");
                 }
-                if ("galleryURL".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getGalleryURL()).append("\n");
+                if ("galleryURL".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getGalleryURL()).append("\n");
                 }
-                if ("galleryPlusPictureURL".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getGalleryPlusPictureURL()).append("\n");
+                if ("galleryPlusPictureURL".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getGalleryPlusPictureURL()).append("\n");
                 }
-                if ("globalId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getGlobalId()).append("\n");
+                if ("globalId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getGlobalId()).append("\n");
                 }
-                if ("itemId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getItemId()).append("\n");
+                if ("itemId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getItemId()).append("\n");
                 }
-                if ("bestOfferEnabled".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().isBestOfferEnabled()).append("\n");
+                if ("bestOfferEnabled".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().isBestOfferEnabled()).append("\n");
                 }
-                if ("buyItNowAvailable".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().isBuyItNowAvailable()).append("\n");
+                if ("buyItNowAvailable".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().isBuyItNowAvailable()).append("\n");
                 }
-                if ("buyItNowPrice".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().getBuyItNowPrice()).append("\n");
+                if ("buyItNowPrice".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().getBuyItNowPrice()).append("\n");
                 }
-                if ("convertedBuyItNowPrice".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().getConvertedBuyItNowPrice()).append("\n");
+                if ("convertedBuyItNowPrice".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().getConvertedBuyItNowPrice()).append("\n");
                 }
-                if ("endTime".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(dateformatter.format(item.getListingInfo().getEndTime().getTime())).append("\n");
+                if ("endTime".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(dateformatter.format(item.getListingInfo().getEndTime().getTime())).append("\n");
                 }
-                if ("gift".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().isGift()).append("\n");
+                if ("gift".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().isGift()).append("\n");
                 }
-                if ("listingType".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getListingInfo().getListingType()).append("\n");
+                if ("listingType".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getListingInfo().getListingType()).append("\n");
                 }
-                if ("startTime".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(dateformatter.format(item.getListingInfo().getStartTime().getTime())).append("\n");
+                if ("startTime".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(dateformatter.format(item.getListingInfo().getStartTime().getTime())).append("\n");
                 }
-                if ("primaryCategoryId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getPrimaryCategory().getCategoryId()).append("\n");
+                if ("primaryCategoryId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getPrimaryCategory().getCategoryId()).append("\n");
                 }
-                if ("primaryCategoryName".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getPrimaryCategory().getCategoryName()).append("\n");
+                if ("primaryCategoryName".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getPrimaryCategory().getCategoryName()).append("\n");
                 }
-                if ("location".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getLocation()).append("\n");
+                if ("location".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getLocation()).append("\n");
                 }
-                if ("paymentMethod".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getPaymentMethod()).append("\n");
+                if ("paymentMethod".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getPaymentMethod()).append("\n");
                 }
-                if ("postalCode".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getPostalCode()).append("\n");
+                if ("postalCode".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getPostalCode()).append("\n");
                 }
-                if ("productId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getProductId()).append("\n");
+                if ("productId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getProductId()).append("\n");
                 }
-                if ("returnsAccepted".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.isReturnsAccepted()).append("\n");
+                if ("returnsAccepted".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.isReturnsAccepted()).append("\n");
                 }
-                if ("secondaryCategoryId".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSecondaryCategory().getCategoryId()).append("\n");
+                if ("secondaryCategoryId".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSecondaryCategory().getCategoryId()).append("\n");
                 }
-                if ("secondaryCategoryName".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSecondaryCategory().getCategoryName()).append("\n");
+                if ("secondaryCategoryName".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSecondaryCategory().getCategoryName()).append("\n");
                 }
-                if ("feedbackRatingStar".equals(entry.getKey())) {
+                if ("feedbackRatingStar".equals(valueOpt)) {
                     String value = item.getSellerInfo() != null ? item.getSellerInfo().getFeedbackRatingStar() : "";
-                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
+                    sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
-                if ("feedbackScore".equals(entry.getKey())) {
+                if ("feedbackScore".equals(valueOpt)) {
                     String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getFeedbackScore()) : "";
-                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
+                    sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
-                if ("positiveFeedbackPercent".equals(entry.getKey())) {
+                if ("positiveFeedbackPercent".equals(valueOpt)) {
                     String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getPositiveFeedbackPercent()) : "";
-                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
+                    sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
-                if ("sellerUserName".equals(entry.getKey())) {
+                if ("sellerUserName".equals(valueOpt)) {
                     String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getSellerUserName()) : "";
-                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
+                    sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
-                if ("topRatedSeller".equals(entry.getKey())) {
+                if ("topRatedSeller".equals(valueOpt)) {
                     String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().isTopRatedSeller()) : "";
-                    sb.append(entry.getKey()).append(" : ").append(value).append("\n");
+                    sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
-                if ("bidCount".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getBidCount()).append("\n");
+                if ("bidCount".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSellingStatus().getBidCount()).append("\n");
                 }
-                if ("convertedCurrentPrice".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getConvertedCurrentPrice()).append("\n");
+                if ("convertedCurrentPrice".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSellingStatus().getConvertedCurrentPrice()).append("\n");
                 }
-                if ("currentPrice".equals(entry.getKey())) {
+                if ("currentPrice".equals(valueOpt)) {
                     String value = String.valueOf(item.getSellingStatus().getCurrentPrice().getValue());
                     String rate = item.getSellingStatus().getCurrentPrice().getCurrencyId();
-                    sb.append(entry.getKey()).append(" : ").append(buildPrice(item.getSellingStatus().getCurrentPrice())).append("\n");
+                    sb.append(valueOpt).append(" : ").append(buildPrice(item.getSellingStatus().getCurrentPrice())).append("\n");
                 }
-                if ("sellingState".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSellingStatus().getSellingState()).append("\n");
+                if ("sellingState".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSellingStatus().getSellingState()).append("\n");
                 }
-                if ("timeLeft".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(buildTime(item.getSellingStatus().getTimeLeft())).append("\n");
+                if ("timeLeft".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(buildTime(item.getSellingStatus().getTimeLeft())).append("\n");
                 }
-                if ("expeditedShipping".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().isExpeditedShipping()).append("\n");
+                if ("expeditedShipping".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getShippingInfo().isExpeditedShipping()).append("\n");
                 }
-                if ("handlingTime".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().getHandlingTime()).append("\n");
+                if ("handlingTime".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getShippingInfo().getHandlingTime()).append("\n");
                 }
-                if ("oneDayShippingAvailable".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().isOneDayShippingAvailable()).append("\n");
+                if ("oneDayShippingAvailable".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getShippingInfo().isOneDayShippingAvailable()).append("\n");
                 }
-                if ("shippingServiceCost".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(buildPrice(item.getShippingInfo().getShippingServiceCost())).append("\n");
+                if ("shippingServiceCost".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(buildPrice(item.getShippingInfo().getShippingServiceCost())).append("\n");
                 }
-                if ("shippingType".equals(entry.getKey())) {
+                if ("shippingType".equals(valueOpt)) {
 
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().getShippingType()).append("\n");
+                    sb.append(valueOpt).append(" : ").append(item.getShippingInfo().getShippingType()).append("\n");
                 }
-                if ("shipToLocations".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getShippingInfo().getShipToLocations()).append("\n");
+                if ("shipToLocations".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getShippingInfo().getShipToLocations()).append("\n");
                 }
-                if ("storeName".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getStoreInfo().getStoreName()).append("\n");
+                if ("storeName".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getStoreInfo().getStoreName()).append("\n");
                 }
-                if ("storeURL".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getStoreInfo().getStoreURL()).append("\n");
+                if ("storeURL".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getStoreInfo().getStoreURL()).append("\n");
                 }
-                if ("subtitle".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getSubtitle()).append("\n");
+                if ("subtitle".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getSubtitle()).append("\n");
                 }
-                if ("title".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getTitle()).append("\n");
+                if ("title".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getTitle()).append("\n");
                 }
-                if ("viewItemURL".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(item.getViewItemURL()).append("\n");
+                if ("viewItemURL".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(item.getViewItemURL()).append("\n");
                 }
-                if ("description".equals(entry.getKey())) {
-                    sb.append(entry.getKey()).append(" : ").append(SearchUtil.getInstance().getProductByItemNumber(item.getItemId()).getDescription()).append("\n");
+                if ("description".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(SearchUtil.getInstance().getProductByItemNumber(item.getItemId()).getDescription()).append("\n");
                 }
             }
             sb.append("\n");

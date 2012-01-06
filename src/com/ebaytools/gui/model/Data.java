@@ -13,7 +13,6 @@ import java.util.Map;
  * This is com.ebaytools.gui.model for data. We will be to use it every way in a project
  */
 public class Data {
-    private Map<String, Boolean> showOpts; //this map consists from options which we can see
     private List<SearchItem> items; // search result
     private List<String> loadId;
     private Map<Pair, List<SearchItem>> saveData; // data for save
@@ -91,14 +90,6 @@ public class Data {
         this.daysLeft = daysLeft;
     }
 
-    public Map<String, Boolean> getShowOpts() {
-        return showOpts;
-    }
-
-    public void setShowOpts(Map<String, Boolean> showOpts) {
-        this.showOpts = showOpts;
-    }
-
     public List<SearchItem> getItems() {
         return items;
     }
@@ -123,6 +114,14 @@ public class Data {
         this.saveData = saveData;
     }
 
+    public ActionListener getRefreshAction() {
+        return refresAction;
+    }
+
+    public void setRefresAction(ActionListener refresAction) {
+        this.refresAction = refresAction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -133,25 +132,15 @@ public class Data {
         if (items != null ? !items.equals(data.items) : data.items != null) return false;
         if (loadId != null ? !loadId.equals(data.loadId) : data.loadId != null) return false;
         if (saveData != null ? !saveData.equals(data.saveData) : data.saveData != null) return false;
-        if (showOpts != null ? !showOpts.equals(data.showOpts) : data.showOpts != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = showOpts != null ? showOpts.hashCode() : 0;
-        result = 31 * result + (items != null ? items.hashCode() : 0);
+        int result = items != null ? items.hashCode() : 0;
         result = 31 * result + (loadId != null ? loadId.hashCode() : 0);
         result = 31 * result + (saveData != null ? saveData.hashCode() : 0);
         return result;
-    }
-
-    public ActionListener getRefreshAction() {
-        return refresAction;
-    }
-
-    public void setRefresAction(ActionListener refresAction) {
-        this.refresAction = refresAction;
     }
 }

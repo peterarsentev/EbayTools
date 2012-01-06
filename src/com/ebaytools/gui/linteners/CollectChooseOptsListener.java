@@ -1,6 +1,8 @@
 package com.ebaytools.gui.linteners;
 
 import com.ebaytools.gui.model.Data;
+import com.ebaytools.kernel.dao.ManagerDAO;
+import com.ebaytools.kernel.entity.SystemSetting;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,14 +24,33 @@ public class CollectChooseOptsListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Map<String, Boolean> showOpts = new LinkedHashMap<String, Boolean>();
+        List<SystemSetting> settings = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOpts();
         for (JCheckBox box : checkBoxes) {
             if (box.isSelected()) {
-                showOpts.put(box.getText(), true);
+                SystemSetting setting = checkOpt(settings, box.getText());
+                if (setting == null) {
+                    SystemSetting systemSetting = new SystemSetting();
+                    systemSetting.setName("chooseOpt");
+                    systemSetting.setValue(box.getText());
+                    ManagerDAO.getInstance().getSystemSettingDAO().create(systemSetting);
+                } else {
+                    settings.remove(setting);
+                }
             }
         }
-        data.setShowOpts(showOpts);
+        for (SystemSetting setting : settings) {
+            ManagerDAO.getInstance().getSystemSettingDAO().delete(setting.getId());
+        }
         dialog.setVisible(false);
         dialog.dispose();
+    }
+
+    private static SystemSetting checkOpt(List<SystemSetting> settings, String value) {
+        for (SystemSetting setting : settings) {
+            if (setting.getValue().equals(value)) {
+                return setting;
+            }
+        }
+        return null;
     }
 }

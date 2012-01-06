@@ -3,6 +3,7 @@ package com.ebaytools.gui.dialog;
 import com.ebaytools.gui.linteners.CollectChooseOptsListener;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.*;
+import com.ebaytools.kernel.dao.ManagerDAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +43,7 @@ public class ChooseOpts extends JDialog {
         int column = 1;
         int div = EbayGUI.fields.size()/2 + 1;
         int start = 0;
+        List<String> chooseOpt = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue();
         for (Map.Entry<String, Boolean> entry : EbayGUI.fields.entrySet()) {
             if (column > div) {
                 start = 16;
@@ -53,11 +55,11 @@ public class ChooseOpts extends JDialog {
                 if (entry.getKey().startsWith("--")) {
                     ++startApproximate;
                     box = new JCheckBox(entry.getKey().substring(2));
-                    box.setSelected(data.getShowOpts().containsKey(entry.getKey().substring(2)));
+                    box.setSelected(chooseOpt.contains(entry.getKey().substring(2)));
                     panel.add(box, new Rectangle(startApproximate, column, 15, 1));
                 } else {
                     box = new JCheckBox(entry.getKey());
-                    box.setSelected(data.getShowOpts().containsKey(entry.getKey()));
+                    box.setSelected(chooseOpt.contains(entry.getKey()));
                     panel.add(box, new Rectangle(start, column, 15, 1));
                 }
                 boxList.add(box);

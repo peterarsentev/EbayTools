@@ -22,3 +22,10 @@ create table itemProperties (
   CONSTRAINT ipId PRIMARY KEY (id),
   Foreign Key (itemId) references item(id)
 );
+
+create table systemSetting (
+  id bigint not null,
+  name varchar(200),
+  value varchar(200),
+  constraint ssId primary key (id)
+);

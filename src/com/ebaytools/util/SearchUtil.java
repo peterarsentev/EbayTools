@@ -199,11 +199,11 @@ public class SearchUtil {
                         sb.append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n");
                         map.put(new Pair<String>(id, "doesn't have any match by reference and upc id!"), null);
                     } else {
-                        FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "ReferenceID");
+                        FormatterText.formatForConsole(items, id, "ReferenceID");
                         map.put(new Pair<String>(id, "ReferenceID"), items);
                     }
                 } else {
-                    FormatterText.formatForConsole(items, dataModel.getShowOpts(), id, "UPC");
+                    FormatterText.formatForConsole(items, id, "UPC");
                     map.put(new Pair<String>(id, "UPC"), items);
                 }
             }
@@ -224,7 +224,7 @@ public class SearchUtil {
             }
         }
         if (!items.isEmpty()) {
-            sb.append(FormatterText.formatForConsole(items, data.getShowOpts(), id, type));
+            sb.append(FormatterText.formatForConsole(items, id, type));
             sb.append("Total items : ").append(items.size()).append("\n\n");
         }
         return items;

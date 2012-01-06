@@ -22,6 +22,7 @@
                 <value>com/ebaytools/kernel/entity/Product.hbm.xml</value>
                 <value>com/ebaytools/kernel/entity/Item.hbm.xml</value>
                 <value>com/ebaytools/kernel/entity/ItemProperties.hbm.xml</value>
+                <value>com/ebaytools/kernel/entity/SystemSetting.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -49,6 +50,10 @@
     </bean>
 
     <bean id="itemPropetiesDAO" class="com.ebaytools.kernel.dao.ItemPropetiesDAOImpl">
+        <property name="sessionFactory"><ref local="sessionFactory"/></property>
+    </bean>
+
+    <bean id="systemSettingDAO" class="com.ebaytools.kernel.dao.SystemSettingDAOImpl">
         <property name="sessionFactory"><ref local="sessionFactory"/></property>
     </bean>
 </beans>
