@@ -15,7 +15,7 @@
 
     <target name="clean">
         <delete dir="${temp.dir}"/>
-        <delete dir="${project.dir}/ebaytools.jar"/>
+        <delete file="${project.dir}/ebaytools.jar"/>
     </target>
 
     <target name="build" depends="clean">
@@ -26,13 +26,24 @@
                fork="yes" nowarn="true" deprecation="no" memoryInitialSize="126m" memoryMaximumSize="512m">
         </javac>
 
+        <copy file="${src.dir}/app-context.xml" tofile="${temp.dir}/app-context.xml"/>
+        <copy file="${src.dir}/hibernate.properties" tofile="${temp.dir}/hibernate.properties"/>
+        <copy file="${src.dir}/log4j.properties" tofile="${temp.dir}/log4j.properties"/>
+
+        <copy file="${src.dir}/com/ebaytools/kernel/entity/Product.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/Product.hbm.xml"/>
+        <copy file="${src.dir}/com/ebaytools/kernel/entity/Item.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/Item.hbm.xml"/>
+        <copy file="${src.dir}/com/ebaytools/kernel/entity/ItemProperties.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/ItemProperties.hbm.xml"/>
+
+        <manifestclasspath property="jar.classpath" jarfile="${project.dir}/ebaytools.jar">
+            <classpath refid="compile.classpath"/>
+        </manifestclasspath>
         <jar basedir="${temp.dir}" jarfile="${project.dir}/ebaytools.jar">
             <manifest>
                 <attribute name="Main-Class" value="com.ebaytools.start.RunGUI"/>
-                <attribute name="Class-Path" value="${classpath.dir}"/>
+                <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
         </jar>
-        <delete dir="${temp.dir}"/>
+        <!--<delete dir="${temp.dir}"/>-->
     </target>
 
 

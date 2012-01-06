@@ -1,7 +1,5 @@
 package com.ebaytools.gui.panel;
 
-import com.ebaytools.gui.linteners.OpenProductIDDialogListener;
-import com.ebaytools.gui.linteners.OpenShowProductDialogListener;
 import com.ebaytools.gui.model.Data;
 
 import java.awt.*;
