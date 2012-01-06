@@ -33,6 +33,7 @@
         <copy file="${src.dir}/com/ebaytools/kernel/entity/Product.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/Product.hbm.xml"/>
         <copy file="${src.dir}/com/ebaytools/kernel/entity/Item.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/Item.hbm.xml"/>
         <copy file="${src.dir}/com/ebaytools/kernel/entity/ItemProperties.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/ItemProperties.hbm.xml"/>
+        <copy file="${src.dir}/com/ebaytools/kernel/entity/SystemSetting.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/SystemSetting.hbm.xml"/>
 
         <manifestclasspath property="jar.classpath" jarfile="${project.dir}/ebaytools.jar">
             <classpath refid="compile.classpath"/>

@@ -51,8 +51,9 @@ public class FormatterText {
     public static String formatForConsole(List<SearchItem> items, String id, String type) {
         StringBuilder sb = new StringBuilder();
         sb.append(type).append(" (").append(id).append(")").append("\n\n");
+        List<String> opts = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue();
         for (SearchItem item : items)  {
-            for (String valueOpt : ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue()) {
+            for (String valueOpt : opts) {
                 if ("autoPay".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(String.valueOf(item.isAutoPay())).append("\n");
                 }
