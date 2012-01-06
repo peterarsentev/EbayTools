@@ -2,15 +2,17 @@ package com.ebaytools.kernel.entity;
 
 import com.ebaytools.util.FormatterText;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
-public class Item {
+public class Item implements Comparable<Item>, Serializable {
     private Long id;
     private String ebayItemId;
     private Long productId;
     private Calendar createDate;
-    private List<ItemProperties> properties;
+    private Set<ItemProperties> properties;
 
     public Long getId() {
         return id;
@@ -44,11 +46,11 @@ public class Item {
         this.createDate = createDate;
     }
 
-    public List<ItemProperties> getProperties() {
+    public Set<ItemProperties> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<ItemProperties> properties) {
+    public void setProperties(Set<ItemProperties> properties) {
         this.properties = properties;
     }
 
@@ -58,8 +60,7 @@ public class Item {
                 "id=" + id +
                 ", ebayItemId='" + ebayItemId + '\'' +
                 ", productId=" + productId +
-                ", createDate=" + FormatterText.dateformatter.format(createDate) +
-                ", properties=" + properties +
+                ", createDate=" + FormatterText.dateformatter.format(createDate.getTime()) +
                 '}';
     }
 
@@ -87,5 +88,10 @@ public class Item {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (properties != null ? properties.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return this.ebayItemId.compareTo(o.ebayItemId);
     }
 }

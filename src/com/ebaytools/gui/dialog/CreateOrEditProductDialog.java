@@ -1,6 +1,7 @@
 package com.ebaytools.gui.dialog;
 
 import com.ebaytools.gui.linteners.SaveProductListener;
+import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.GraphPaperLayout;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Product;
@@ -14,9 +15,11 @@ import java.awt.event.WindowEvent;
 public class CreateOrEditProductDialog extends JDialog {
     private JDialog dialog;
     private Long productId;
+    private Data data;
 
-    public CreateOrEditProductDialog(JFrame main, Long productId) {
+    public CreateOrEditProductDialog(JFrame main, Long productId, Data data) {
         dialog = this;
+        this.data = data;
         this.productId = productId;
         dialog.setTitle(productId == null ? "Create product" : "Edit product");
         dialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -50,7 +53,7 @@ public class CreateOrEditProductDialog extends JDialog {
             referenceId.setText(product.getReferenceId());
             name.setText(product.getName());
         }
-        save.addActionListener(new SaveProductListener(dialog, productId, referenceId, name));
+        save.addActionListener(new SaveProductListener(dialog, productId, referenceId, name, data));
         return panel;
     }
 }

@@ -5,6 +5,7 @@ import com.ebaytools.gui.linteners.OpenProductIDDialogListener;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
+import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
 import com.ebaytools.util.ProductDataImpl;
 import com.ebaytools.util.SearchUtil;
@@ -31,7 +32,8 @@ public class ProductPanel extends JPanel {
         java.util.List<Product> productList = ManagerDAO.getInstance().getProductDAO().getAllProduct();
         ProductDataImpl productData = new ProductDataImpl(productList);
         TableModelCheckBox productModelTable = new TableModelCheckBox(productData);
-        JTable tableProduct = TableCheckBox.buildTable(productModelTable);
+        JTable tableProduct =  new JTable(productModelTable);
+        TableCheckBox.buildTable(tableProduct);
         panel.add(new JScrollPane(tableProduct), new Rectangle(0, 0, 12, 16));
         JButton createProduct = new JButton("Create");
         JButton editProduct = new JButton("Edit");
@@ -45,10 +47,12 @@ public class ProductPanel extends JPanel {
         panel.add(refreshTable, new Rectangle(12, 3, 4, 1));
         panel.add(searchItem, new Rectangle(12, 4, 4, 1));
         panel.add(showItems, new Rectangle(12, 5, 4, 1));
-        createProduct.addActionListener(new OpenProductIDDialogListener(main));
-        editProduct.addActionListener(new UpdateProductListenter(main, productModelTable));
+        RefreshTableListenter refresAction = new RefreshTableListenter(tableProduct, productModelTable);
+        data.setRefresAction(refresAction);
+        createProduct.addActionListener(new OpenProductIDDialogListener(main, data));
+        editProduct.addActionListener(new UpdateProductListenter(main, productModelTable, data));
         deleteProduct.addActionListener(new DeleteProductListenter(main, productModelTable));
-        refreshTable.addActionListener(new RefreshTableListenter(tableProduct));
+        refreshTable.addActionListener(refresAction);
         searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
     }
@@ -72,33 +76,38 @@ public class ProductPanel extends JPanel {
                     ManagerDAO.getInstance().getProductDAO().delete((Long) object[1]);
                 }
             }
+            data.getRefreshAction().actionPerformed(e);
         }
     }
 
     private class RefreshTableListenter implements ActionListener {
         private JTable tableProduct;
+        private TableModelCheckBox modelCheckBox;
 
-        private RefreshTableListenter(JTable tableProduct) {
+        private RefreshTableListenter(JTable tableProduct, TableModelCheckBox productModelTable) {
             this.tableProduct = tableProduct;
+            this.modelCheckBox = productModelTable;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             List<Product> productList = ManagerDAO.getInstance().getProductDAO().getAllProduct();
             ProductDataImpl productData = new ProductDataImpl(productList);
-            tableProduct.setModel(new TableModelCheckBox(productData));
+            modelCheckBox.setIDate(productData);
+            TableCheckBox.buildTable(tableProduct);
             tableProduct.updateUI();
-            TableModelCheckBox.resizeColumnsByName(tableProduct);
         }
     }
 
     private class UpdateProductListenter implements ActionListener {
         private TableModelCheckBox productModelTable;
         private JFrame main;
+        private Data data;
 
-        private UpdateProductListenter(JFrame main, TableModelCheckBox productModelTable) {
+        private UpdateProductListenter(JFrame main, TableModelCheckBox productModelTable, Data data) {
             this.main = main;
             this.productModelTable = productModelTable;
+            this.data = data;
         }
 
         @Override
@@ -107,7 +116,7 @@ public class ProductPanel extends JPanel {
             if (selectData.isEmpty() || selectData.size() > 1) {
                 JOptionPane.showMessageDialog(main, "You must select only one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                CreateOrEditProductDialog productDialog = new CreateOrEditProductDialog(main, (Long) selectData.get(0)[1]);
+                CreateOrEditProductDialog productDialog = new CreateOrEditProductDialog(main, (Long) selectData.get(0)[1], data);
                 productDialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             }
         }
@@ -157,7 +166,11 @@ public class ProductPanel extends JPanel {
                 for (Object[] objects : selectData) {
                     sb.append("Reference ID : " + objects[2] + "\n");
                     for (Item item : ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1])) {
-                        sb.append("Item : " + item + "\n");
+                        sb.append(item).append("\n");
+                        for (ItemProperties properties : item.getProperties()) {
+                            sb.append(properties).append("\n");
+                        }
+                        sb.append("\n");
                     }
                     data.getText().setText(data.getText().getText() + sb.toString());
                 }

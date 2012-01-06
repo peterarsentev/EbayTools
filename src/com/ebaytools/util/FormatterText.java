@@ -218,7 +218,18 @@ public class FormatterText {
         sb.append(duration.getDays()).append(" days, ").append(duration.getHours()).append(" hours, ").append(duration.getMinutes()).append(" minutes, ").append(duration.getSeconds()).append(" seconds.");
         return sb.toString();
     }
-    private static String buildPrice(Amount amount) {
+    
+    public static String addAmount(Amount shipping, Amount price) {
+        if (shipping != null && price != null) {
+            String value = String.valueOf(shipping.getValue() + price.getValue());
+            String rate = shipping.getCurrencyId();
+            return value + " " + rate;
+        } else {
+            return null;
+        }        
+    }
+
+    public static String buildPrice(Amount amount) {
         if (amount != null) {
             String value = String.valueOf(amount.getValue());
             String rate = amount.getCurrencyId();

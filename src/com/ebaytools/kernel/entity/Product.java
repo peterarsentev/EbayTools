@@ -1,11 +1,21 @@
 package com.ebaytools.kernel.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class Product implements Serializable {
     private Long id;
     private String referenceId;
     private String name;
+    private Set<Item> items;
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
 
     public Long getId() {
         return id;

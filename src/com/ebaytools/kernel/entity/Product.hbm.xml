@@ -13,5 +13,9 @@
 
         <property name="referenceId" column="referenceId" type="java.lang.String"/>
         <property name="name" column="name" type="java.lang.String"/>
+        <set name="items" lazy="true" inverse="true" cascade="all">
+            <key column="productId" not-null="true"/>
+            <one-to-many class="com.ebaytools.kernel.entity.Item"/>
+        </set>
   </class>
 </hibernate-mapping>

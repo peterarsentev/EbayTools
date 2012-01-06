@@ -35,6 +35,11 @@ public class TableModelCheckBox extends AbstractTableModel {
         this.nameColumn = iData.getNameColumn();
     }
 
+    public void setIDate(IData iData) {
+        this.data = iData.getData();
+        this.nameColumn = iData.getNameColumn();
+    }
+
     public int getRowCount() {
         return data == null ? 0 : data.size();
     }

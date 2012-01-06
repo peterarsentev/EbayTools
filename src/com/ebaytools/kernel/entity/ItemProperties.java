@@ -1,6 +1,8 @@
 package com.ebaytools.kernel.entity;
 
-public class ItemProperties {
+import java.io.Serializable;
+
+public class ItemProperties implements Comparable<ItemProperties>, Serializable {
     private Long id;
     private Long itemId;
     private String name;
@@ -39,6 +41,16 @@ public class ItemProperties {
     }
 
     @Override
+    public String toString() {
+        return "ItemProperties{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", id=" + id +
+                ", itemId=" + itemId +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -60,5 +72,11 @@ public class ItemProperties {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
+    }
+
+
+    @Override
+    public int compareTo(ItemProperties o) {
+        return this.name.compareTo(o.name);
     }
 }

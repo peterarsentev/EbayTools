@@ -3,24 +3,31 @@ package com.ebaytools.kernel.dao;
 import com.ebaytools.kernel.entity.ItemProperties;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import java.util.List;
+
 public class ItemPropetiesDAOImpl extends HibernateDaoSupport implements ItemPropetiesDAO {
     @Override
     public Long create(ItemProperties itemProperties) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return (Long) getHibernateTemplate().save(itemProperties);
+    }
+
+    @Override
+    public List<ItemProperties> getItemPropetiesForItemId(Long itemId) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void update(ItemProperties itemProperties) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void delete(Long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ItemProperties find(Long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 }

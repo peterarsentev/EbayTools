@@ -7,20 +7,20 @@ import com.ebaytools.kernel.entity.Product;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class SaveProductListener implements ActionListener {
     private JDialog dialog;
     private JTextField referenceId;
     private JTextField name;
     private Long productId;
+    private Data data;
 
-    public SaveProductListener(JDialog dialog, Long productId, JTextField referenceId, JTextField name) {
+    public SaveProductListener(JDialog dialog, Long productId, JTextField referenceId, JTextField name, Data data) {
         this.name = name;
         this.referenceId = referenceId;
         this.dialog = dialog;
         this.productId = productId;
+        this.data = data;
     }
 
     @Override
@@ -34,6 +34,7 @@ public class SaveProductListener implements ActionListener {
             product.setId(productId);
             ManagerDAO.getInstance().getProductDAO().update(product);
         }
+        data.getRefreshAction().actionPerformed(null);
         dialog.setVisible(false);
         dialog.dispose();
     }

@@ -13,21 +13,26 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public void update(Item item) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void delete(Long id) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Item find(Long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Item> getItemsByProductId(Long productId) {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=?", productId);
+    }
+
+    @Override
+    public List<String> getItemEbayIdByProductId(Long productId) {
+        return getHibernateTemplate().find("select item.ebayItemId from com.ebaytools.kernel.entity.Item as item where item.productId=?", productId);
     }
 }

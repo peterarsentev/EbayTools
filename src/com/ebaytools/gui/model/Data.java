@@ -5,6 +5,7 @@ import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.util.Pair;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class Data {
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox goldenSearch;
     private JTextField daysLeft;
+    private ActionListener refresAction;
 
     public JTextField getNumbersItem() {
         return numbersItem;
@@ -143,5 +145,13 @@ public class Data {
         result = 31 * result + (loadId != null ? loadId.hashCode() : 0);
         result = 31 * result + (saveData != null ? saveData.hashCode() : 0);
         return result;
+    }
+
+    public ActionListener getRefreshAction() {
+        return refresAction;
+    }
+
+    public void setRefresAction(ActionListener refresAction) {
+        this.refresAction = refresAction;
     }
 }

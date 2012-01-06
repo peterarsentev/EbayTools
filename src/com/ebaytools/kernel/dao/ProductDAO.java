@@ -7,4 +7,5 @@ import java.util.List;
 public interface ProductDAO extends CrUD<Product> {
     public List<Product> getAllProduct();
     public List<Object[]> getProducts();
+    public Product findProductByReferenceId(String referenceId);
 }
