@@ -46,5 +46,7 @@
         <delete dir="${temp.dir}"/>
     </target>
 
-
+    <target name="run">
+        <java jar="${project.dir}/ebaytools.jar" fork="true"/>
+    </target>
 </project>
