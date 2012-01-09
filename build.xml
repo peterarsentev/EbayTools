@@ -50,4 +50,15 @@
     <target name="run">
         <java jar="${project.dir}/ebaytools.jar" fork="true"/>
     </target>
+
+    <target name="hsql">
+        <java jar="${lib.dir}/hsqldb.jar" fork="true">
+            <arg value="-user"/>
+            <arg value="sa"/>
+            <arg value="-url"/>
+            <arg value="jdbc:hsqldb:database/db"/>
+            <arg value="-script"/>
+            <arg value="sql/sql.sql"/>
+        </java>
+    </target>
 </project>

@@ -69,7 +69,11 @@ public class LoadFileListener implements ActionListener {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
             while ((strLine = br.readLine()) != null)   {
-                list.add(strLine);
+                if (strLine.contains(";")) {
+                    list.add(strLine.split(";")[0]);
+                } else {
+                    list.add(strLine);
+                }
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

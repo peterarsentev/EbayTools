@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import com.ebaytools.gui.dialog.BarDialog;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.SearchPanel;
 import com.ebaytools.util.*;
@@ -20,8 +21,9 @@ public class ItemsSearchListener implements ActionListener {
     private JCheckBox golderSearch;
     private Data data;
     private JTextField daysLeft;
+    private JFrame main;
 
-	public ItemsSearchListener(SearchPanel panel) {
+    public ItemsSearchListener(SearchPanel panel) {
 		this.text = panel.getText();
 		this.product = panel.getReferenceId();
         this.condition = panel.getConditionsField();
@@ -30,6 +32,7 @@ public class ItemsSearchListener implements ActionListener {
         this.golderSearch = panel.getGoldenSearch();
         this.data = panel.getData();
         this.daysLeft = panel.getDaysLeft();
+        this.main = panel.getMain();
 	}
 
 	@Override

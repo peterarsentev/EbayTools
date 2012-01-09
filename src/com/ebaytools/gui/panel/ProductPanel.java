@@ -7,10 +7,7 @@ import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
-import com.ebaytools.util.ProductDataImpl;
-import com.ebaytools.util.SearchUtil;
-import com.ebaytools.util.TableCheckBox;
-import com.ebaytools.util.TableModelCheckBox;
+import com.ebaytools.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +67,7 @@ public class ProductPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             List<Object[]> selectData = productModelTable.getDataSelect();
             if (selectData.isEmpty()) {
-                JOptionPane.showMessageDialog(main, "You must select at last one product", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 for (Object[] object : selectData) {
                     ManagerDAO.getInstance().getProductDAO().delete((Long) object[1]);
@@ -135,7 +132,7 @@ public class ProductPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             List<Object[]> selectData = productModelTable.getDataSelect();
             if (selectData.isEmpty()) {
-                JOptionPane.showMessageDialog(main, "You must select at last one product", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 List<String> loadId = new ArrayList<String>();
                 for (Object[] object : selectData) {
@@ -160,18 +157,26 @@ public class ProductPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             List<Object[]> selectData = productModelTable.getDataSelect();
             if (selectData.isEmpty()) {
-                JOptionPane.showMessageDialog(main, "You must select at last one product", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (Object[] objects : selectData) {
                     sb.append("Reference ID : " + objects[2] + "\n");
-                    for (Item item : ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1])) {
-                        sb.append(item).append("\n");
-                        for (ItemProperties properties : item.getProperties()) {
-                            sb.append(properties).append("\n");
+                    List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]); 
+                    for (Item item : items) {
+                        sb.append("itemID : ").append(item.getEbayItemId()).append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
+                        List<ItemProperties> list = new ArrayList<ItemProperties>(item.getProperties());
+                        Collections.sort(list);
+                        for (ItemProperties properties : list) {
+                            String value = properties.getValue();
+                            if (Fields.AUCTION_CLOSE_TIME.getKey().equals(properties.getName()) && TextUtil.isNotNull(value)) {
+                                value = FormatterText.dateformatter.format(new Date(Long.parseLong(value)));
+                            } 
+                            sb.append(properties.getName()).append(" : ").append(value).append("\n");
                         }
                         sb.append("\n");
                     }
+                    sb.append("Total items : ").append(items.size()).append("\n");
                     data.getText().setText(data.getText().getText() + sb.toString());
                 }
             }

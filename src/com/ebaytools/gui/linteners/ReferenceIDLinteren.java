@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebaytools.gui.panel.SearchPanel;
 import com.ebaytools.util.*;
 
@@ -20,7 +21,8 @@ public class ReferenceIDLinteren implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			String referenceID = SearchUtil.getInstance().getProductByItemNumber(field.getText()).getProductListingDetails().getProductReferenceID();
+            ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(field.getText());  
+			String referenceID = itemType.getProductListingDetails().getProductReferenceID();
 			text.setText(text.getText() + "Reference ID : " + referenceID + "\n");
 		} catch (Exception e) {
 			e.printStackTrace();

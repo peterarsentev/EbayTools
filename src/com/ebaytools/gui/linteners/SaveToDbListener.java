@@ -6,6 +6,7 @@ import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
+import com.ebaytools.util.Fields;
 import com.ebaytools.util.FormatterText;
 import com.ebaytools.util.Pair;
 
@@ -41,28 +42,31 @@ public class SaveToDbListener implements ActionListener {
                 }
                 List<String> itemIds = ManagerDAO.getInstance().getItemDAO().getItemEbayIdByProductId(productId);
                 Calendar createTime = Calendar.getInstance();
-                for (SearchItem searchItem : entry.getValue()) {
-                    if (!itemIds.contains(searchItem.getItemId())) {
-                        Item item = new Item();
-                        item.setProductId(productId);
-                        item.setCreateDate(createTime);
-                        item.setEbayItemId(searchItem.getItemId());
-                        Long itemId = ManagerDAO.getInstance().getItemDAO().create(item);
-                        buildItemProperties(itemId, "auction closing time", String.valueOf(searchItem.getListingInfo().getEndTime().getTime().getTime()));
-                        buildItemProperties(itemId, "auction price", FormatterText.buildPrice(searchItem.getSellingStatus().getCurrentPrice()));
-                        buildItemProperties(itemId, "is golden", String.valueOf(data.getGoldenSearch().isSelected()));
-                        buildItemProperties(itemId, "shipping cost", FormatterText.buildPrice(searchItem.getShippingInfo().getShippingServiceCost()));
-                        buildItemProperties(itemId, "total cost", FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()));
+                if (entry.getValue() != null) {
+                    for (SearchItem searchItem : entry.getValue()) {
+                        if (!itemIds.contains(searchItem.getItemId())) {
+                            Item item = new Item();
+                            item.setProductId(productId);
+                            item.setCreateDate(createTime);
+                            item.setEbayItemId(searchItem.getItemId());
+                            Long itemId = ManagerDAO.getInstance().getItemDAO().create(item);
+                            buildItemProperties(itemId, Fields.AUCTION_CLOSE_TIME, String.valueOf(searchItem.getListingInfo().getEndTime().getTime().getTime()));
+                            buildItemProperties(itemId, Fields.AUCTION_PRICE, FormatterText.buildPrice(searchItem.getSellingStatus().getCurrentPrice()));
+                            buildItemProperties(itemId, Fields.IS_GOLDEN, String.valueOf(data.getGoldenSearch().isSelected()));
+                            buildItemProperties(itemId, Fields.SHIPPING_COST, FormatterText.buildPrice(searchItem.getShippingInfo().getShippingServiceCost()));
+                            buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()));
+                        }
                     }
                 }
             }
+            data.getRefreshAction().actionPerformed(null);
         }
     }
 
-    public static Long buildItemProperties(Long itemId, String name, String value) {
+    public static Long buildItemProperties(Long itemId, Fields name, String value) {
         ItemProperties itemProperties = new ItemProperties();
         itemProperties.setItemId(itemId);
-        itemProperties.setName(name);
+        itemProperties.setName(name.getKey());
         itemProperties.setValue(value);
         return ManagerDAO.getInstance().getItemPropetiesDAO().create(itemProperties);
     }

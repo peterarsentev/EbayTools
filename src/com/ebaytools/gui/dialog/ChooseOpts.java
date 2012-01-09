@@ -68,7 +68,7 @@ public class ChooseOpts extends JDialog {
             }
             ++column;
         }
-        JButton ok = new JButton("Ok");
+        JButton ok = new JButton("Save as default");
         panel.add(ok, new Rectangle(0, 31, 10, 1));
         ok.addActionListener(new CollectChooseOptsListener(dialog, data, boxList));
         return panel;

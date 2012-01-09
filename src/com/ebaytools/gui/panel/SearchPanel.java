@@ -87,7 +87,7 @@ public class SearchPanel extends JPanel {
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
         panel.add(saveResultToDb, new Rectangle(9, 26, 5, 1));
 
-        // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox  
+        // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
         showResultFilter.addActionListener(new ItemsSearchListener(panel));
         clear.addActionListener(new ClearListener(panel));
