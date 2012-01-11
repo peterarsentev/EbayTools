@@ -120,11 +120,17 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                             for (ItemProperties prs : item.getProperties()) {
                                 if (Fields.AUCTION_PRICE.getKey().equals(prs.getName())) {
                                     prs.setValue(itemType.getSellingStatus().getCurrentPrice().getValue() + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
+                                    session.update(prs);
                                 }
                                 if (Fields.AUCTION_STATUS.getKey().equals(prs.getName())) {
                                     prs.setValue(itemType.getSellingStatus().getListingStatus().name());
+                                    session.update(prs);
                                 }
-                                session.update(prs);
+                                if (Fields.TOTAL_COST.getKey().equals(prs.getName())) {
+                                    double cost = itemType.getSellingStatus().getCurrentPrice().getValue() + itemType.getShippingDetails().getDefaultShippingCost().getValue();
+                                    prs.setValue(cost + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
+                                    session.update(prs);
+                                }
                             }
                         } else {
                             session.delete(itemIds.get(id));
