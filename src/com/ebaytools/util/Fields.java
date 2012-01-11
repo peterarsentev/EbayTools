@@ -5,7 +5,8 @@ public enum Fields {
     AUCTION_PRICE("auction_price", "auction price"),
     IS_GOLDEN("is_golden", "is golden"),
     SHIPPING_COST("shipping_cost", "shipping cost"),
-    TOTAL_COST("total_cost", "total cost");
+    TOTAL_COST("total_cost", "total cost"),
+    AUCTION_STATUS("auction_status", "auction status");
 
     private String key;
     private String name;

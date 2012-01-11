@@ -35,12 +35,11 @@ public class SearchPanel extends JPanel {
         JButton optsButton = new JButton("Choose opts.");
         JButton loadReferenceIDList = new JButton("Load");
         JButton searchUPC = new JButton("RefID to UPC");
-        JButton saveResultToDb = new JButton("Save result to DB");
         this.numbersItem = new JTextField();
         this.referenceId = new JTextField();
         referenceId.setText("77826847");
         this.conditionsField = new JTextField();
-        conditionsField.setText("Used");
+        conditionsField.setText("3000;7000");
         this.listTypeField = new JTextField();
         listTypeField.setText("Auction");
         this.text = new JTextArea();
@@ -85,7 +84,6 @@ public class SearchPanel extends JPanel {
         panel.add(optsButton, new Rectangle(4, 26, 4, 1));
         panel.add(new JLabel("Days Left"), new Rectangle(11, 3, 4, 1));
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
-        panel.add(saveResultToDb, new Rectangle(9, 26, 5, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
@@ -95,7 +93,6 @@ public class SearchPanel extends JPanel {
         loadReferenceIDList.addActionListener(new LoadFileListener(panel));
         optsButton.addActionListener(new ChooseOptsListener(panel));
         searchUPC.addActionListener(new UPCSearchListener(panel));
-        saveResultToDb.addActionListener(new SaveToDbListener(main, data));
     }
 
     public JFrame getMain() {

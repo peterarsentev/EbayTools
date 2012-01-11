@@ -140,6 +140,7 @@ public class ProductPanel extends JPanel {
                 }
                 data.setLoadId(loadId);
                 data.getText().setText(data.getText().getText() + SearchUtil.buildSearchByMultiIDs(data));
+                ManagerDAO.getInstance().getProductDAO().create(data.getSaveData(), data.getGoldenSearch().isSelected());
             }
         }
     }

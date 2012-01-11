@@ -1,41 +1,28 @@
 package com.ebaytools.gui.linteners;
 
-import com.ebay.services.finding.SearchItem;
-import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.SearchPanel;
-import com.ebaytools.util.FormatterText;
-import com.ebaytools.util.Pair;
+import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.util.SearchUtil;
-import com.ebaytools.util.TextUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadFileListener implements ActionListener {
     private JFileChooser fc;
     private JFrame main;
     private JTextArea text;
-    private JTextField condition;
-    private JTextField listingType;
-    private JComboBox<Pair<SortOrderType>> sortedTypeField;
-    private JCheckBox golderSearch;
     private Data dataModel;
-    private JTextField daysLeft;
 
     public LoadFileListener(SearchPanel panel) {
         this.fc = new JFileChooser();
-        this.condition = panel.getConditionsField();
-        this.listingType = panel.getListTypeField();
-        this.sortedTypeField = panel.getSortedTypeField();
         this.main = panel.getMain();
         this.text = panel.getText();
-        this.golderSearch = panel.getGoldenSearch();
         this.dataModel = panel.getData();
-        this.daysLeft = panel.getDaysLeft();
     }
 
     @Override
@@ -48,6 +35,7 @@ public class LoadFileListener implements ActionListener {
                 List<String> data = readFile(file);
                 dataModel.setLoadId(data);
                 msg = SearchUtil.buildSearchByMultiIDs(dataModel);
+                ManagerDAO.getInstance().getProductDAO().create(dataModel.getSaveData(), dataModel.getGoldenSearch().isSelected());
             } else {
                 msg = "Error this file does not exist file : " + file.getAbsolutePath() + "\n";
             }

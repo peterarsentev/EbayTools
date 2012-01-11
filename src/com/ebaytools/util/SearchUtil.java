@@ -97,10 +97,12 @@ public class SearchUtil {
         }
     }
 
-    private static ItemFilter buildFulter(ItemFilterType type, String value) {
+    private static ItemFilter buildFulter(ItemFilterType type, String... values) {
         Filter filter = new Filter();
         filter.setName(type);
-        filter.addValue(value);
+        for (String value : values) {
+            filter.addValue(value);
+        }
         return filter;
     }
 
@@ -111,7 +113,11 @@ public class SearchUtil {
         productRequest.setPaginationInput(pi);
         productRequest.setSortOrder(order);
         if (TextUtil.isNotNull(condition)) {
-            productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
+            if (condition.contains(";")) {
+                productRequest.add(buildFulter(ItemFilterType.CONDITION, condition.split(";")));
+            } else {
+                productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
+            }
         }
         if (TextUtil.isNotNull(listingType)) {
             productRequest.add(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
@@ -177,7 +183,7 @@ public class SearchUtil {
         }
         return incorrectDuration;
     }
-    
+
     public static String buildSearchByMultiIDs(Data dataModel) {
         StringBuilder sb = new StringBuilder();
         sb.append("The file is loaded and to be made search.\n");

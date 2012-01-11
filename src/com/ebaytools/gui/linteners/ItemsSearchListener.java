@@ -8,6 +8,7 @@ import javax.swing.*;
 import com.ebaytools.gui.dialog.BarDialog;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.SearchPanel;
+import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.util.*;
 import com.ebay.services.finding.*;
 import java.util.*;
@@ -54,6 +55,7 @@ public class ItemsSearchListener implements ActionListener {
             Map<Pair, List<SearchItem>> saveData = new LinkedHashMap<Pair, List<SearchItem>>();
             saveData.put(new Pair<String>(product.getText(), "ReferenceID"), items);
             data.setSaveData(saveData);
+            ManagerDAO.getInstance().getProductDAO().create(data.getSaveData(), data.getGoldenSearch().isSelected());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
