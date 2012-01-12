@@ -127,7 +127,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                                     session.update(prs);
                                 }
                                 if (Fields.TOTAL_COST.getKey().equals(prs.getName())) {
-                                    double cost = itemType.getSellingStatus().getCurrentPrice().getValue() + itemType.getShippingDetails().getDefaultShippingCost().getValue();
+                                    double cost = itemType.getSellingStatus().getCurrentPrice().getValue(); //TODO don't count shipping cost. need to add it.
                                     prs.setValue(cost + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
                                     session.update(prs);
                                 }
