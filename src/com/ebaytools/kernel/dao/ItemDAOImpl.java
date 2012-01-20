@@ -2,7 +2,6 @@ package com.ebaytools.kernel.dao;
 
 import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.Item;
-import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.util.Fields;
 import com.ebaytools.util.FilterDataImpl;
 import com.ebaytools.util.TextUtil;
@@ -35,6 +34,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     public List<Item> getItemsByProductId(Long productId) {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=?", productId);
     }
+    
 
     @Override
     public Map<String, Item> getItemEbayIdByProductId(Long productId) {
@@ -86,26 +86,25 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             }
         }
 
-        List<Object[]> objects = getHibernateTemplate().find(query.toString(), params.toArray(new Object[params.size()]));
-        List<Item> items = new ArrayList<Item>(); 
-        Boolean golden = false;
-        if (TextUtil.isNotNull(conditions.get(Fields.IS_GOLDEN)) && !objects.isEmpty()) {
-            String[] values = conditions.get(Fields.IS_GOLDEN).split(";");
+        if (TextUtil.isNotNull(conditions.get(Fields.IS_GOLDEN_FILTER_FIELD))) {
+            String[] values = conditions.get(Fields.IS_GOLDEN_FILTER_FIELD).split(";");
             if (values.length > 0) {
                 String value = values[0];
-                golden = Boolean.valueOf(value);
-            }
-        } 
-        for (Object[] object : objects) {
-            Item item = (Item) object[0];
-            for (ItemProperties propeties : item.getProperties()) { 
-                if (Fields.IS_GOLDEN.getKey().equals(propeties.getName())) {
-                    if (Boolean.valueOf(propeties.getName()).equals(golden)) {
-                        items.add(item);
-                    }
-                }
+                query.append(" and item.golden=?");
+                params.add(Boolean.valueOf(value));
             }
         }
+
+        List<Object[]> objectArray = getHibernateTemplate().find(query.toString(), params.toArray(new Object[params.size()]));
+        List<Item> items = new ArrayList<Item>();
+        for (Object[] array : objectArray) {
+            items.add((Item) array[0]);
+        }
         return items;
+    }
+
+    @Override
+    public List<Item> getAllItems() {
+        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item");
     }
 }

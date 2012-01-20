@@ -11,6 +11,9 @@ create table item (
   createDate TIMESTAMP NOT NULL,
   closeDate TIMESTAMP,
   productId bigint not null,
+  totalBid integer not null,
+  golden boolean not null,
+  closeAuction boolean,
   CONSTRAINT iId PRIMARY KEY (id),
   Foreign Key (productId) references product(id)
 );
@@ -40,6 +43,7 @@ create table filter (
 create table filterconditions (
   id bigint NOT NULL,
   name VARCHAR(200),
+  type VARCHAR(200),
   type VARCHAR(200),
   filterId bigint not null,
   CONSTRAINT fcId PRIMARY KEY (id),

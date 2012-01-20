@@ -11,4 +11,6 @@ public interface ItemDAO extends CrUD<Item> {
     public Map<String, Item> getItemEbayIdByProductId(Long productId);
 
     public List<Item> getProductByFilter(Filter filter);
+
+    public List<Item> getAllItems();
 }

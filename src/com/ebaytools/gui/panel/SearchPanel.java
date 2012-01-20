@@ -53,6 +53,7 @@ public class SearchPanel extends JPanel {
         this.daysLeft = new JTextField();
         SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
         JButton buttonFilter = new JButton("Filter : " + (setting != null ? ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())).getName() : "-"));
+        JButton averagePrice = new JButton("Average price");
 
         data.setNumbersItem(numbersItem);
         data.setReferenceId(referenceId);
@@ -90,6 +91,7 @@ public class SearchPanel extends JPanel {
         panel.add(new JLabel("Days Left"), new Rectangle(11, 3, 4, 1));
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
         panel.add(buttonFilter, new Rectangle(11, 4, 6, 1));
+        panel.add(averagePrice, new Rectangle(18, 0, 4, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
@@ -100,6 +102,7 @@ public class SearchPanel extends JPanel {
         optsButton.addActionListener(new ChooseOptsListener(panel));
         searchUPC.addActionListener(new UPCSearchListener(panel));
         buttonFilter.addActionListener(new FilterActionListener(main, data));
+        averagePrice.addActionListener(new AveragePriceActionListener(main, data));
     }
 
     public JFrame getMain() {

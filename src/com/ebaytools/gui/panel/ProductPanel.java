@@ -167,14 +167,15 @@ public class ProductPanel extends JPanel {
                     sb.append("Reference ID : " + objects[2] + "\n");
                     List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]); 
                     for (Item item : items) {
-                        sb.append("itemID : ").append(item.getEbayItemId()).append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
+                        sb.append("itemID : ").append(item.getEbayItemId()).append("\n");
+                                //.append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
+                        sb.append("count_bid : ").append(item.getTotalBid()).append("\n");
+                        sb.append("auction_close_date : ").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
+                        sb.append("is_golden : ").append(item.getGolden()).append("\n");
                         List<ItemProperties> list = new ArrayList<ItemProperties>(item.getProperties());
                         Collections.sort(list);
                         for (ItemProperties properties : list) {
                             String value = properties.getValue();
-                            if (Fields.AUCTION_CLOSE_TIME.getKey().equals(properties.getName()) && TextUtil.isNotNull(value)) {
-                                value = FormatterText.dateformatter.format(new Date(Long.parseLong(value)));
-                            } 
                             if (TextUtil.isNotNull(properties.getType())) {
                                 value += " " + properties.getType();
                             }

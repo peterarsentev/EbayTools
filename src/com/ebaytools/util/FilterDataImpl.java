@@ -24,7 +24,7 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
             objects[2] = filter.getName();
             Map<Fields, String> conditionsMap = buildConditions(filter.getConditions());
             objects[3]  = conditionsMap.get(Fields.CONDITIONS);
-            objects[4]  = conditionsMap.get(Fields.IS_GOLDEN);
+            objects[4]  = conditionsMap.get(Fields.IS_GOLDEN_FILTER_FIELD);
             objects[5]  = conditionsMap.get(Fields.TIME_OF_DAY);
             filterFields.add(objects);
         }
@@ -37,7 +37,7 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
         if (conditionses != null) {
             for (FilterConditions conditions : conditionses) {
                 fullingData(conditions, Fields.CONDITIONS, conditionMap);
-                fullingData(conditions, Fields.IS_GOLDEN, conditionMap);
+                fullingData(conditions, Fields.IS_GOLDEN_FILTER_FIELD, conditionMap);
                 fullingData(conditions, Fields.TIME_OF_DAY, conditionMap);
             }
         }

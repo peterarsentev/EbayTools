@@ -84,19 +84,21 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         item.setCreateDate(createTime);
                         item.setCloseDate(searchItem.getListingInfo().getEndTime());
                         item.setEbayItemId(searchItem.getItemId());
+                        Integer totalBid = searchItem.getSellingStatus().getBidCount();
+                        item.setTotalBid(totalBid != null ? totalBid : 0);
+                        boolean closeAuction = "COMPLETED".equals(searchItem.getSellingStatus().getSellingState());
+                        item.setCloseAuction(closeAuction);
+                        item.setGolden(isGolden);
                         Long itemId = (Long) session.save(item);
-                        if ("COMPLETED".equals(searchItem.getSellingStatus().getSellingState())) {
+                        if (closeAuction) {
                             session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, FormatterText.getPrice(searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getSellingStatus().getCurrentPrice())));
                         } else {
                             session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, null, null));
                         }
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_CLOSE_TIME, String.valueOf(searchItem.getListingInfo().getEndTime().getTime().getTime()), null));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.IS_GOLDEN, String.valueOf(isGolden), null));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.SHIPPING_COST, FormatterText.getPrice(searchItem.getShippingInfo().getShippingServiceCost()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState(), null));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.CONDITIONS, String.valueOf(searchItem.getCondition().getConditionId()), null));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_BIDS, String.valueOf(searchItem.getSellingStatus().getBidCount()), null));
                     }
                     useIds.add(searchItem.getItemId());
                 }
@@ -137,6 +139,8 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                             float cost = Float.valueOf(shippingValue) + Float.valueOf(priceCost);
                             prTotal.setValue(String.valueOf(cost));
                             session.update(prTotal);
+                            item.setCloseAuction(true);
+                            session.update(item);
                         }
                     } else {
                         session.delete(itemIds.get(id));
@@ -152,12 +156,10 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
         Map<Fields, ItemProperties> map = new LinkedHashMap<Fields, ItemProperties>();
         for (ItemProperties properties : propertiesSet) {
             fullingValue(Fields.AUCTION_PRICE, properties, map);
-            fullingValue(Fields.IS_GOLDEN, properties, map);
             fullingValue(Fields.SHIPPING_COST, properties, map);
             fullingValue(Fields.TOTAL_COST, properties, map);
             fullingValue(Fields.CONDITIONS, properties, map);
             fullingValue(Fields.AUCTION_PRICE, properties, map);
-            fullingValue(Fields.TOTAL_BIDS, properties, map);
         }
         return map;
     }

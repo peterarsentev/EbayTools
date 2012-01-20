@@ -14,6 +14,33 @@ public class Item implements Comparable<Item>, Serializable {
     private Calendar createDate;
     private Set<ItemProperties> properties;
     private Calendar closeDate;
+    private Integer totalBid;
+    private Boolean golden;
+    private Boolean closeAuction;
+
+    public Boolean getCloseAuction() {
+        return closeAuction;
+    }
+
+    public void setCloseAuction(Boolean closeAuction) {
+        this.closeAuction = closeAuction;
+    }
+
+    public Boolean getGolden() {
+        return golden;
+    }
+
+    public void setGolden(Boolean golden) {
+        this.golden = golden;
+    }
+
+    public Integer getTotalBid() {
+        return totalBid;
+    }
+
+    public void setTotalBid(Integer totalBid) {
+        this.totalBid = totalBid;
+    }
 
     public Calendar getCloseDate() {
         return closeDate;

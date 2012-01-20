@@ -37,7 +37,7 @@ public class SaveFilterListener implements ActionListener {
         FilterValue goldenValue = new FilterValue();
         goldenValue.setValue(String.valueOf(golden.isSelected()));
         FilterConditions goldenConditions = new FilterConditions();
-        goldenConditions.setName(Fields.IS_GOLDEN.getKey());
+        goldenConditions.setName(Fields.IS_GOLDEN_FILTER_FIELD.getKey());
         goldenConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(goldenValue)));
 
         TreeSet<FilterValue> conditionsValues = new TreeSet<FilterValue>();
