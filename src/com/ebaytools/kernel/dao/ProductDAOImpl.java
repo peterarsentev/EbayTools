@@ -13,10 +13,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
     @Override
@@ -85,14 +82,21 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         Item item = new Item();
                         item.setProductId(productId);
                         item.setCreateDate(createTime);
+                        item.setCloseDate(searchItem.getListingInfo().getEndTime());
                         item.setEbayItemId(searchItem.getItemId());
                         Long itemId = (Long) session.save(item);
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_CLOSE_TIME, String.valueOf(searchItem.getListingInfo().getEndTime().getTime().getTime())));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, FormatterText.buildPrice(searchItem.getSellingStatus().getCurrentPrice())));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.IS_GOLDEN, String.valueOf(isGolden)));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.SHIPPING_COST, FormatterText.buildPrice(searchItem.getShippingInfo().getShippingServiceCost())));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice())));
-                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState()));
+                        if ("COMPLETED".equals(searchItem.getSellingStatus().getSellingState())) {
+                            session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, FormatterText.getPrice(searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getSellingStatus().getCurrentPrice())));
+                        } else {
+                            session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, null, null));
+                        }
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_CLOSE_TIME, String.valueOf(searchItem.getListingInfo().getEndTime().getTime().getTime()), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.IS_GOLDEN, String.valueOf(isGolden), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.SHIPPING_COST, FormatterText.getPrice(searchItem.getShippingInfo().getShippingServiceCost()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState(), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.CONDITIONS, String.valueOf(searchItem.getCondition().getConditionId()), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_BIDS, String.valueOf(searchItem.getSellingStatus().getBidCount()), null));
                     }
                     useIds.add(searchItem.getItemId());
                 }
@@ -117,29 +121,50 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                     if (itemType != null) {
                         if (itemType.getSellingStatus().getListingStatus().name().equals("COMPLETED")) {
                             Item item = itemIds.get(id);
-                            for (ItemProperties prs : item.getProperties()) {
-                                if (Fields.AUCTION_PRICE.getKey().equals(prs.getName())) {
-                                    prs.setValue(itemType.getSellingStatus().getCurrentPrice().getValue() + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
-                                    session.update(prs);
-                                }
-                                if (Fields.AUCTION_STATUS.getKey().equals(prs.getName())) {
-                                    prs.setValue(itemType.getSellingStatus().getListingStatus().name());
-                                    session.update(prs);
-                                }
-                                if (Fields.TOTAL_COST.getKey().equals(prs.getName())) {
-                                    double cost = itemType.getSellingStatus().getCurrentPrice().getValue(); //TODO don't count shipping cost. need to add it.
-                                    prs.setValue(cost + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
-                                    session.update(prs);
-                                }
-                            }
-                        } else {
-                            session.delete(itemIds.get(id));
+                            Map<Fields, ItemProperties> prMap = buildProperties(item.getProperties());
+
+                            ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
+                            prAuction.setValue(itemType.getSellingStatus().getCurrentPrice().getValue() + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
+                            session.update(prAuction);
+
+                            ItemProperties prStatus = prMap.get(Fields.AUCTION_STATUS);
+                            prStatus.setValue(itemType.getSellingStatus().getListingStatus().name());
+                            session.update(prStatus);
+
+                            ItemProperties prTotal = prMap.get(Fields.TOTAL_COST);
+                            String shippingValue = prMap.get(Fields.SHIPPING_COST).getValue();
+                            String priceCost = prMap.get(Fields.AUCTION_PRICE).getValue();
+                            float cost = Float.valueOf(shippingValue) + Float.valueOf(priceCost);
+                            prTotal.setValue(String.valueOf(cost));
+                            session.update(prTotal);
                         }
+                    } else {
+                        session.delete(itemIds.get(id));
                     }
                 }
             }
         }
         tx.commit();
         session.close();
+    }
+    
+    private static Map<Fields, ItemProperties> buildProperties(Set<ItemProperties> propertiesSet) {
+        Map<Fields, ItemProperties> map = new LinkedHashMap<Fields, ItemProperties>();
+        for (ItemProperties properties : propertiesSet) {
+            fullingValue(Fields.AUCTION_PRICE, properties, map);
+            fullingValue(Fields.IS_GOLDEN, properties, map);
+            fullingValue(Fields.SHIPPING_COST, properties, map);
+            fullingValue(Fields.TOTAL_COST, properties, map);
+            fullingValue(Fields.CONDITIONS, properties, map);
+            fullingValue(Fields.AUCTION_PRICE, properties, map);
+            fullingValue(Fields.TOTAL_BIDS, properties, map);
+        }
+        return map;
+    }
+
+    private static void fullingValue(Fields fields, ItemProperties properties, Map<Fields, ItemProperties> map) {
+        if (fields.getKey().equals(properties.getName())) {
+            map.put(fields, properties);
+        }
     }
 }

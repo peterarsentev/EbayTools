@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import com.ebaytools.gui.linteners.*;
 import com.ebaytools.gui.model.Data;
+import com.ebaytools.kernel.dao.ManagerDAO;
+import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.*;
 import com.ebay.services.finding.*;
 
@@ -49,6 +51,8 @@ public class SearchPanel extends JPanel {
         }
         this.goldenSearch = new JCheckBox("Search single item");
         this.daysLeft = new JTextField();
+        SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
+        JButton buttonFilter = new JButton("Filter : " + (setting != null ? ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())).getName() : "-"));
 
         data.setNumbersItem(numbersItem);
         data.setReferenceId(referenceId);
@@ -58,6 +62,7 @@ public class SearchPanel extends JPanel {
         data.setSortedTypeField(sortedTypeField);
         data.setGoldenSearch(goldenSearch);
         data.setDaysLeft(daysLeft);
+        data.setButtonFilter(buttonFilter);
 
         //  In this section we paint own components, We use special layer manager GraphPaperLayout 
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -84,6 +89,7 @@ public class SearchPanel extends JPanel {
         panel.add(optsButton, new Rectangle(4, 26, 4, 1));
         panel.add(new JLabel("Days Left"), new Rectangle(11, 3, 4, 1));
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
+        panel.add(buttonFilter, new Rectangle(11, 4, 6, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
@@ -93,6 +99,7 @@ public class SearchPanel extends JPanel {
         loadReferenceIDList.addActionListener(new LoadFileListener(panel));
         optsButton.addActionListener(new ChooseOptsListener(panel));
         searchUPC.addActionListener(new UPCSearchListener(panel));
+        buttonFilter.addActionListener(new FilterActionListener(main, data));
     }
 
     public JFrame getMain() {

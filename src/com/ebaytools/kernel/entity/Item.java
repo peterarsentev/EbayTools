@@ -13,6 +13,15 @@ public class Item implements Comparable<Item>, Serializable {
     private Long productId;
     private Calendar createDate;
     private Set<ItemProperties> properties;
+    private Calendar closeDate;
+
+    public Calendar getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(Calendar closeDate) {
+        this.closeDate = closeDate;
+    }
 
     public Long getId() {
         return id;

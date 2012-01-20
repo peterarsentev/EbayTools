@@ -24,7 +24,9 @@ public class Data {
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox goldenSearch;
     private JTextField daysLeft;
-    private ActionListener refresAction;
+    private ActionListener refresProductTable;
+    private ActionListener refresFilterTable;
+    private JButton buttonFilter;
 
     public JTextField getNumbersItem() {
         return numbersItem;
@@ -115,11 +117,27 @@ public class Data {
     }
 
     public ActionListener getRefreshAction() {
-        return refresAction;
+        return refresProductTable;
     }
 
-    public void setRefresAction(ActionListener refresAction) {
-        this.refresAction = refresAction;
+    public void setRefresProductTable(ActionListener refresProductTable) {
+        this.refresProductTable = refresProductTable;
+    }
+
+    public ActionListener getRefresFilterTable() {
+        return refresFilterTable;
+    }
+
+    public void setRefresFilterTable(ActionListener refresFilterTable) {
+        this.refresFilterTable = refresFilterTable;
+    }
+
+    public JButton getButtonFilter() {
+        return buttonFilter;
+    }
+
+    public void setButtonFilter(JButton buttonFilter) {
+        this.buttonFilter = buttonFilter;
     }
 
     @Override

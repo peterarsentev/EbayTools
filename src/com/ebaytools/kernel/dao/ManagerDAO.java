@@ -1,20 +1,9 @@
 package com.ebaytools.kernel.dao;
 
-import com.ebay.services.finding.SearchItem;
-import com.ebaytools.gui.model.Data;
-import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
-import com.ebaytools.kernel.entity.Product;
 import com.ebaytools.util.Fields;
-import com.ebaytools.util.FormatterText;
-import com.ebaytools.util.Pair;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.swing.*;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 public class ManagerDAO {
     private static ManagerDAO instance;
@@ -22,6 +11,9 @@ public class ManagerDAO {
     private ItemDAO itemDAO;
     private ItemPropetiesDAO itemPropetiesDAO;
     private SystemSettingDAO systemSettingDAO;
+    private FilterConditionsDAO filterConditionsDAO;
+    private FilterDAO filterDAO;
+    private FilterValueDAO filterValueDAO;
 
     private ManagerDAO() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
@@ -29,6 +21,9 @@ public class ManagerDAO {
         this.itemDAO = (ItemDAO) ctx.getBean("itemDAO");
         this.itemPropetiesDAO = (ItemPropetiesDAO) ctx.getBean("itemPropetiesDAO");
         this.systemSettingDAO = (SystemSettingDAO) ctx.getBean("systemSettingDAO");
+        this.filterDAO = (FilterDAO) ctx.getBean("filterDAO");
+        this.filterConditionsDAO = (FilterConditionsDAO) ctx.getBean("filterConditionsDAO");
+        this.filterValueDAO = (FilterValueDAO) ctx.getBean("filterValueDAO");
     }
 
     public static synchronized ManagerDAO getInstance() {
@@ -36,6 +31,18 @@ public class ManagerDAO {
             instance = new ManagerDAO();
         }
         return instance;
+    }
+
+    public FilterConditionsDAO getFilterConditionsDAO() {
+        return filterConditionsDAO;
+    }
+
+    public FilterDAO getFilterDAO() {
+        return filterDAO;
+    }
+
+    public FilterValueDAO getFilterValueDAO() {
+        return filterValueDAO;
     }
 
     public ProductDAO getProductDAO() {
@@ -54,10 +61,11 @@ public class ManagerDAO {
         return systemSettingDAO;
     }
 
-    public static ItemProperties buildItemProperties(Long itemId, Fields name, String value) {
+    public static ItemProperties buildItemProperties(Long itemId, Fields name, String value, String type) {
         ItemProperties itemProperties = new ItemProperties();
         itemProperties.setItemId(itemId);
         itemProperties.setName(name.getKey());
+        itemProperties.setType(type);
         itemProperties.setValue(value);
         return itemProperties;
     }

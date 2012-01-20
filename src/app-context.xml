@@ -23,6 +23,9 @@
                 <value>com/ebaytools/kernel/entity/Item.hbm.xml</value>
                 <value>com/ebaytools/kernel/entity/ItemProperties.hbm.xml</value>
                 <value>com/ebaytools/kernel/entity/SystemSetting.hbm.xml</value>
+                <value>com/ebaytools/kernel/entity/Filter.hbm.xml</value>
+                <value>com/ebaytools/kernel/entity/FilterConditions.hbm.xml</value>
+                <value>com/ebaytools/kernel/entity/FilterValue.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -54,6 +57,18 @@
     </bean>
 
     <bean id="systemSettingDAO" class="com.ebaytools.kernel.dao.SystemSettingDAOImpl">
+        <property name="sessionFactory"><ref local="sessionFactory"/></property>
+    </bean>
+
+    <bean id="filterDAO" class="com.ebaytools.kernel.dao.FilterDAOImpl">
+        <property name="sessionFactory"><ref local="sessionFactory"/></property>
+    </bean>
+
+    <bean id="filterConditionsDAO" class="com.ebaytools.kernel.dao.FilterConditionsDAOImpl">
+        <property name="sessionFactory"><ref local="sessionFactory"/></property>
+    </bean>
+
+    <bean id="filterValueDAO" class="com.ebaytools.kernel.dao.FilterValueDAOImpl">
         <property name="sessionFactory"><ref local="sessionFactory"/></property>
     </bean>
 </beans>

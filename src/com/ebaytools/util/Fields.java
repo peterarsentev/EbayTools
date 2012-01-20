@@ -6,7 +6,13 @@ public enum Fields {
     IS_GOLDEN("is_golden", "is golden"),
     SHIPPING_COST("shipping_cost", "shipping cost"),
     TOTAL_COST("total_cost", "total cost"),
-    AUCTION_STATUS("auction_status", "auction status");
+    AUCTION_STATUS("auction_status", "auction status"),
+    CONDITIONS("conditions", "conditions"),
+    TIME_OF_DAY("time_of_day", "time_of_day"),
+    APPLY_FILTER("apply_filter", "apply_filter"),
+    CHOSE_OPTIONS("chose_options", "chose_optios"),
+    TOTAL_BIDS("total_bids", "total_bids");
+
 
     private String key;
     private String name;

@@ -148,7 +148,7 @@ public class FormatterText {
                     sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
                 if ("sellerUserName".equals(valueOpt)) {
-                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getSellerUserName()) : "";
+                    String value = item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo()) : "";
                     sb.append(valueOpt).append(" : ").append(value).append("\n");
                 }
                 if ("topRatedSeller".equals(valueOpt)) {
@@ -164,7 +164,7 @@ public class FormatterText {
                 if ("currentPrice".equals(valueOpt)) {
                     String value = String.valueOf(item.getSellingStatus().getCurrentPrice().getValue());
                     String rate = item.getSellingStatus().getCurrentPrice().getCurrencyId();
-                    sb.append(valueOpt).append(" : ").append(buildPrice(item.getSellingStatus().getCurrentPrice())).append("\n");
+                    sb.append(valueOpt).append(" : ").append(getPrice(item.getSellingStatus().getCurrentPrice())).append("\n");
                 }
                 if ("sellingState".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(item.getSellingStatus().getSellingState()).append("\n");
@@ -182,7 +182,7 @@ public class FormatterText {
                     sb.append(valueOpt).append(" : ").append(item.getShippingInfo().isOneDayShippingAvailable()).append("\n");
                 }
                 if ("shippingServiceCost".equals(valueOpt)) {
-                    sb.append(valueOpt).append(" : ").append(buildPrice(item.getShippingInfo().getShippingServiceCost())).append("\n");
+                    sb.append(valueOpt).append(" : ").append(getPrice(item.getShippingInfo().getShippingServiceCost())).append("\n");
                 }
                 if ("shippingType".equals(valueOpt)) {
 
@@ -223,19 +223,23 @@ public class FormatterText {
     
     public static String addAmount(Amount shipping, Amount price) {
         if (shipping != null && price != null) {
-            String value = String.valueOf(shipping.getValue() + price.getValue());
-            String rate = shipping.getCurrencyId();
-            return value + " " + rate;
+            return String.valueOf(shipping.getValue() + price.getValue());
         } else {
             return null;
         }        
     }
 
-    public static String buildPrice(Amount amount) {
+    public static String getPrice(Amount amount) {
         if (amount != null) {
-            String value = String.valueOf(amount.getValue());
-            String rate = amount.getCurrencyId();
-            return value + " " + rate;
+            return String.valueOf(amount.getValue());
+        } else {
+            return null;
+        }
+    }
+
+    public static String getCurrency(Amount amount) {
+        if (amount != null) {
+            return amount.getCurrencyId();
         } else {
             return null;
         }

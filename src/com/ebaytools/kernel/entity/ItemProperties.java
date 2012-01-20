@@ -7,6 +7,15 @@ public class ItemProperties implements Comparable<ItemProperties>, Serializable 
     private Long itemId;
     private String name;
     private String value;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;

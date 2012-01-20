@@ -56,7 +56,8 @@ public class ItemsSearchListener implements ActionListener {
             saveData.put(new Pair<String>(product.getText(), "ReferenceID"), items);
             data.setSaveData(saveData);
             ManagerDAO.getInstance().getProductDAO().create(data.getSaveData(), data.getGoldenSearch().isSelected());
-		} catch (Exception e) {
+		    data.getRefreshAction().actionPerformed(null);
+        } catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

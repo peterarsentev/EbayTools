@@ -3,6 +3,7 @@ package com.ebaytools.gui.linteners;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.SystemSetting;
+import com.ebaytools.util.Fields;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,7 @@ public class CollectChooseOptsListener implements ActionListener {
                 SystemSetting setting = checkOpt(settings, box.getText());
                 if (setting == null) {
                     SystemSetting systemSetting = new SystemSetting();
-                    systemSetting.setName("chooseOpt");
+                    systemSetting.setName(Fields.CHOSE_OPTIONS.getKey());
                     systemSetting.setValue(box.getText());
                     ManagerDAO.getInstance().getSystemSettingDAO().create(systemSetting);
                 } else {

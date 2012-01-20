@@ -4,16 +4,14 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="com.ebaytools.kernel.entity.ItemProperties" proxy="com.ebaytools.kernel.entity.ItemProperties" table="itemProperties">
+    <class name="com.ebaytools.kernel.entity.FilterValue" proxy="com.ebaytools.kernel.entity.FilterValue" table="filtervalue">
         <cache usage="nonstrict-read-write"/>
 
         <id name="id" column="id"  type="java.lang.Long" unsaved-value="null">
             <generator class="increment"/>
         </id>
 
+        <property name="filterConditionsId" column="filterConditionsId" type="java.lang.Long"/>
         <property name="value" column="value" type="java.lang.String"/>
-        <property name="name" column="name" type="java.lang.String"/>
-        <property name="type" column="type" type="java.lang.String"/>
-        <property name="itemId" column="itemId" type="java.lang.Long"/>
     </class>
 </hibernate-mapping>

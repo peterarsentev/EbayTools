@@ -1,7 +1,9 @@
 package com.ebaytools.gui.panel;
 
 import com.ebaytools.gui.dialog.CreateOrEditProductDialog;
+import com.ebaytools.gui.dialog.FilterDialog;
 import com.ebaytools.gui.linteners.OpenProductIDDialogListener;
+import com.ebaytools.gui.linteners.RefreshTableListenter;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
@@ -38,20 +40,39 @@ public class ProductPanel extends JPanel {
         JButton refreshTable = new JButton("Refresh");
         JButton searchItem = new JButton("Search");
         JButton showItems = new JButton("Items");
+        JButton filters = new JButton("Filters");
         panel.add(createProduct, new Rectangle(12, 0, 4, 1));
         panel.add(editProduct, new Rectangle(12, 1, 4, 1));
         panel.add(deleteProduct, new Rectangle(12, 2, 4, 1));
         panel.add(refreshTable, new Rectangle(12, 3, 4, 1));
         panel.add(searchItem, new Rectangle(12, 4, 4, 1));
-        panel.add(showItems, new Rectangle(12, 5, 4, 1));
-        RefreshTableListenter refresAction = new RefreshTableListenter(tableProduct, productModelTable);
-        data.setRefresAction(refresAction);
+        panel.add(showItems, new Rectangle(12, 6, 4, 1));
+        panel.add(filters, new Rectangle(12, 7, 4, 1));
+        RefreshTableListenter refresAction = new RefreshTableListenter(tableProduct, productModelTable, RefreshTableListenter.TypeTable.PRODUCT);
+        data.setRefresProductTable(refresAction);
         createProduct.addActionListener(new OpenProductIDDialogListener(main, data));
         editProduct.addActionListener(new UpdateProductListenter(main, productModelTable, data));
         deleteProduct.addActionListener(new DeleteProductListenter(main, productModelTable));
         refreshTable.addActionListener(refresAction);
         searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
+        filters.addActionListener(new FilterActionListener(main, data));
+    }
+
+    private class FilterActionListener implements ActionListener {
+        private JFrame frame;
+        private Data data;
+
+        public FilterActionListener(JFrame frame, Data data) {
+            this.frame = frame;
+            this.data = data;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            FilterDialog filterDialog = new FilterDialog(frame, data);
+            filterDialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
     }
 
     private class DeleteProductListenter implements ActionListener {
@@ -74,25 +95,6 @@ public class ProductPanel extends JPanel {
                 }
             }
             data.getRefreshAction().actionPerformed(e);
-        }
-    }
-
-    private class RefreshTableListenter implements ActionListener {
-        private JTable tableProduct;
-        private TableModelCheckBox modelCheckBox;
-
-        private RefreshTableListenter(JTable tableProduct, TableModelCheckBox productModelTable) {
-            this.tableProduct = tableProduct;
-            this.modelCheckBox = productModelTable;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            List<Product> productList = ManagerDAO.getInstance().getProductDAO().getAllProduct();
-            ProductDataImpl productData = new ProductDataImpl(productList);
-            modelCheckBox.setIDate(productData);
-            TableCheckBox.buildTable(tableProduct);
-            tableProduct.updateUI();
         }
     }
 
@@ -173,6 +175,9 @@ public class ProductPanel extends JPanel {
                             if (Fields.AUCTION_CLOSE_TIME.getKey().equals(properties.getName()) && TextUtil.isNotNull(value)) {
                                 value = FormatterText.dateformatter.format(new Date(Long.parseLong(value)));
                             } 
+                            if (TextUtil.isNotNull(properties.getType())) {
+                                value += " " + properties.getType();
+                            }
                             sb.append(properties.getName()).append(" : ").append(value).append("\n");
                         }
                         sb.append("\n");

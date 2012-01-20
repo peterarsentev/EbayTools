@@ -14,6 +14,7 @@
         <property name="ebayItemId" column="ebayItemId" type="java.lang.String"/>
         <property name="productId" column="productId" type="java.lang.Long"/>
         <property name="createDate" column="createDate" type="java.util.Calendar"/>
+        <property name="closeDate" column="closeDate" type="java.util.Calendar"/>
         <set name="properties" lazy="false" inverse="true" cascade="all">
             <key column="itemId" not-null="true" />
             <one-to-many class="com.ebaytools.kernel.entity.ItemProperties"/>
