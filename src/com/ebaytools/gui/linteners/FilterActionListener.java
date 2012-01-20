@@ -9,8 +9,6 @@ import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
 import com.ebaytools.util.FormatterText;
 import com.ebaytools.util.TextUtil;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
-import org.hibernate.dialect.DataDirectOracle9Dialect;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
