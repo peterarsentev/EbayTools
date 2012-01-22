@@ -37,6 +37,7 @@ public class FilterActionListener implements ActionListener {
             StringBuilder sb = new StringBuilder();
             List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter);
             for (Item item : items) {
+                sb.append("id : ").append(item.getId()).append("\n");
                 sb.append("itemID : ").append(item.getEbayItemId()).append("\n");
                 //append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
                 sb.append("count_bid : ").append(item.getTotalBid()).append("\n");

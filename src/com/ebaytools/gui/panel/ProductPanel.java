@@ -1,9 +1,7 @@
 package com.ebaytools.gui.panel;
 
 import com.ebaytools.gui.dialog.CreateOrEditProductDialog;
-import com.ebaytools.gui.dialog.FilterDialog;
-import com.ebaytools.gui.linteners.OpenProductIDDialogListener;
-import com.ebaytools.gui.linteners.RefreshTableListenter;
+import com.ebaytools.gui.linteners.*;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
@@ -35,19 +33,29 @@ public class ProductPanel extends JPanel {
         TableCheckBox.buildTable(tableProduct);
         panel.add(new JScrollPane(tableProduct), new Rectangle(0, 0, 12, 16));
         JButton createProduct = new JButton("Create");
+        createProduct.setForeground(ColorUtil.IndianRed);
         JButton editProduct = new JButton("Edit");
+        editProduct.setForeground(ColorUtil.IndianRed);
         JButton deleteProduct = new JButton("Delete");
+        deleteProduct.setForeground(ColorUtil.IndianRed);
         JButton refreshTable = new JButton("Refresh");
+        refreshTable.setForeground(ColorUtil.IndianRed);
         JButton searchItem = new JButton("Search");
+        searchItem.setForeground(ColorUtil.IndianRed);
         JButton showItems = new JButton("Items");
-        JButton filters = new JButton("Filters");
-        panel.add(createProduct, new Rectangle(12, 0, 4, 1));
-        panel.add(editProduct, new Rectangle(12, 1, 4, 1));
-        panel.add(deleteProduct, new Rectangle(12, 2, 4, 1));
-        panel.add(refreshTable, new Rectangle(12, 3, 4, 1));
-        panel.add(searchItem, new Rectangle(12, 4, 4, 1));
-        panel.add(showItems, new Rectangle(12, 6, 4, 1));
-        panel.add(filters, new Rectangle(12, 7, 4, 1));
+        JButton loadReferenceIDList = new JButton("Add files");
+        JButton searchByFilesOfList = new JButton("Daily");
+        loadReferenceIDList.setForeground(ColorUtil.IndianRed);
+        showItems.setForeground(ColorUtil.IndianRed);
+        showItems.setForeground(ColorUtil.IndianRed);
+        panel.add(loadReferenceIDList, new Rectangle(12, 0, 4, 1));
+        panel.add(searchByFilesOfList, new Rectangle(12, 2, 4, 1));
+        panel.add(createProduct, new Rectangle(12, 4, 4, 1));
+        panel.add(editProduct, new Rectangle(12, 5, 4, 1));
+        panel.add(refreshTable, new Rectangle(12, 6, 4, 1));
+        panel.add(searchItem, new Rectangle(12, 7, 4, 1));
+        panel.add(showItems, new Rectangle(12, 8, 4, 1));
+        panel.add(deleteProduct, new Rectangle(12, 10, 4, 1));
         RefreshTableListenter refresAction = new RefreshTableListenter(tableProduct, productModelTable, RefreshTableListenter.TypeTable.PRODUCT);
         data.setRefresProductTable(refresAction);
         createProduct.addActionListener(new OpenProductIDDialogListener(main, data));
@@ -56,23 +64,8 @@ public class ProductPanel extends JPanel {
         refreshTable.addActionListener(refresAction);
         searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
-        filters.addActionListener(new FilterActionListener(main, data));
-    }
-
-    private class FilterActionListener implements ActionListener {
-        private JFrame frame;
-        private Data data;
-
-        public FilterActionListener(JFrame frame, Data data) {
-            this.frame = frame;
-            this.data = data;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            FilterDialog filterDialog = new FilterDialog(frame, data);
-            filterDialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        }
+        loadReferenceIDList.addActionListener(new OpenFileSearchingDialogAcitonListener(main, data));
+        searchByFilesOfList.addActionListener(new SearchingByFilesOfListActionListener(main, data));
     }
 
     private class DeleteProductListenter implements ActionListener {
@@ -132,6 +125,7 @@ public class ProductPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            long start = System.currentTimeMillis();
             List<Object[]> selectData = productModelTable.getDataSelect();
             if (selectData.isEmpty()) {
                 JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
@@ -142,7 +136,8 @@ public class ProductPanel extends JPanel {
                 }
                 data.setLoadId(loadId);
                 data.getText().setText(data.getText().getText() + SearchUtil.buildSearchByMultiIDs(data));
-                ManagerDAO.getInstance().getProductDAO().create(data.getSaveData(), data.getGoldenSearch().isSelected());
+                ManagerDAO.getInstance().getProductDAO().create(data.getSaveData());
+                data.getText().setText(data.getText().getText() + "Start search total auction ids : " + data.getSaveData().size() + " time : " + (System.currentTimeMillis() - start)/1000 +" ms ");
             }
         }
     }
@@ -171,6 +166,7 @@ public class ProductPanel extends JPanel {
                                 //.append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
                         sb.append("count_bid : ").append(item.getTotalBid()).append("\n");
                         sb.append("auction_close_date : ").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
+                        sb.append("auction_status : ").append(item.getCloseAuction() ? "completed" : "active").append("\n");
                         sb.append("is_golden : ").append(item.getGolden()).append("\n");
                         List<ItemProperties> list = new ArrayList<ItemProperties>(item.getProperties());
                         Collections.sort(list);

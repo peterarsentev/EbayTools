@@ -166,8 +166,8 @@ public class SearchUtil {
         return totalItems;
     }
 
-    public static List<SearchItem> getGoldenItems(List<SearchItem> sortedItems) {       // after fixing the bug
-        List<SearchItem> incorrectDuration = new ArrayList<SearchItem>();
+    public static Map<SearchItem, Boolean> getGoldenItems(List<SearchItem> sortedItems) {       // after fixing the bug
+        Map<SearchItem, Boolean> incorrectDuration = new LinkedHashMap<SearchItem, Boolean>();
         boolean check = false;   //checking for the moment the time has switched.
         if (!sortedItems.isEmpty()) {
             Duration previuosDuration = sortedItems.get(0).getSellingStatus().getTimeLeft();
@@ -176,9 +176,33 @@ public class SearchUtil {
                 if (currectDuration.isShorterThan(previuosDuration)) {
                     check = true;
                 }
-                if (check) {incorrectDuration.add(item); }
+                if (check) {
+                    incorrectDuration.put(item, true);
+                }
                 previuosDuration = currectDuration;
 
+            }
+        }
+        return incorrectDuration;
+    }
+
+    /**
+     * This method checks order items and set up field golden in true if this order is broken
+     * @param sortedItems list items
+     * @return list fulling items
+     */
+    public static Map<SearchItem, Boolean> fullingGoldenItems(List<SearchItem> sortedItems) {
+        Map<SearchItem, Boolean> incorrectDuration = new LinkedHashMap<SearchItem, Boolean>();
+        boolean check = false;   //checking for the moment the time has switched.
+        if (!sortedItems.isEmpty()) {
+            Duration previuosDuration = sortedItems.get(0).getSellingStatus().getTimeLeft();
+            for (SearchItem item : sortedItems) {
+                Duration currectDuration = item.getSellingStatus().getTimeLeft();
+                if (currectDuration.isShorterThan(previuosDuration)) {
+                    check = true;
+                }
+                incorrectDuration.put(item, check);
+                previuosDuration = currectDuration;
             }
         }
         return incorrectDuration;
@@ -195,10 +219,10 @@ public class SearchUtil {
             typeSearch = "All items : \n";
         }
         sb.append(typeSearch);
-        Map<Pair, List<SearchItem>> map = new LinkedHashMap<Pair, List<SearchItem>>();
+        Map<Pair, Map<SearchItem, Boolean>> map = new LinkedHashMap<Pair, Map<SearchItem, Boolean>>();
         for (String id : dataModel.getLoadId()) {
             if (TextUtil.isNotNull(id)) {
-                List<SearchItem> items = getResult(sb, pairSorted, id, "UPC", dataModel);
+                Map<SearchItem, Boolean> items = getResult(sb, pairSorted, id, "UPC", dataModel);
                 if (items.isEmpty()) {
                     items = getResult(sb, pairSorted, id, "ReferenceID", dataModel);
                     if (items.isEmpty()) {
@@ -218,15 +242,16 @@ public class SearchUtil {
         return sb.toString();
     }
 
-    private static List<SearchItem> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
-        List<SearchItem> items = new ArrayList<SearchItem>();
+    private static Map<SearchItem, Boolean> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
+        Map<SearchItem, Boolean> items = new LinkedHashMap<SearchItem, Boolean>();
         List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, data.getConditionsField().getText(), data.getListTypeField().getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(data.getDaysLeft().getText()));
         if (searchItems != null) {
             if (data.getGoldenSearch().isSelected()) {
-                List<SearchItem> goldenItems = SearchUtil.getGoldenItems(searchItems);
-                items.addAll(goldenItems);
+                Map<SearchItem, Boolean> goldenItems = SearchUtil.getGoldenItems(searchItems);
+                items.putAll(goldenItems);
             } else {
-                items.addAll(searchItems);
+                Map<SearchItem, Boolean> fullingItem = SearchUtil.fullingGoldenItems(searchItems);
+                items.putAll(fullingItem);
             }
         }
         if (!items.isEmpty()) {

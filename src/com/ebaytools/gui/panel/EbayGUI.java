@@ -113,5 +113,6 @@ public class EbayGUI extends JFrame {
         fields.put("title", false);
         fields.put("viewItemURL", false);
         fields.put("description", false);
+        fields.put("golden", false);
     }
 }

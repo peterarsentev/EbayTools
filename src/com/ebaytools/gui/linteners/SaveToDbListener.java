@@ -26,11 +26,11 @@ public class SaveToDbListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Map<Pair, List<SearchItem>> result = data.getSaveData();
+        Map<Pair, Map<SearchItem, Boolean>> result = data.getSaveData();
         if (result.isEmpty()) {
             JOptionPane.showMessageDialog(main, "Data is empty!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            ManagerDAO.getInstance().getProductDAO().create(result, data.getGoldenSearch().isSelected());
+            ManagerDAO.getInstance().getProductDAO().create(result);
             data.getRefreshAction().actionPerformed(null);
         }
     }

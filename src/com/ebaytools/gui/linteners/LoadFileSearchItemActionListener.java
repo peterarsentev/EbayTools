@@ -12,17 +12,20 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadFileListener implements ActionListener {
+/**
+ * This class loads file which consists from product id and maked searching in ebay. Don't save reasult it database
+ */
+public class LoadFileSearchItemActionListener implements ActionListener {
     private JFileChooser fc;
     private JFrame main;
     private JTextArea text;
     private Data dataModel;
 
-    public LoadFileListener(SearchPanel panel) {
+    public LoadFileSearchItemActionListener(JFrame main, Data data) {
         this.fc = new JFileChooser();
-        this.main = panel.getMain();
-        this.text = panel.getText();
-        this.dataModel = panel.getData();
+        this.main = main;
+        this.text = data.getText();
+        this.dataModel = data;
     }
 
     @Override
@@ -35,7 +38,6 @@ public class LoadFileListener implements ActionListener {
                 List<String> data = readFile(file);
                 dataModel.setLoadId(data);
                 msg = SearchUtil.buildSearchByMultiIDs(dataModel);
-                ManagerDAO.getInstance().getProductDAO().create(dataModel.getSaveData(), dataModel.getGoldenSearch().isSelected());
             } else {
                 msg = "Error this file does not exist file : " + file.getAbsolutePath() + "\n";
             }

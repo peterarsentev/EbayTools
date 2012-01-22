@@ -37,6 +37,7 @@
         <copy file="${src.dir}/com/ebaytools/kernel/entity/Filter.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/Filter.hbm.xml"/>
         <copy file="${src.dir}/com/ebaytools/kernel/entity/FilterConditions.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/FilterConditions.hbm.xml"/>
         <copy file="${src.dir}/com/ebaytools/kernel/entity/FilterValue.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/FilterValue.hbm.xml"/>
+        <copy file="${src.dir}/com/ebaytools/kernel/entity/FileSearching.hbm.xml" tofile="${temp.dir}/com/ebaytools/kernel/entity/FileSearching.hbm.xml"/>
 
         <manifestclasspath property="jar.classpath" jarfile="${project.dir}/ebaytools.jar">
             <classpath refid="compile.classpath"/>

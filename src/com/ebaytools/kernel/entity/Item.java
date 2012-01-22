@@ -18,6 +18,8 @@ public class Item implements Comparable<Item>, Serializable {
     private Boolean golden;
     private Boolean closeAuction;
 
+
+
     public Boolean getCloseAuction() {
         return closeAuction;
     }

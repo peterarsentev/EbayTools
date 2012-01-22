@@ -13,9 +13,9 @@ import java.util.Map;
  * This is com.ebaytools.gui.model for data. We will be to use it every way in a project
  */
 public class Data {
-    private List<SearchItem> items; // search result
+    private Map<SearchItem, Boolean> items; // search result
     private List<String> loadId;
-    private Map<Pair, List<SearchItem>> saveData; // data for save
+    private Map<Pair, Map<SearchItem, Boolean>> saveData; // data for save
     private JTextField numbersItem;
     private JTextField referenceId;
     private JTextField conditionsField;
@@ -26,7 +26,16 @@ public class Data {
     private JTextField daysLeft;
     private ActionListener refresProductTable;
     private ActionListener refresFilterTable;
+    private ActionListener refresFileSearchingTable;
     private JButton buttonFilter;
+
+    public ActionListener getRefresFileSearchingTable() {
+        return refresFileSearchingTable;
+    }
+
+    public void setRefresFileSearchingTable(ActionListener refresFileSearchingTable) {
+        this.refresFileSearchingTable = refresFileSearchingTable;
+    }
 
     public JTextField getNumbersItem() {
         return numbersItem;
@@ -92,14 +101,6 @@ public class Data {
         this.daysLeft = daysLeft;
     }
 
-    public List<SearchItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<SearchItem> items) {
-        this.items = items;
-    }
-
     public List<String> getLoadId() {
         return loadId;
     }
@@ -108,11 +109,19 @@ public class Data {
         this.loadId = loadId;
     }
 
-    public Map<Pair, List<SearchItem>> getSaveData() {
+    public Map<SearchItem, Boolean> getItems() {
+        return items;
+    }
+
+    public void setItems(Map<SearchItem, Boolean> items) {
+        this.items = items;
+    }
+
+    public Map<Pair, Map<SearchItem, Boolean>> getSaveData() {
         return saveData;
     }
 
-    public void setSaveData(Map<Pair, List<SearchItem>> saveData) {
+    public void setSaveData(Map<Pair, Map<SearchItem, Boolean>> saveData) {
         this.saveData = saveData;
     }
 

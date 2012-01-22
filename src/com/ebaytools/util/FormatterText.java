@@ -48,11 +48,19 @@ public class FormatterText {
     }
 
 
-    public static String formatForConsole(List<SearchItem> items, String id, String type) {
+    /**
+     * This method prints result searching with system setting
+     * @param items Map searching result
+     * @param id product id
+     * @param type type product
+     * @return formatted text
+     */
+    public static String formatForConsole(Map<SearchItem, Boolean> items, String id, String type) {
         StringBuilder sb = new StringBuilder();
         sb.append(type).append(" (").append(id).append(")").append("\n\n");
         List<String> opts = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue();
-        for (SearchItem item : items)  {
+        for (Map.Entry<SearchItem, Boolean> entry : items.entrySet())  {
+             SearchItem item = entry.getKey();
             for (String valueOpt : opts) {
                 if ("autoPay".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(String.valueOf(item.isAutoPay())).append("\n");
@@ -208,6 +216,9 @@ public class FormatterText {
                 }
                 if ("description".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(SearchUtil.getInstance().getProductByItemNumber(item.getItemId()).getDescription()).append("\n");
+                }
+                if ("golden".equals(valueOpt)) {
+                    sb.append(valueOpt).append(" : ").append(String.valueOf(entry.getValue())).append("\n");
                 }
             }
             sb.append("\n");

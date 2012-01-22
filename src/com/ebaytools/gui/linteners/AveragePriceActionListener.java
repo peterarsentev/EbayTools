@@ -2,8 +2,10 @@ package com.ebaytools.gui.linteners;
 
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
+import com.ebaytools.kernel.dao.ProductDAOImpl;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
+import com.ebaytools.util.Fields;
 import com.ebaytools.util.FormatterText;
 
 import javax.swing.*;
@@ -41,12 +43,15 @@ public class AveragePriceActionListener implements ActionListener {
             }
         }
         for (Map.Entry<Rang, List<Item>> entry : rangByHour.entrySet()) {
-            sb.append(entry.getKey()).append("\n");
-//            float averagePrice = 0F;
+            float averagePrice = 0F;
             for (Item item : entry.getValue()) {
-                sb.append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
+                Map<Fields, ItemProperties> prs = ProductDAOImpl.buildProperties(item.getProperties());
+                averagePrice += Float.valueOf(prs.get(Fields.AUCTION_PRICE).getValue());
             }
-            sb.append("\n\n");
+            sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");
+            sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ": ");
+            sb.append(averagePrice + "$\t(" + entry.getValue().size() + ")");
+            sb.append("\n");
         }
         sb.append("Total items : ").append(items.size()).append("\n");
         data.getText().setText(data.getText().getText() + sb.toString());

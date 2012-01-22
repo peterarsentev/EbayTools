@@ -1,12 +1,10 @@
 package com.ebaytools.gui.linteners;
 
 import com.ebaytools.kernel.dao.ManagerDAO;
+import com.ebaytools.kernel.entity.FileSearching;
 import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.Product;
-import com.ebaytools.util.FilterDataImpl;
-import com.ebaytools.util.ProductDataImpl;
-import com.ebaytools.util.TableCheckBox;
-import com.ebaytools.util.TableModelCheckBox;
+import com.ebaytools.util.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +13,7 @@ import java.util.List;
 
 public class RefreshTableListenter implements ActionListener {
     public enum TypeTable {
-        PRODUCT, FILTER
+        PRODUCT, FILTER, FILE_SEARCHING
     }
     private JTable tableProduct;
     private TableModelCheckBox modelCheckBox;
@@ -33,9 +31,12 @@ public class RefreshTableListenter implements ActionListener {
         if (TypeTable.PRODUCT == type) {
             List<Product> productList = ManagerDAO.getInstance().getProductDAO().getAllProduct();
             iData = new ProductDataImpl(productList);
-        } else {
+        } else if (TypeTable.FILTER == type) {
             List<Filter> filters = ManagerDAO.getInstance().getFilterDAO().getAllFilters();
             iData = new FilterDataImpl(filters);
+        } else if (TypeTable.FILE_SEARCHING == type) {
+            List<FileSearching> fileSearching = ManagerDAO.getInstance().getFileSearchingDAO().getAllFileSearching();
+            iData = new FileSearchingDataImpl(fileSearching);
         }
         modelCheckBox.setIDate(iData);
         TableCheckBox.buildTable(tableProduct);

@@ -60,10 +60,10 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
 
     //TODO need to rewrite this awful method
     @Override
-    public void create(Map<Pair, List<SearchItem>> map, boolean isGolden) {
+    public void create(Map<Pair, Map<SearchItem, Boolean>> map) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        for (Map.Entry<Pair, List<SearchItem>> entry : map.entrySet()) {
+        for (Map.Entry<Pair, Map<SearchItem, Boolean>> entry : map.entrySet()) {
             Product product = findProductByReferenceId(entry.getKey().getKey());
             Long productId;
             if (product == null) {
@@ -77,7 +77,8 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
             Calendar createTime = Calendar.getInstance();
             if (entry.getValue() != null) {
                 List<String> useIds = new ArrayList<String>();
-                for (SearchItem searchItem : entry.getValue()) {
+                for (Map.Entry<SearchItem, Boolean> innerEntry : entry.getValue().entrySet()) {
+                    SearchItem searchItem = innerEntry.getKey();
                     if (!itemIds.containsKey(searchItem.getItemId())) {
                         Item item = new Item();
                         item.setProductId(productId);
@@ -88,7 +89,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         item.setTotalBid(totalBid != null ? totalBid : 0);
                         boolean closeAuction = "COMPLETED".equals(searchItem.getSellingStatus().getSellingState());
                         item.setCloseAuction(closeAuction);
-                        item.setGolden(isGolden);
+                        item.setGolden(innerEntry.getValue());
                         Long itemId = (Long) session.save(item);
                         if (closeAuction) {
                             session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_PRICE, FormatterText.getPrice(searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getSellingStatus().getCurrentPrice())));
@@ -126,7 +127,8 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                             Map<Fields, ItemProperties> prMap = buildProperties(item.getProperties());
 
                             ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
-                            prAuction.setValue(itemType.getSellingStatus().getCurrentPrice().getValue() + " " + itemType.getSellingStatus().getCurrentPrice().getCurrencyID());
+                            prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));
+                            prAuction.setType(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getCurrencyID()));
                             session.update(prAuction);
 
                             ItemProperties prStatus = prMap.get(Fields.AUCTION_STATUS);
@@ -152,9 +154,10 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
         session.close();
     }
     
-    private static Map<Fields, ItemProperties> buildProperties(Set<ItemProperties> propertiesSet) {
+    public static Map<Fields, ItemProperties> buildProperties(Set<ItemProperties> propertiesSet) {
         Map<Fields, ItemProperties> map = new LinkedHashMap<Fields, ItemProperties>();
         for (ItemProperties properties : propertiesSet) {
+            fullingValue(Fields.AUCTION_STATUS, properties, map);
             fullingValue(Fields.AUCTION_PRICE, properties, map);
             fullingValue(Fields.SHIPPING_COST, properties, map);
             fullingValue(Fields.TOTAL_COST, properties, map);

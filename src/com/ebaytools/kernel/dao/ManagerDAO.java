@@ -9,21 +9,23 @@ public class ManagerDAO {
     private static ManagerDAO instance;
     private ProductDAO productDAO;
     private ItemDAO itemDAO;
-    private ItemPropetiesDAO itemPropetiesDAO;
+    private ItemPropertiesDAO itemPropetiesDAO;
     private SystemSettingDAO systemSettingDAO;
     private FilterConditionsDAO filterConditionsDAO;
     private FilterDAO filterDAO;
     private FilterValueDAO filterValueDAO;
+    private FileSearchingDAO fileSearchingDAO;
 
     private ManagerDAO() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
         this.productDAO = (ProductDAO) ctx.getBean("productDAO");
         this.itemDAO = (ItemDAO) ctx.getBean("itemDAO");
-        this.itemPropetiesDAO = (ItemPropetiesDAO) ctx.getBean("itemPropetiesDAO");
+        this.itemPropetiesDAO = (ItemPropertiesDAO) ctx.getBean("itemPropetiesDAO");
         this.systemSettingDAO = (SystemSettingDAO) ctx.getBean("systemSettingDAO");
         this.filterDAO = (FilterDAO) ctx.getBean("filterDAO");
         this.filterConditionsDAO = (FilterConditionsDAO) ctx.getBean("filterConditionsDAO");
         this.filterValueDAO = (FilterValueDAO) ctx.getBean("filterValueDAO");
+        this.fileSearchingDAO = (FileSearchingDAO) ctx.getBean("fileSearchingDAO");
     }
 
     public static synchronized ManagerDAO getInstance() {
@@ -53,12 +55,16 @@ public class ManagerDAO {
         return itemDAO;
     }
 
-    public ItemPropetiesDAO getItemPropetiesDAO() {
+    public ItemPropertiesDAO getItemPropetiesDAO() {
         return itemPropetiesDAO;
     }
 
     public SystemSettingDAO getSystemSettingDAO() {
         return systemSettingDAO;
+    }
+
+    public FileSearchingDAO getFileSearchingDAO() {
+        return fileSearchingDAO;
     }
 
     public static ItemProperties buildItemProperties(Long itemId, Fields name, String value, String type) {

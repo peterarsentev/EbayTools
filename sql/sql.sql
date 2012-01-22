@@ -57,3 +57,9 @@ create table filtervalue(
   CONSTRAINT fvId PRIMARY KEY (id),
   Foreign Key (filterConditionsId) references filterconditions(id)
 );
+
+create table fileSearching (
+  id bigint not null,
+  parh varchar(200),
+  constraint fsId primary key (id)
+);

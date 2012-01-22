@@ -41,22 +41,20 @@ public class ItemsSearchListener implements ActionListener {
 		try {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
-            List<SearchItem> items;
+            Map<SearchItem, Boolean> items;
             List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.getIntegerOrNull(daysLeft.getText()));
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {
-                items = searchItems;
+                items = SearchUtil.fullingGoldenItems(searchItems);
             }
             data.setItems(items);
             sb.append(FormatterText.formatForConsole(data.getItems(), product.getText(), "ReferenceID"));
             sb.append("Total items : ").append(items.size());
             text.setText(text.getText() + sb.toString() + "\n");
-            Map<Pair, List<SearchItem>> saveData = new LinkedHashMap<Pair, List<SearchItem>>();
+            Map<Pair, Map<SearchItem, Boolean>> saveData = new LinkedHashMap<Pair, Map<SearchItem, Boolean>>();
             saveData.put(new Pair<String>(product.getText(), "ReferenceID"), items);
             data.setSaveData(saveData);
-            ManagerDAO.getInstance().getProductDAO().create(data.getSaveData(), data.getGoldenSearch().isSelected());
-		    data.getRefreshAction().actionPerformed(null);
         } catch (Exception e) {
 			e.printStackTrace();
 		}

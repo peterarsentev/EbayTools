@@ -5,7 +5,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import java.util.List;
 
-public class ItemPropetiesDAOImpl extends HibernateDaoSupport implements ItemPropetiesDAO {
+public class ItemPropertiesDAOImpl extends HibernateDaoSupport implements ItemPropertiesDAO {
     @Override
     public Long create(ItemProperties itemProperties) {
         return (Long) getHibernateTemplate().save(itemProperties);

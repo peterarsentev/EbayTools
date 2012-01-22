@@ -11,5 +11,5 @@ public interface ProductDAO extends CrUD<Product> {
     public List<Product> getAllProduct();
     public List<Object[]> getProducts();
     public Product findProductByReferenceId(String referenceId);
-    public void create(Map<Pair, List<SearchItem>> map, boolean isGolden);
+    public void create(Map<Pair, Map<SearchItem, Boolean>> map);
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTextArea;
 
@@ -25,8 +26,8 @@ public class ClearListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-            data.setItems(new ArrayList<SearchItem>());
-            data.setSaveData(new LinkedHashMap<Pair, List<SearchItem>>());
+            data.setItems(new LinkedHashMap<SearchItem, Boolean>());
+            data.setSaveData(new LinkedHashMap<Pair, Map<SearchItem, Boolean>>());
 			text.setText("");
 		} catch (Exception e) {
 			e.printStackTrace();

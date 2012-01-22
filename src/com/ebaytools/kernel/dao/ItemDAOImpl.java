@@ -2,6 +2,7 @@ package com.ebaytools.kernel.dao;
 
 import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.Item;
+import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.util.Fields;
 import com.ebaytools.util.FilterDataImpl;
 import com.ebaytools.util.TextUtil;
@@ -48,7 +49,9 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     @Override
     public List<Item> getProductByFilter(Filter filter) {
         StringBuilder query = new StringBuilder(" from com.ebaytools.kernel.entity.Item as item, com.ebaytools.kernel.entity.ItemProperties as prs where item.id = prs.itemId ");
+        query.append(" and item.closeAuction=?");
         List<Object> params = new ArrayList<Object>();
+        params.add(true);
         Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         if (TextUtil.isNotNull(conditions.get(Fields.CONDITIONS))) {
             String[] values = conditions.get(Fields.CONDITIONS).split(";");
@@ -74,7 +77,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
                 query.append(") ");
             }
         }
-        
+
         if (TextUtil.isNotNull(conditions.get(Fields.TIME_OF_DAY))) {
             String[] values = conditions.get(Fields.TIME_OF_DAY).split(";");
             if (values.length > 0) {
@@ -98,13 +101,16 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
         List<Object[]> objectArray = getHibernateTemplate().find(query.toString(), params.toArray(new Object[params.size()]));
         List<Item> items = new ArrayList<Item>();
         for (Object[] array : objectArray) {
-            items.add((Item) array[0]);
+            Item item = (Item) array[0];
+            if (!items.contains(item)) {
+                items.add((Item) array[0]);
+            }
         }
         return items;
     }
 
     @Override
     public List<Item> getAllItems() {
-        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item");
+        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=?", true);
     }
 }

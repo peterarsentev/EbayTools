@@ -32,14 +32,14 @@ public class SaveListener implements ActionListener {
         int returnVal = fc.showOpenDialog(main);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            Map<Pair, List<SearchItem>> map = data.getSaveData();
+            Map<Pair, Map<SearchItem, Boolean>> map = data.getSaveData();
             if (map != null) {
                 StringBuilder sb = new StringBuilder();
-                for (Map.Entry<Pair, List<SearchItem>> entry : map.entrySet()) {
+                for (Map.Entry<Pair, Map<SearchItem, Boolean>> entry : map.entrySet()) {
                     sb.append(entry.getKey().getKey()).append(" (").append(entry.getKey().getValue()).append(")").append("\n\n");
                     if (entry.getValue() != null) {
-                        for (SearchItem item : entry.getValue()) {
-                            sb.append(item.getItemId()).append("\n");
+                        for (Map.Entry<SearchItem, Boolean> item : entry.getValue().entrySet()) {
+                            sb.append(item.getKey().getItemId()).append("\n");
                         }
                     }
                 }

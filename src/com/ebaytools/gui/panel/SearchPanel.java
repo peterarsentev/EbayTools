@@ -1,7 +1,6 @@
 package com.ebaytools.gui.panel;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import javax.swing.*;
 
@@ -30,13 +29,17 @@ public class SearchPanel extends JPanel {
         this.data = data;
 
         SearchPanel panel = this;
-        JButton searchReference = new JButton("Reference");
+        JButton searchReference = new JButton("Auction ID");
+        searchReference.setForeground(ColorUtil.LightSlateGray);
         JButton showResultFilter = new JButton("Result");
+        showResultFilter.setForeground(ColorUtil.LightSlateGray);
         JButton clear = new JButton("Clear");
         JButton save = new JButton("Save");
         JButton optsButton = new JButton("Choose opts.");
         JButton loadReferenceIDList = new JButton("Load");
+        loadReferenceIDList.setForeground(ColorUtil.LightSlateGray);
         JButton searchUPC = new JButton("RefID to UPC");
+        searchUPC.setForeground(ColorUtil.LightSlateGray);
         this.numbersItem = new JTextField();
         this.referenceId = new JTextField();
         referenceId.setText("77826847");
@@ -50,10 +53,18 @@ public class SearchPanel extends JPanel {
             sortedTypeField.addItem(new Pair<SortOrderType>(sortedType.value(), sortedType));
         }
         this.goldenSearch = new JCheckBox("Search single item");
+        goldenSearch.setForeground(ColorUtil.LightSlateGray);
         this.daysLeft = new JTextField();
         SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
-        JButton buttonFilter = new JButton("Filter : " + (setting != null ? ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())).getName() : "-"));
+        JButton buttonFilter = new JButton((setting != null ? ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())).getName() : "-"));
         JButton averagePrice = new JButton("Average price");
+        JButton filters = new JButton("Filters");
+        buttonFilter.setForeground(ColorUtil.darkGreen);
+        averagePrice.setForeground(ColorUtil.darkGreen);
+        filters.setForeground(ColorUtil.darkGreen);
+        clear.setForeground(ColorUtil.LightSlateGray);
+        optsButton.setForeground(ColorUtil.LightSlateGray);
+        save.setForeground(ColorUtil.LightSlateGray);
 
         data.setNumbersItem(numbersItem);
         data.setReferenceId(referenceId);
@@ -69,7 +80,7 @@ public class SearchPanel extends JPanel {
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.setLayout(new GraphPaperLayout(new Dimension(27, 27), 1, 1));
         panel.add(new JLabel("Search reference id"), new Rectangle(0, 0, 5, 1));
-        panel.add(new JLabel("Reference ID"), new Rectangle(0, 1, 5, 1));
+        panel.add(new JLabel("Auction ID"), new Rectangle(0, 1, 5, 1));
         panel.add(numbersItem, new Rectangle(6, 0, 4, 1));
         panel.add(referenceId, new Rectangle(4, 1, 6, 1));
         panel.add(loadReferenceIDList, new Rectangle(24, 1, 3, 1));
@@ -80,7 +91,7 @@ public class SearchPanel extends JPanel {
         panel.add(conditionsField, new Rectangle(4, 2, 6, 1));
         panel.add(new JLabel("List Type"), new Rectangle(0, 3, 5, 1));
         panel.add(listTypeField, new Rectangle(4, 3, 6, 1));
-        panel.add(showResultFilter, new Rectangle(24, 4, 3, 1));
+        panel.add(showResultFilter, new Rectangle(11, 4, 5, 1));
         panel.add(new JScrollPane(text), new Rectangle(0, 5, 16, 21));
         panel.add(new ProductPanel(main, data), new Rectangle(16, 5, 12, 26));
         panel.add(clear, new Rectangle(0, 26, 3, 1));
@@ -88,21 +99,25 @@ public class SearchPanel extends JPanel {
         panel.add(new JLabel("Sorted type"), new Rectangle(0, 4, 5, 1));
         panel.add(sortedTypeField, new Rectangle(4, 4, 6, 1));
         panel.add(optsButton, new Rectangle(4, 26, 4, 1));
-        panel.add(new JLabel("Days Left"), new Rectangle(11, 3, 4, 1));
+        JLabel lbDayLeft = new JLabel("Days Left");
+        lbDayLeft.setForeground(ColorUtil.LightSlateGray);
+        panel.add(lbDayLeft, new Rectangle(11, 3, 4, 1));
         panel.add(daysLeft, new Rectangle(14, 3, 4, 1));
-        panel.add(buttonFilter, new Rectangle(11, 4, 6, 1));
-        panel.add(averagePrice, new Rectangle(18, 0, 4, 1));
+        panel.add(buttonFilter, new Rectangle(18, 0, 4, 1));
+        panel.add(filters, new Rectangle(18, 1, 4, 1));
+        panel.add(averagePrice, new Rectangle(18, 2, 4, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
         showResultFilter.addActionListener(new ItemsSearchListener(panel));
         clear.addActionListener(new ClearListener(panel));
         save.addActionListener(new SaveListener(panel));
-        loadReferenceIDList.addActionListener(new LoadFileListener(panel));
+        loadReferenceIDList.addActionListener(new LoadFileSearchItemActionListener(main, data));
         optsButton.addActionListener(new ChooseOptsListener(panel));
         searchUPC.addActionListener(new UPCSearchListener(panel));
         buttonFilter.addActionListener(new FilterActionListener(main, data));
         averagePrice.addActionListener(new AveragePriceActionListener(main, data));
+        filters.addActionListener(new OpenDialogFilterActionListener(main, data));
     }
 
     public JFrame getMain() {
