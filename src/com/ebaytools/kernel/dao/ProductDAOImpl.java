@@ -5,10 +5,7 @@ import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
-import com.ebaytools.util.Fields;
-import com.ebaytools.util.FormatterText;
-import com.ebaytools.util.Pair;
-import com.ebaytools.util.SearchUtil;
+import com.ebaytools.util.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -58,9 +55,13 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
         }
     }
 
+    /**
+     * This method creates product object. To set synchronized because system uses this method in schedule job as separete thread
+     * @param map result
+     */
     //TODO need to rewrite this awful method
     @Override
-    public void create(Map<Pair, Map<SearchItem, Boolean>> map) {
+    public synchronized void create(Map<Pair, Map<SearchItem, Boolean>> map) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         for (Map.Entry<Pair, Map<SearchItem, Boolean>> entry : map.entrySet()) {
@@ -138,7 +139,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                             ItemProperties prTotal = prMap.get(Fields.TOTAL_COST);
                             String shippingValue = prMap.get(Fields.SHIPPING_COST).getValue();
                             String priceCost = prMap.get(Fields.AUCTION_PRICE).getValue();
-                            float cost = Float.valueOf(shippingValue) + Float.valueOf(priceCost);
+                            float cost = TextUtil.getFloarOrZero(shippingValue) + TextUtil.getFloarOrZero(priceCost);
                             prTotal.setValue(String.valueOf(cost));
                             session.update(prTotal);
                             item.setCloseAuction(true);

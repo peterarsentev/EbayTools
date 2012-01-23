@@ -35,7 +35,7 @@ public class ManagerDAO {
         return instance;
     }
 
-    public FilterConditionsDAO getFilterConditionsDAO() {
+    public  FilterConditionsDAO getFilterConditionsDAO() {
         return filterConditionsDAO;
     }
 

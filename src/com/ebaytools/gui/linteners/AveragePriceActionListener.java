@@ -11,6 +11,7 @@ import com.ebaytools.util.FormatterText;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class AveragePriceActionListener implements ActionListener {
@@ -42,19 +43,51 @@ public class AveragePriceActionListener implements ActionListener {
                 rangItems.add(item);
             }
         }
-        for (Map.Entry<Rang, List<Item>> entry : rangByHour.entrySet()) {
+        for (Map.Entry<Rang, List<Item>> entry : sortMap(rangByHour).entrySet()) {
             float averagePrice = 0F;
             for (Item item : entry.getValue()) {
                 Map<Fields, ItemProperties> prs = ProductDAOImpl.buildProperties(item.getProperties());
                 averagePrice += Float.valueOf(prs.get(Fields.AUCTION_PRICE).getValue());
             }
             sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");
-            sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ": ");
-            sb.append(averagePrice + "$\t(" + entry.getValue().size() + ")");
+            sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ":\t");
+            DecimalFormat twoDForm = new DecimalFormat("#.##");
+            sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
             sb.append("\n");
         }
         sb.append("Total items : ").append(items.size()).append("\n");
         data.getText().setText(data.getText().getText() + sb.toString());
+    }
+    
+    public Map<Rang, List<Item>> sortMap(Map<Rang, List<Item>> map) {
+        List<Rang> keys = new ArrayList<Rang>(map.keySet());
+        Collections.sort(keys, new Comparator<Rang>() {
+            @Override
+            public int compare(Rang o1, Rang o2) {
+                if (o1.year == o2.year) {
+                    if (o1.month == o2.month) {
+                        if (o1.day == o2.day) {
+                            if (o1.hour == o2.hour) {
+                                return 0;  
+                            } else {
+                                return o1.hour > o2.hour ? 1 : -1;
+                            }
+                        } else {
+                            return o1.day > o2.day ? 1 : -1;   
+                        }
+                    } else {
+                        return o1.month > o2.month ? 1 : -1;    
+                    }
+                } else {
+                    return o1.year > o2.year ? 1 : -1;
+                }
+            }
+        });
+        Map<Rang, List<Item>> sortedMap = new LinkedHashMap<Rang, List<Item>>();
+        for (Rang rang : keys) {
+            sortedMap.put(rang, map.get(rang));
+        }
+        return sortedMap;
     }
 
     private static class Rang {

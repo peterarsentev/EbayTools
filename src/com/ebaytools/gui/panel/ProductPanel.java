@@ -44,12 +44,10 @@ public class ProductPanel extends JPanel {
         searchItem.setForeground(ColorUtil.IndianRed);
         JButton showItems = new JButton("Items");
         JButton loadReferenceIDList = new JButton("Add files");
-        JButton searchByFilesOfList = new JButton("Daily");
         loadReferenceIDList.setForeground(ColorUtil.IndianRed);
         showItems.setForeground(ColorUtil.IndianRed);
         showItems.setForeground(ColorUtil.IndianRed);
         panel.add(loadReferenceIDList, new Rectangle(12, 0, 4, 1));
-        panel.add(searchByFilesOfList, new Rectangle(12, 2, 4, 1));
         panel.add(createProduct, new Rectangle(12, 4, 4, 1));
         panel.add(editProduct, new Rectangle(12, 5, 4, 1));
         panel.add(refreshTable, new Rectangle(12, 6, 4, 1));
@@ -65,7 +63,6 @@ public class ProductPanel extends JPanel {
         searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
         loadReferenceIDList.addActionListener(new OpenFileSearchingDialogAcitonListener(main, data));
-        searchByFilesOfList.addActionListener(new SearchingByFilesOfListActionListener(main, data));
     }
 
     private class DeleteProductListenter implements ActionListener {
@@ -137,7 +134,7 @@ public class ProductPanel extends JPanel {
                 data.setLoadId(loadId);
                 data.getText().setText(data.getText().getText() + SearchUtil.buildSearchByMultiIDs(data));
                 ManagerDAO.getInstance().getProductDAO().create(data.getSaveData());
-                data.getText().setText(data.getText().getText() + "Start search total auction ids : " + data.getSaveData().size() + " time : " + (System.currentTimeMillis() - start)/1000 +" ms ");
+                data.getText().setText(data.getText().getText() + "Start search total auction ids : " + data.getSaveData().size() + " time : " + (System.currentTimeMillis() - start)/1000 +"s \n");
             }
         }
     }

@@ -27,7 +27,7 @@ public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSea
     }
 
     @Override
-    public List<FileSearching> getAllFileSearching() {
+    public synchronized List<FileSearching> getAllFileSearching() {
         return getHibernateTemplate().find("from " + FileSearching.class.getName());
     }
 }

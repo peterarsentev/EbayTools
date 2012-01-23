@@ -76,4 +76,24 @@
     <bean id="fileSearchingDAO" class="com.ebaytools.kernel.dao.FileSearchingDAOImpl">
         <property name="sessionFactory"><ref local="sessionFactory"/></property>
     </bean>
+
+    <bean id="jobBean" class="com.ebaytools.jobs.FileListSearchingJob"/>
+
+    <bean name="fileListSearchingJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.ebaytools.jobs.FileListSearchingJob" />
+    </bean>
+
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="fileListSearchingJob" />
+        <property name="cronExpression" value="0 59 23 * * ?" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
+
 </beans>
