@@ -98,10 +98,10 @@ public class AveragePriceActionListener implements ActionListener {
         
         private static Rang createRang(Calendar calendar) {
             Rang rang = new Rang();
-            rang.year = calendar.get(Calendar.YEAR);
-            rang.month = calendar.get(Calendar.MONTH);
-            rang.day = calendar.get(Calendar.DAY_OF_MONTH);
-            rang.hour = calendar.get(Calendar.HOUR);
+            rang.year = 0;//calendar.get(Calendar.YEAR);
+            rang.month = 0;//calendar.get(Calendar.MONTH);
+            rang.day = 0;//calendar.get(Calendar.DAY_OF_MONTH);
+            rang.hour = calendar.get(Calendar.HOUR_OF_DAY);
             return rang;
         }
 
