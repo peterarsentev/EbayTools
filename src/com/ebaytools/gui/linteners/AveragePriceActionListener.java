@@ -49,7 +49,7 @@ public class AveragePriceActionListener implements ActionListener {
                 Map<Fields, ItemProperties> prs = ProductDAOImpl.buildProperties(item.getProperties());
                 averagePrice += Float.valueOf(prs.get(Fields.AUCTION_PRICE).getValue());
             }
-            sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");
+//            sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");
             sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ":\t");
             DecimalFormat twoDForm = new DecimalFormat("#.##");
             sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
