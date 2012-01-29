@@ -65,6 +65,8 @@ public class SearchPanel extends JPanel {
         clear.setForeground(ColorUtil.LightSlateGray);
         optsButton.setForeground(ColorUtil.LightSlateGray);
         save.setForeground(ColorUtil.LightSlateGray);
+        JLabel lbClock = new JLabel();
+        new Clock(lbClock);
 
         data.setNumbersItem(numbersItem);
         data.setReferenceId(referenceId);
@@ -106,6 +108,7 @@ public class SearchPanel extends JPanel {
         panel.add(buttonFilter, new Rectangle(18, 0, 4, 1));
         panel.add(filters, new Rectangle(18, 1, 4, 1));
         panel.add(averagePrice, new Rectangle(18, 2, 4, 1));
+        panel.add(lbClock, new Rectangle(9, 26, 6, 1));
 
         // in this section we add listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));

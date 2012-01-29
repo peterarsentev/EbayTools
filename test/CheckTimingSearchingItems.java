@@ -9,17 +9,10 @@ import java.util.List;
 public class CheckTimingSearchingItems {
     private static final Log log = LogFactory.getLog(CheckTimingSearchingItems.class);
     public static void main(String[] arg) {
-        SearchUtil util = SearchUtil.getInstance();
         long start = System.currentTimeMillis();
-        log.info("Start : " + start);
-        new InnerSearcher(util, "First", "77826847").start();
-        new InnerSearcher(util, "Second", "108837307").start();
-        new InnerSearcher(util, "Three", "92352708").start();
-        log.info(" Time : " + (System.currentTimeMillis() - start) + " ms");
-//        util.getItemsBySortedType("77826847", "3000;7000", "Auction", SortOrderType.BEST_MATCH, "ReferenceID", null);
-//        util.getItemsBySortedType("108837307", "3000;7000", "Auction", SortOrderType.BEST_MATCH, "ReferenceID", null);
-//        util.getItemsBySortedType("92352708", "3000;7000", "Auction", SortOrderType.BEST_MATCH, "ReferenceID", null);
-//        log.info(" Time : " + (System.currentTimeMillis() - start) + " ms");
+        SearchUtil util = SearchUtil.getInstance();
+        List<SearchItem> items = util.getItemsBySortedType("85404848", "7000", "Auction", SortOrderType.BEST_MATCH, "ReferenceID", null);
+        log.info("total : " + items.size() + " time : " + (System.currentTimeMillis() - start) + " ms");
     }
     
     private static class InnerSearcher extends Thread {

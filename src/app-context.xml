@@ -4,7 +4,7 @@
 
 <beans>
     <bean id="propetyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="hibernate.properties"/>
+        <property name="location" value="ebaytools.properties"/>
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -85,7 +85,7 @@
 
     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="fileListSearchingJob" />
-        <property name="cronExpression" value="0 59 23 * * ?" />
+        <property name="cronExpression" value="${ebaytools.run.scherule}"/>
     </bean>
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

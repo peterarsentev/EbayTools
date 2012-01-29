@@ -1,6 +1,7 @@
 package com.ebaytools.kernel.dao;
 
 import com.ebaytools.kernel.entity.ItemProperties;
+import com.ebaytools.start.AppContextManager;
 import com.ebaytools.util.Fields;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,7 +18,7 @@ public class ManagerDAO {
     private FileSearchingDAO fileSearchingDAO;
 
     private ManagerDAO() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
+        ApplicationContext ctx = AppContextManager.getInstance().getCtx();
         this.productDAO = (ProductDAO) ctx.getBean("productDAO");
         this.itemDAO = (ItemDAO) ctx.getBean("itemDAO");
         this.itemPropetiesDAO = (ItemPropertiesDAO) ctx.getBean("itemPropetiesDAO");

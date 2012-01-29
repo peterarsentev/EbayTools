@@ -3,6 +3,8 @@ package com.ebaytools.start;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.EbayGUI;
 import com.ebaytools.kernel.dao.ManagerDAO;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
@@ -18,6 +20,7 @@ public class RunGUI {
 	public static void main(String[] arg) {
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                AppContextManager.getInstance();
                 ManagerDAO.getInstance();
                 Data data = new Data();
             	EbayGUI gui = new EbayGUI(data);
