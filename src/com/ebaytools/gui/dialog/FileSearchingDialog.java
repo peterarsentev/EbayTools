@@ -1,6 +1,7 @@
 package com.ebaytools.gui.dialog;
 
 import com.ebaytools.gui.linteners.AddfileActionListener;
+import com.ebaytools.gui.linteners.OpenDialogFileSearchingListener;
 import com.ebaytools.gui.linteners.RefreshTableListenter;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.GraphPaperLayout;
@@ -55,7 +56,7 @@ public class FileSearchingDialog extends JDialog {
         JButton delete = new JButton("Delete");
         panel.add(create, new Rectangle(12, 0, 3, 1));
         panel.add(delete, new Rectangle(12, 1, 3, 1));
-        create.addActionListener(new AddfileActionListener(dialog, data));
+        create.addActionListener(new OpenDialogFileSearchingListener(main, data));
         delete.addActionListener(new DeleteFileSearchingActionListener(main, data, fileSearchingModelTable));
         return panel;
     }

@@ -12,12 +12,12 @@ import java.io.File;
 public class AddfileActionListener implements ActionListener {
     private JFileChooser fc;
     private JDialog main;
-    private Data dataModel;
+    private JLabel label;
 
-    public AddfileActionListener(JDialog main, Data data) {
+    public AddfileActionListener(JDialog main, JLabel label) {
         this.fc = new JFileChooser();
         this.main = main;
-        this.dataModel = data;
+        this.label = label;
     }
 
     @Override
@@ -26,10 +26,7 @@ public class AddfileActionListener implements ActionListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file.exists()) {
-                FileSearching fileSearching = new FileSearching();
-                fileSearching.setPath(file.getAbsolutePath());
-                ManagerDAO.getInstance().getFileSearchingDAO().create(fileSearching);
-                dataModel.getRefresFileSearchingTable().actionPerformed(null);
+                label.setText(file.getAbsolutePath());
             } else {
                 JOptionPane.showMessageDialog(main, "Error this file does not exist file : " + file.getAbsolutePath() , "Error", JOptionPane.ERROR_MESSAGE);
             }

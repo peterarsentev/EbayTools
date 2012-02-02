@@ -12,5 +12,9 @@
         </id>
 
         <property name="path" column="path" type="java.lang.String"/>
+        <property name="condition" column="condition" type="java.lang.String"/>
+        <property name="listType" column="listType" type="java.lang.String"/>
+        <property name="dayLeft" column="dayLeft" type="java.lang.Integer"/>
+        <property name="timeInterval" column="timeInterval" type="java.lang.Integer"/>
     </class>
 </hibernate-mapping>

@@ -61,5 +61,9 @@ create table filtervalue(
 create table fileSearching (
   id bigint not null,
   parh varchar(200),
+  condition varchar(200),
+  listType varchar(200),
+  dayLeft integer,
+  timeInterval integer,
   constraint fsId primary key (id)
 );

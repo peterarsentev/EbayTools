@@ -3,6 +3,42 @@ package com.ebaytools.kernel.entity;
 public class FileSearching {
     private Long id;
     private String path;
+    private String condition;
+    private String listType;
+    private Integer dayLeft;
+    private Integer timeInterval;
+
+    public Integer getTimeInterval() {
+        return timeInterval;
+    }
+
+    public void setTimeInterval(Integer timeInterval) {
+        this.timeInterval = timeInterval;
+    }
+
+    public Integer getDayLeft() {
+        return dayLeft;
+    }
+
+    public void setDayLeft(Integer dayLeft) {
+        this.dayLeft = dayLeft;
+    }
+
+    public String getListType() {
+        return listType;
+    }
+
+    public void setListType(String listType) {
+        this.listType = listType;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
     public Long getId() {
         return id;
