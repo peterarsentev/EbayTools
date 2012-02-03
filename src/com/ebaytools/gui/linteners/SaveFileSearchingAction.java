@@ -9,17 +9,18 @@ import com.ebaytools.util.Pair;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 
 public class SaveFileSearchingAction implements ActionListener {
     private JDialog dialog;
-    private JLabel filePart;
+    private JTextField filePart;
     private JList<Pair<String>> valueConditions;
     private JTextField timeOfDay;
     private JTextField listType;
     private JTextField intervalUpdate;
     private Data data;
 
-    public SaveFileSearchingAction(JDialog dialog, JLabel filePart, JList<Pair<String>> valueConditions, JTextField listType, JTextField timeOfDay, JTextField intervalUpdate, Data data) {
+    public SaveFileSearchingAction(JDialog dialog, JTextField filePart, JList<Pair<String>> valueConditions, JTextField listType, JTextField timeOfDay, JTextField intervalUpdate, Data data) {
         this.dialog = dialog;
         this.filePart = filePart;
         this.intervalUpdate = intervalUpdate;
@@ -41,6 +42,9 @@ public class SaveFileSearchingAction implements ActionListener {
         fileSearching.setListType(listType.getText());
         fileSearching.setDayLeft(Integer.valueOf(timeOfDay.getText()));
         fileSearching.setTimeInterval(Integer.valueOf(intervalUpdate.getText()));
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, Integer.valueOf(intervalUpdate.getText()));
+        fileSearching.setRunTime(cal);
         ManagerDAO.getInstance().getFileSearchingDAO().create(fileSearching);
         dialog.setVisible(false);
         dialog.dispose();

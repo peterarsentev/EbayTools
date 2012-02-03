@@ -14,9 +14,9 @@ public class Clock  {
 
     public Clock(final JLabel jLabel) {
         tflz = new DecimalFormat("00");
-        CronTriggerBean cronBean = (CronTriggerBean) AppContextManager.getInstance().getCtx().getBean("cronTrigger");
+        //CronTriggerBean cronBean = (CronTriggerBean) AppContextManager.getInstance().getCtx().getBean("cronTrigger");
         Calendar nextRun = Calendar.getInstance();
-        nextRun.setTime(cronBean.getNextFireTime());
+        //nextRun.setTime(cronBean.getNextFireTime());
         StringBuilder sb = new StringBuilder();
         sb.append(" next run ");
         sb.append(nextRun.get(Calendar.HOUR_OF_DAY));

@@ -42,7 +42,7 @@ public class ItemsSearchListener implements ActionListener {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
             Map<SearchItem, Boolean> items;
-            List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.getIntegerOrNull(daysLeft.getText()));
+            List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.convertDayToHours(daysLeft.getText()));
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {

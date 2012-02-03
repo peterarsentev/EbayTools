@@ -1,5 +1,7 @@
 package com.ebaytools.kernel.entity;
 
+import java.util.Calendar;
+
 public class FileSearching {
     private Long id;
     private String path;
@@ -7,6 +9,15 @@ public class FileSearching {
     private String listType;
     private Integer dayLeft;
     private Integer timeInterval;
+    private Calendar runTime;
+
+    public Calendar getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(Calendar runTime) {
+        this.runTime = runTime;
+    }
 
     public Integer getTimeInterval() {
         return timeInterval;

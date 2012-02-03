@@ -2,6 +2,7 @@ package com.ebaytools.start;
 
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.EbayGUI;
+import com.ebaytools.jobs.FileListSearchingJob;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -18,7 +19,7 @@ import java.util.*;
  */
 public class RunGUI {
 	public static void main(String[] arg) {
-		SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 AppContextManager.getInstance();
                 ManagerDAO.getInstance();
@@ -26,6 +27,7 @@ public class RunGUI {
             	EbayGUI gui = new EbayGUI(data);
                 gui.init();
                 gui.setVisible(true);
+                FileListSearchingJob.jobs();
             }
         });
 	}

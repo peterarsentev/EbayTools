@@ -34,7 +34,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public synchronized List<Product> getAllProduct() {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Product");
     }
 

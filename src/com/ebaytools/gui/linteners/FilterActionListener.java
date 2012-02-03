@@ -31,11 +31,18 @@ public class FilterActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
         if (setting == null) {
-            JOptionPane.showMessageDialog(main, "First of all you must apply filter!", "Error", JOptionPane.ERROR_MESSAGE);    
+            JOptionPane.showMessageDialog(main, "First of all you must apply filter!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
             StringBuilder sb = new StringBuilder();
-            List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter);
+            List<Object[]> selectData = data.getProductTable().getDataSelect();
+            Long productId = null;
+            if (selectData.size() > 1) {
+                JOptionPane.showMessageDialog(main, "You must select only one product or nothing!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!selectData.isEmpty()) {
+                productId = (Long) selectData.get(0)[1];
+            }
+            List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, productId);
             for (Item item : items) {
                 sb.append("id : ").append(item.getId()).append("\n");
                 sb.append("itemID : ").append(item.getEbayItemId()).append("\n");

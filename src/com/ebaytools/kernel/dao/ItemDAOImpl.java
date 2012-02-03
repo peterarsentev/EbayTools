@@ -32,7 +32,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getItemsByProductId(Long productId) {
+    public synchronized List<Item> getItemsByProductId(Long productId) {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=?", productId);
     }
     
@@ -47,10 +47,14 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getProductByFilter(Filter filter) {
-        StringBuilder query = new StringBuilder(" from com.ebaytools.kernel.entity.Item as item, com.ebaytools.kernel.entity.ItemProperties as prs where item.id = prs.itemId ");
-        query.append(" and item.closeAuction=?");
+    public List<Item> getProductByFilter(Filter filter, Long productId) {
         List<Object> params = new ArrayList<Object>();
+        StringBuilder query = new StringBuilder(" from com.ebaytools.kernel.entity.Item as item, com.ebaytools.kernel.entity.ItemProperties as prs where item.id = prs.itemId ");
+        if (productId == null) {
+            query.append(" and item.productId=?");
+            params.add(productId);
+        }
+        query.append(" and item.closeAuction=?");
         params.add(true);
         Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         if (TextUtil.isNotNull(conditions.get(Fields.CONDITIONS))) {
@@ -110,7 +114,12 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public synchronized List<Item> getAllCloseItems() {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=?", true);
+    }
+
+    @Override
+    public synchronized List<Item> getAllCloseItemsByProductId(Long productId) {
+        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=? and item.closeAuction=?", productId, true);
     }
 }

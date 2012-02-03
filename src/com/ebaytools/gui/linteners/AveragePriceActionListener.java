@@ -6,7 +6,7 @@ import com.ebaytools.kernel.dao.ProductDAOImpl;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.util.Fields;
-import com.ebaytools.util.FormatterText;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +15,8 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class AveragePriceActionListener implements ActionListener {
+    private static final Logger log = Logger.getLogger(AveragePriceActionListener.class);
+
     private JFrame main;
     private Data data;
 
@@ -25,8 +27,20 @@ public class AveragePriceActionListener implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        List<Object[]> selectData = data.getProductTable().getDataSelect();
+        Long productId = null;
+        if (selectData.size() > 1) {
+            JOptionPane.showMessageDialog(main, "You must select only one product or nothing!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!selectData.isEmpty()) {
+            productId = (Long) selectData.get(0)[1];
+        }
         StringBuilder sb = new StringBuilder();
-        List<Item> items = ManagerDAO.getInstance().getItemDAO().getAllItems();
+        List<Item> items;
+        if (productId == null) {
+            items = ManagerDAO.getInstance().getItemDAO().getAllCloseItems();
+        } else {
+            items = ManagerDAO.getInstance().getItemDAO().getAllCloseItemsByProductId(productId);
+        }
         Map<Rang, List<Item>> rangByHour = new LinkedHashMap<Rang, List<Item>>();
         Collections.sort(items, new Comparator<Item>() {
             @Override

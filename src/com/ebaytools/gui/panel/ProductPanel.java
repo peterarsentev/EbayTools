@@ -63,6 +63,7 @@ public class ProductPanel extends JPanel {
         searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
         loadReferenceIDList.addActionListener(new OpenFileSearchingDialogAcitonListener(main, data));
+        data.setProductTable(productModelTable);
     }
 
     private class DeleteProductListenter implements ActionListener {

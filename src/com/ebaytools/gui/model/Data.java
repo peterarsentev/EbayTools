@@ -3,6 +3,7 @@ package com.ebaytools.gui.model;
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.util.Pair;
+import com.ebaytools.util.TableModelCheckBox;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -28,6 +29,15 @@ public class Data {
     private ActionListener refresFilterTable;
     private ActionListener refresFileSearchingTable;
     private JButton buttonFilter;
+    private TableModelCheckBox productTable;
+
+    public TableModelCheckBox getProductTable() {
+        return productTable;
+    }
+
+    public void setProductTable(TableModelCheckBox productTable) {
+        this.productTable = productTable;
+    }
 
     public ActionListener getRefresFileSearchingTable() {
         return refresFileSearchingTable;

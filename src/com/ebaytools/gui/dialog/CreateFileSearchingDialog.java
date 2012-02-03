@@ -30,7 +30,7 @@ public class CreateFileSearchingDialog extends JDialog {
         });
         dialog.add(buildCreatePanel(), BorderLayout.CENTER);
         dialog.pack();
-        dialog.setSize(400, 400);
+        dialog.setSize(400, 300);
         dialog.setLocationRelativeTo(main);
         dialog.setVisible(true);
     }
@@ -38,12 +38,13 @@ public class CreateFileSearchingDialog extends JDialog {
     private JPanel buildCreatePanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setLayout(new GraphPaperLayout(new Dimension(12, 12), 1, 1));
-        JLabel filePart = new JLabel("-");
-        panel.add(filePart, new Rectangle(3, 1, 11, 1));
+        panel.setLayout(new GraphPaperLayout(new Dimension(12, 10), 1, 1));
+        JTextField filePart = new JTextField();
+        filePart.setEditable(false);
+        panel.add(filePart, new Rectangle(0, 1, 8, 1));
         JButton selectFile = new JButton("Select");
         selectFile.addActionListener(new AddfileActionListener(this, filePart));
-        panel.add(selectFile, new Rectangle(0, 1, 3, 1));
+        panel.add(selectFile, new Rectangle(8, 1, 3, 1));
         panel.add(new JLabel("Conditions : "), new Rectangle(0, 3, 3, 1));
         java.util.List<Pair<String>> pairs = new ArrayList< Pair<String>>();
         pairs.add(new Pair<String>("New", "1000"));
@@ -60,6 +61,7 @@ public class CreateFileSearchingDialog extends JDialog {
         panel.add(new JScrollPane(valueConditions), new Rectangle(3, 3, 9, 3));
         panel.add(new JLabel("List type : "), new Rectangle(0, 6, 6, 1));
         JTextField listType = new JTextField();
+        listType.setText("Auction");
         panel.add(listType, new Rectangle(6, 6, 6, 1));
         panel.add(new JLabel("Time of day (in hours) : "), new Rectangle(0, 7, 6, 1));
         JTextField timeOfDay = new JTextField();

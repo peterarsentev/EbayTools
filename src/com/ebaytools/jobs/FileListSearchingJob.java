@@ -23,42 +23,79 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class FileListSearchingJob extends QuartzJobBean {
+public class FileListSearchingJob  {
     private static final Logger log = Logger.getLogger(FileListSearchingJob.class);
 
-    /*
-    Should to change it because it heavy to set up in the code
-     */
-    private String conditions = "3000;7000"; //set up conditions through DI spring
-    private String listingType = "Auction"; //set up aucton through DI spring
+    public static void jobs() {
+        new Thread() {
+            @Override
+            public void run() {
+                WorkerPool pool = new WorkerPool(1, 0, 4, 30);
+                while (true) {
+                    log.debug("start");
+                    List<FileSearching> files = ManagerDAO.getInstance().getFileSearchingDAO().getFileSearchingCurrentTime();
+                    for (FileSearching fileSearch : files) {
+                        int result = pool.process(new FileSearchingWorker(fileSearch));
+                        if (result == 1) {
+                            ManagerDAO.getInstance().getFileSearchingDAO().updateRunTime(fileSearch);
+                        }
+                    }
+                    try {
+                        Thread.sleep(60000); //wait 1 min
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    log.debug("finish");
+                }
+            }
+        }.start();
+    }
+
+    private static class FileSearchingWorker extends WorkerPool.Worker {
+        private FileSearching fileSearching;
+        private Long id;
+
+        private FileSearchingWorker(FileSearching fileSearching) {
+            super(fileSearching.getId());
+            this.fileSearching = fileSearching;
+            id = fileSearching.getId();
+        }
+
+        private FileSearchingWorker(Long id) {
+            super(id);
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            execute(fileSearching);
+        }
+    }
 
     /**
      * This method is execured through Quartz schecule
-     * @param context JobExecutionContext
-     * @throws JobExecutionException for necessery
+     * @param fileSearching FileSearching
      */
-    @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    private static void execute(FileSearching fileSearching) {
         log.debug("start");
         long start = System.currentTimeMillis();
-        List<FileSearching> files = ManagerDAO.getInstance().getFileSearchingDAO().getAllFileSearching();
         List<String> loadId = new ArrayList<String>();
-        for (FileSearching fileSearching: files) {
-            File file = new File(fileSearching.getPath());
-            if (file.exists()) {
-                List<String> data = LoadFileSearchItemActionListener.readFile(file);
-                loadId.addAll(data);
-            } else {
-                log.error("File " + file.getPath() + " is not exist! ");
-            }
+        File file = new File(fileSearching.getPath());
+        if (file.exists()) {
+            List<String> data = LoadFileSearchItemActionListener.readFile(file);
+            loadId.addAll(data);
+        } else {
+            log.error("File " + file.getPath() + " is not exist! ");
         }
         Map<Pair, Map<SearchItem, Boolean>> map = new LinkedHashMap<Pair, Map<SearchItem, Boolean>>();
         for (String id : loadId) {
             if (TextUtil.isNotNull(id)) {
-                Map<SearchItem, Boolean> items = getResult(id, "UPC", conditions, listingType);
+                Map<SearchItem, Boolean> items = getResult(id, "UPC", fileSearching.getCondition(), fileSearching.getListType(), fileSearching.getDayLeft());
                 if (items.isEmpty()) {
-                    items = getResult(id, "ReferenceID", conditions, listingType);
+                    items = getResult(id, "ReferenceID", fileSearching.getCondition(), fileSearching.getListType(), fileSearching.getDayLeft());
                     if (items.isEmpty()) {
                         log.debug(new StringBuffer().append("\nid : ").append(id).append(" doesn't have any match by peference and upc id!\n\n").toString());
                         map.put(new Pair<String>(id, "doesn't have any match by reference and upc id!"), null);
@@ -84,9 +121,9 @@ public class FileListSearchingJob extends QuartzJobBean {
      * @param listingType listing type usually auction
      * @return map result with item and golden property
      */
-    private static Map<SearchItem, Boolean> getResult(String id, String type, String conditions, String listingType) {
+    private static Map<SearchItem, Boolean> getResult(String id, String type, String conditions, String listingType, Integer leftTime) {
         Map<SearchItem, Boolean> items = new LinkedHashMap<SearchItem, Boolean>();
-        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, conditions, listingType, SortOrderType.BEST_MATCH, type, 1);
+        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, conditions, listingType, SortOrderType.BEST_MATCH, type, leftTime);
         if (searchItems != null) {
             Map<SearchItem, Boolean> fullingItem = SearchUtil.fullingGoldenItems(searchItems);
             items.putAll(fullingItem);

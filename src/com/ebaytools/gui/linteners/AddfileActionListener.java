@@ -12,10 +12,10 @@ import java.io.File;
 public class AddfileActionListener implements ActionListener {
     private JFileChooser fc;
     private JDialog main;
-    private JLabel label;
+    private JTextField label;
 
-    public AddfileActionListener(JDialog main, JLabel label) {
-        this.fc = new JFileChooser();
+    public AddfileActionListener(JDialog main, JTextField label) {
+        this.fc = new JFileChooser("./");
         this.main = main;
         this.label = label;
     }

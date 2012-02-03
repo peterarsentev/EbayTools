@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class FormatterText {
-    public final static SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy");
+    public final static SimpleDateFormat dateformatter = new SimpleDateFormat("kk:mm:ss dd.MM.yyyy");
     private final static SimpleDateFormat dateForSearchDay = new SimpleDateFormat("yyyy-MM-dd");
     private final static SimpleDateFormat dateForSearchTime = new SimpleDateFormat("hh:mm:ss.SSS");
 

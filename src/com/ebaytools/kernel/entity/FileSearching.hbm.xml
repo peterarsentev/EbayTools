@@ -16,5 +16,6 @@
         <property name="listType" column="listType" type="java.lang.String"/>
         <property name="dayLeft" column="dayLeft" type="java.lang.Integer"/>
         <property name="timeInterval" column="timeInterval" type="java.lang.Integer"/>
+        <property name="runTime" column="runTime" type="java.util.Calendar"/>
     </class>
 </hibernate-mapping>

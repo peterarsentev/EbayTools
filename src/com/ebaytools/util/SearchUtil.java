@@ -106,6 +106,16 @@ public class SearchUtil {
         return filter;
     }
 
+    /**
+     * This method searchs items in ebay by specail criteria
+     * @param productId reference or upc id
+     * @param condition condition
+     * @param listingType auction type
+     * @param order order type
+     * @param type product id
+     * @param daysLeft daysLeft to set in hours
+     * @return list items
+     */
     public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Integer daysLeft) {
         FindByProduct productRequest = new FindByProduct();
         PaginationInput pi = new PaginationInput();
@@ -124,7 +134,7 @@ public class SearchUtil {
         }
         if (TextUtil.isNotNull(daysLeft)) {
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_MONTH, daysLeft);
+            cal.add(Calendar.HOUR, daysLeft);
             productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(cal)));
         }
 
@@ -244,7 +254,7 @@ public class SearchUtil {
 
     private static Map<SearchItem, Boolean> getResult(final StringBuilder sb, Pair<SortOrderType> pairSorted, String id, String type, Data data) {
         Map<SearchItem, Boolean> items = new LinkedHashMap<SearchItem, Boolean>();
-        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, data.getConditionsField().getText(), data.getListTypeField().getText(), pairSorted.getValue(), type, TextUtil.getIntegerOrNull(data.getDaysLeft().getText()));
+        List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, data.getConditionsField().getText(), data.getListTypeField().getText(), pairSorted.getValue(), type, TextUtil.convertDayToHours(data.getDaysLeft().getText()));
         if (searchItems != null) {
             if (data.getGoldenSearch().isSelected()) {
                 Map<SearchItem, Boolean> goldenItems = SearchUtil.getGoldenItems(searchItems);

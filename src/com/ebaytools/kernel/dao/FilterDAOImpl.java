@@ -44,12 +44,12 @@ public class FilterDAOImpl extends HibernateDaoSupport implements FilterDAO {
     }
 
     @Override
-    public Filter find(Long id) {
+    public synchronized Filter find(Long id) {
         return getHibernateTemplate().get(Filter.class, id);
     }
 
     @Override
-    public List<Filter> getAllFilters() {
+    public synchronized List<Filter> getAllFilters() {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Filter");
     }
 }

@@ -17,6 +17,11 @@ public class TextUtil {
         }
     }
 
+    public static Integer convertDayToHours(String text) {
+        Integer days = getIntegerOrNull(text);
+        return days != null ? 24 * days : null;
+    }
+
     /**
      * This method parses srting and trys to convert it in float
      * @param text parse string
