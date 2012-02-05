@@ -17,8 +17,27 @@ public class Item implements Comparable<Item>, Serializable {
     private Integer totalBid;
     private Boolean golden;
     private Boolean closeAuction;
+    private Integer state;
 
+    public enum Status {
+        CLOSE(1),
+        PROCESS_UPDATE(2),
+        UNSOLD(-1);
 
+        public int key;
+
+        private Status(int key) {
+            this.key = key;
+        }
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Boolean getCloseAuction() {
         return closeAuction;

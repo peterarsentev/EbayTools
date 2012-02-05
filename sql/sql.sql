@@ -14,6 +14,7 @@ create table item (
   totalBid integer not null,
   golden boolean not null,
   closeAuction boolean,
+  state integer,
   CONSTRAINT iId PRIMARY KEY (id),
   Foreign Key (productId) references product(id)
 );

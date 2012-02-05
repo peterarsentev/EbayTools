@@ -28,12 +28,12 @@ public class SystemSettingDAOImpl extends HibernateDaoSupport implements SystemS
     }
 
     @Override
-    public List<String> getChooseOptsValue() {
+    public synchronized List<String> getChooseOptsValue() {
         return getHibernateTemplate().find("select sysSet.value from com.ebaytools.kernel.entity.SystemSetting as sysSet where sysSet.name=?", Fields.CHOSE_OPTIONS.getKey());
     }
 
     @Override
-    public List<SystemSetting> getChooseOpts() {
+    public synchronized List<SystemSetting> getChooseOpts() {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.SystemSetting as sysSet where sysSet.name=?", Fields.CHOSE_OPTIONS.getKey());
     }
 

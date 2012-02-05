@@ -226,7 +226,7 @@ public class FormatterText {
         return sb.toString();
     }
 
-    private static String buildTime(Duration duration) {
+    public static String buildTime(Duration duration) {
         StringBuilder sb = new StringBuilder();
         sb.append(duration.getDays()).append(" days, ").append(duration.getHours()).append(" hours, ").append(duration.getMinutes()).append(" minutes, ").append(duration.getSeconds()).append(" seconds.");
         return sb.toString();

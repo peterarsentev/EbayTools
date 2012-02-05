@@ -11,10 +11,14 @@ import com.ebaytools.gui.panel.SearchPanel;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.util.*;
 import com.ebay.services.finding.*;
+import org.apache.log4j.Logger;
+
 import java.util.*;
 
 public class ItemsSearchListener implements ActionListener {
-	private JTextArea text;
+    private static final Logger log = Logger.getLogger(ItemsSearchListener.class);
+    
+    private JTextArea text;
 	private JTextField product;
     private JTextField condition;
     private JTextField listingType;
@@ -42,7 +46,9 @@ public class ItemsSearchListener implements ActionListener {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
 			StringBuilder sb = new StringBuilder("GoldenItems : \n");
             Map<SearchItem, Boolean> items;
+            log.debug(product.getText()+" "+condition.getText()+ " " +listingType.getText() + " " +pairSorted.getValue()+ " " +"ReferenceID"+ " " +TextUtil.convertDayToHours(daysLeft.getText()));
             List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.convertDayToHours(daysLeft.getText()));
+            log.debug("total : " + searchItems.size());
             if (golderSearch.isSelected()) {
                 items = SearchUtil.getGoldenItems(searchItems);
             } else {

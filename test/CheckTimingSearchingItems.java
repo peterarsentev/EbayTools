@@ -12,7 +12,7 @@ public class CheckTimingSearchingItems {
         long start = System.currentTimeMillis();
         SearchUtil util = SearchUtil.getInstance();
         List<SearchItem> items = util.getItemsBySortedType("85404848", "7000", "Auction", SortOrderType.BEST_MATCH, "ReferenceID", null);
-        log.info("total : " + items.size() + " time : " + (System.currentTimeMillis() - start) + " ms");
+        log.debug("total : " + items.size() + " time : " + (System.currentTimeMillis() - start) + " ms");
     }
     
     private static class InnerSearcher extends Thread {

@@ -3,6 +3,7 @@ package com.ebaytools.start;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.EbayGUI;
 import com.ebaytools.jobs.FileListSearchingJob;
+import com.ebaytools.jobs.UpdateAuctionClosePriceJob;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,6 +29,7 @@ public class RunGUI {
                 gui.init();
                 gui.setVisible(true);
                 FileListSearchingJob.jobs();
+                UpdateAuctionClosePriceJob.jobs();
             }
         });
 	}

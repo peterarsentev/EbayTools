@@ -22,5 +22,6 @@
             <key column="itemId" not-null="true" />
             <one-to-many class="com.ebaytools.kernel.entity.ItemProperties"/>
         </set>
+        <property name="state" column="state" type="java.lang.Integer"/>
     </class>
 </hibernate-mapping>

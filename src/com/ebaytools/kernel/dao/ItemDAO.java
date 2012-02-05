@@ -15,4 +15,6 @@ public interface ItemDAO extends CrUD<Item> {
     public List<Item> getAllCloseItems();
     
     public List<Item> getAllCloseItemsByProductId(Long productId);
+
+    public List<Item> getItemsAuctionDateExpare();
 }

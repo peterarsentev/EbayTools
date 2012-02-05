@@ -33,7 +33,7 @@ public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSea
     }
 
     @Override
-    public List<FileSearching> getFileSearchingCurrentTime() {
+    public synchronized List<FileSearching> getFileSearchingCurrentTime() {
         return getHibernateTemplate().find("from " + FileSearching.class.getName() + " as fs where fs.runTime<=?", Calendar.getInstance());
     }
 

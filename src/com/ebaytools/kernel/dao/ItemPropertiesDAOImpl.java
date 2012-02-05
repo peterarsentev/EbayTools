@@ -18,7 +18,7 @@ public class ItemPropertiesDAOImpl extends HibernateDaoSupport implements ItemPr
 
     @Override
     public void update(ItemProperties itemProperties) {
-        throw new UnsupportedOperationException();
+        getHibernateTemplate().update(itemProperties);
     }
 
     @Override

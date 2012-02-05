@@ -119,15 +119,16 @@ public class FileListSearchingJob  {
      * @param type type product id reference or upc
      * @param conditions conditions
      * @param listingType listing type usually auction
+     * @param leftTime left time
      * @return map result with item and golden property
      */
     private static Map<SearchItem, Boolean> getResult(String id, String type, String conditions, String listingType, Integer leftTime) {
         Map<SearchItem, Boolean> items = new LinkedHashMap<SearchItem, Boolean>();
+        log.debug(id + " " + conditions + " " + listingType + " " + SortOrderType.BEST_MATCH + " " + type + " " + leftTime);
         List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(id, conditions, listingType, SortOrderType.BEST_MATCH, type, leftTime);
-        if (searchItems != null) {
-            Map<SearchItem, Boolean> fullingItem = SearchUtil.fullingGoldenItems(searchItems);
-            items.putAll(fullingItem);
-        }
+        Map<SearchItem, Boolean> fullingItem = SearchUtil.fullingGoldenItems(searchItems);
+        items.putAll(fullingItem);
+        log.debug(" Total : " + searchItems.size());
         return items;
     }
 }

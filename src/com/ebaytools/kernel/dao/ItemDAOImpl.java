@@ -18,7 +18,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public void update(Item item) {
-        throw new UnsupportedOperationException();
+        getHibernateTemplate().update(item);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public synchronized List<Item> getItemsByProductId(Long productId) {
-        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=?", productId);
+        return getHibernateTemplate().find("from "+Item.class.getName()+" as item where item.productId=? order by item.closeDate", productId);
     }
     
 
@@ -48,15 +48,15 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public List<Item> getProductByFilter(Filter filter, Long productId) {
+        Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         List<Object> params = new ArrayList<Object>();
         StringBuilder query = new StringBuilder(" from com.ebaytools.kernel.entity.Item as item, com.ebaytools.kernel.entity.ItemProperties as prs where item.id = prs.itemId ");
-        if (productId == null) {
+        if (productId != null) {
             query.append(" and item.productId=?");
             params.add(productId);
         }
         query.append(" and item.closeAuction=?");
         params.add(true);
-        Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         if (TextUtil.isNotNull(conditions.get(Fields.CONDITIONS))) {
             String[] values = conditions.get(Fields.CONDITIONS).split(";");
             if (TextUtil.isNotNull(values[0])) {
@@ -102,6 +102,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             }
         }
 
+        query.append(" order by item.closeDate");
         List<Object[]> objectArray = getHibernateTemplate().find(query.toString(), params.toArray(new Object[params.size()]));
         List<Item> items = new ArrayList<Item>();
         for (Object[] array : objectArray) {
@@ -121,5 +122,14 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     @Override
     public synchronized List<Item> getAllCloseItemsByProductId(Long productId) {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.productId=? and item.closeAuction=?", productId, true);
+    }
+
+    /**
+     * This method gets items where close date is expared
+     * @return list items
+     */
+    @Override
+    public synchronized List<Item> getItemsAuctionDateExpare() {
+        return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction=?", Calendar.getInstance(), false);
     }
 }

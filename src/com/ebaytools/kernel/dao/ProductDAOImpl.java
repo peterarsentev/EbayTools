@@ -65,19 +65,24 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         for (Map.Entry<Pair, Map<SearchItem, Boolean>> entry : map.entrySet()) {
+            boolean isItems = entry.getValue() != null && !entry.getValue().isEmpty();
             Product product = findProductByReferenceId(entry.getKey().getKey());
             Long productId;
             if (product == null) {
                 product = new Product();
                 product.setReferenceId(entry.getKey().getKey());
+                if (isItems) {
+                    String title = entry.getValue().entrySet().iterator().next().getKey().getTitle();
+                    product.setName(title);
+                }
                 productId = (Long) session.save(product);
+                
             } else {
                 productId = product.getId();
             }
             Map<String, Item> itemIds = ManagerDAO.getInstance().getItemDAO().getItemEbayIdByProductId(productId);
             Calendar createTime = Calendar.getInstance();
-            if (entry.getValue() != null) {
-                List<String> useIds = new ArrayList<String>();
+            if (isItems) {
                 for (Map.Entry<SearchItem, Boolean> innerEntry : entry.getValue().entrySet()) {
                     SearchItem searchItem = innerEntry.getKey();
                     if (!itemIds.containsKey(searchItem.getItemId())) {
@@ -101,52 +106,6 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState(), null));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.CONDITIONS, String.valueOf(searchItem.getCondition().getConditionId()), null));
-                    }
-                    useIds.add(searchItem.getItemId());
-                }
-
-                List<String> endedAuction = new ArrayList<String>();
-                for (String id : itemIds.keySet()) {
-                    if (!useIds.contains(id)) {
-                        boolean notEndedYet = true;
-                        for (ItemProperties prs : itemIds.get(id).getProperties()) {
-                            if (Fields.AUCTION_STATUS.getKey().equals(prs.getName()) && "COMPLETED".equals(prs.getValue())) {
-                                notEndedYet = false;
-                            }
-                        }
-                        if (notEndedYet) {
-                            endedAuction.add(id);
-                        }
-                    }
-                }
-
-                for (String id : endedAuction) {
-                    ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(id);
-                    if (itemType != null) {
-                        if (itemType.getSellingStatus().getListingStatus().name().equals("COMPLETED")) {
-                            Item item = itemIds.get(id);
-                            Map<Fields, ItemProperties> prMap = buildProperties(item.getProperties());
-
-                            ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
-                            prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));
-                            prAuction.setType(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getCurrencyID()));
-                            session.update(prAuction);
-
-                            ItemProperties prStatus = prMap.get(Fields.AUCTION_STATUS);
-                            prStatus.setValue(itemType.getSellingStatus().getListingStatus().name());
-                            session.update(prStatus);
-
-                            ItemProperties prTotal = prMap.get(Fields.TOTAL_COST);
-                            String shippingValue = prMap.get(Fields.SHIPPING_COST).getValue();
-                            String priceCost = prMap.get(Fields.AUCTION_PRICE).getValue();
-                            float cost = TextUtil.getFloarOrZero(shippingValue) + TextUtil.getFloarOrZero(priceCost);
-                            prTotal.setValue(String.valueOf(cost));
-                            session.update(prTotal);
-                            item.setCloseAuction(true);
-                            session.update(item);
-                        }
-                    } else {
-                        session.delete(itemIds.get(id));
                     }
                 }
             }

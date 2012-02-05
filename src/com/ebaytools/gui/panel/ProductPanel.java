@@ -10,9 +10,13 @@ import com.ebaytools.kernel.entity.Product;
 import com.ebaytools.util.*;
 
 import javax.swing.*;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.List;
 
@@ -161,7 +165,6 @@ public class ProductPanel extends JPanel {
                     List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]); 
                     for (Item item : items) {
                         sb.append("itemID : ").append(item.getEbayItemId()).append("\n");
-                                //.append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
                         sb.append("count_bid : ").append(item.getTotalBid()).append("\n");
                         sb.append("auction_close_date : ").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
                         sb.append("auction_status : ").append(item.getCloseAuction() ? "completed" : "active").append("\n");
