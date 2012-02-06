@@ -22,10 +22,11 @@ public class RunGUI {
 	public static void main(String[] arg) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                AppContextManager.getInstance();
+                AppContextManager app = AppContextManager.getInstance();
                 ManagerDAO.getInstance();
                 Data data = new Data();
             	EbayGUI gui = new EbayGUI(data);
+                gui.setTitle("Ebay tools v." + app.getCtx().getBean("ebaytoolsVersion"));
                 gui.init();
                 gui.setVisible(true);
                 FileListSearchingJob.jobs();

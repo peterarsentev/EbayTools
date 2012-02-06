@@ -8,4 +8,8 @@ public interface SystemSettingDAO extends CrUD<SystemSetting> {
     public List<String> getChooseOptsValue();
     public List<SystemSetting> getChooseOpts();
     public SystemSetting getSystemSettingByName(String applyFilter);
+
+    public List<String> getShowFieldsValue();
+
+    public List<SystemSetting> getShowFields();
 }

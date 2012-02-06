@@ -43,22 +43,8 @@ public class FilterActionListener implements ActionListener {
                 productId = (Long) selectData.get(0)[1];
             }
             List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, productId);
-            for (Item item : items) {
-                sb.append("id : ").append(item.getId()).append("\n");
-                sb.append("itemID : ").append(item.getEbayItemId()).append("\n");
-                //append("\t\t").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\n");
-                sb.append("count_bid : ").append(item.getTotalBid()).append("\n");
-                sb.append("auction_close_date : ").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
-                sb.append("is_golden : ").append(item.getGolden()).append("\n");
-                List<ItemProperties> list = new ArrayList<ItemProperties>(item.getProperties());
-                Collections.sort(list);
-                for (ItemProperties properties : list) {
-                    String value = properties.getValue();
-                    sb.append(properties.getName()).append(" : ").append(value).append("\n");
-                }
-                sb.append("\n");
-            }
-            sb.append("Total items : ").append(items.size()).append("\n");
+            List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
+            sb.append(FormatterText.formatShowFields(items, showField));
             data.getText().setText(data.getText().getText() + sb.toString());
         }
     }

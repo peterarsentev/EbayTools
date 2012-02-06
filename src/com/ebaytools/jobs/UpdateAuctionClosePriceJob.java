@@ -72,7 +72,7 @@ public class UpdateAuctionClosePriceJob {
         ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(item.getEbayItemId());
         if (itemType != null) {
             if (itemType.getSellingStatus().getListingStatus().name().equals("COMPLETED")) {
-                Map<Fields, ItemProperties> prMap = ProductDAOImpl.buildProperties(item.getProperties());
+                Map<Fields, ItemProperties> prMap = Fields.buildProperties(item.getProperties());
 
                 ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
                 prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));

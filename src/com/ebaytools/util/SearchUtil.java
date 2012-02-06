@@ -2,6 +2,7 @@ package com.ebaytools.util;
 
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.GetItemCall;
+import com.ebay.sdk.call.GetProductsCall;
 import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebay.services.finding.SearchItem;
@@ -10,7 +11,9 @@ import com.ebay.services.client.ClientConfig;
 import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.*;
 import com.ebay.services.finding.FindingServicePortType;
+import com.ebay.soap.eBLBaseComponents.ProductSearchType;
 import com.ebaytools.gui.model.Data;
+import org.apache.log4j.Logger;
 
 import javax.xml.datatype.Duration;
 
@@ -20,7 +23,10 @@ import javax.xml.datatype.Duration;
  *
  */
 public class SearchUtil {
+    private static final Logger log = Logger.getLogger(SearchUtil.class);
+
     private GetItemCall gc;
+    private GetProductsCall gpc;
     private FindingServicePortType serviceClient;
 
     /**
@@ -48,14 +54,36 @@ public class SearchUtil {
         cred.seteBayToken("AgAAAA**AQAAAA**aAAAAA**l/nATg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AEl4SnCJaKqAidj6x9nY+seQ**s00BAA**AAMAAA**oEMj7FN4qgzFdhM9ppIZUAndL2MDJxd3Q1HBBPHJPk4IH0ajpiEYrbXoAzpYZcUL0XyvU9f84EEK0EfqlXuOZu8g0o+ENxBr/UjaPFNcUpiRmwXA4ESVpKY0aB3V445a24yp9as+ljhDszsR1b6kmieYedFfZroyZ3FzlW1H4pfSOU0OCi5FxUQE52Qwv9bW91hFPJG5CzXskU3Cv4eYspjjSQSij5Jm2jaoiPOp/M4wLHw8Fi4p3n2X9znbpOco2qXgeisluHVbEIG+Qx7ODD6BZmi0aRt2wVW+00B72HpfWiFwsD9apico5TeYt5XUMtyMyloTRFTj0bp0A866yJNmWOQx8ny1DsDSHIpCr80E5aUZmHh2qc1JkSX/CfYBa6mO4qLndgSIP7fn3CxLQxGT4kXEGeJ3KuRPoD97wEhNGkoEY0OxvfVg++Bk7CUQnOkcSLVFEPIlPaZ/woUGpLD38MslXiEW4aoPfz6IBMxlka+jRqqr/HreC7RK47oeezdfMP5Z7dTZSHdmxXt2V7dN+IruYTIDe5bvFOtexiZUZ8QmAp2MkxlwLqaRb51AHdhp+jKr2Oc1OWdQf20H/WFdTqWfHPWVWwbnpsay8ais6FnMMbMS4xf5W2Yn4N3rhz6YH/Sxhvv2FHJ/zSJ7uwuEDCJ3yuj2kVzmdw3+Cmukml2RhGAAY4xZT3bk09pzO7X55fGUd+q2T0CfUBBPVoQH4Yxj6eoHmLa+NmBKsbaSr1NgcGl1BrPBHYWmrQk7");
         apiContext.setApiServerUrl("https://api.ebay.com/wsapi");
         GetItemCall gc = new GetItemCall(apiContext);
+        GetProductsCall gpc = new GetProductsCall(apiContext);
         DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[] {
                 DetailLevelCodeType.RETURN_ALL,
                 DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
                 DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
         };
         gc.setDetailLevel(detailLevels);
+        gpc.setDetailLevel(detailLevels);
         this.gc = gc;
+        this.gpc = gpc;
     }
+
+    /**
+     * This method gets title for special reference id
+     * @param productID reference id
+     * @return title
+     */
+    public String getTitle(String productID) {
+        ProductSearchType searchType = new ProductSearchType();
+        searchType.setProductReferenceID(productID);
+        gpc.setProductSearch(searchType);
+        try {
+            gpc.getProducts();
+            return gpc.getReturnedProduct()[0].getTitle();
+        } catch (Exception e) {
+            log.error("Can't find product " + productID);
+        }
+        return null;
+    }
+    
 
     /**
      * This method gets reference id by numbers item
@@ -63,7 +91,7 @@ public class SearchUtil {
      * @return ItemType product
      */
     public ItemType getProductByItemNumber(String itemNubmer) {
-        try {
+        try {         
             return gc.getItem(itemNubmer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +107,8 @@ public class SearchUtil {
      */
     public String getUpcID(String referenceID) throws Exception {
         FindByProduct productRequest = new FindByProduct();
+        productRequest.addSelect(OutputSelectorType.SELLER_INFO);
+        productRequest.addSelect(OutputSelectorType.STORE_INFO);
         PaginationInput pi = new PaginationInput();
         pi.setEntriesPerPage(1);
         pi.setPageNumber(1);
@@ -118,24 +148,26 @@ public class SearchUtil {
      */
     public List<SearchItem> getItemsBySortedType(String productId, String condition, String listingType, SortOrderType order, String type, Integer daysLeft) {
         FindByProduct productRequest = new FindByProduct();
+        productRequest.addSelect(OutputSelectorType.SELLER_INFO);
+        productRequest.addSelect(OutputSelectorType.STORE_INFO);
         PaginationInput pi = new PaginationInput();
         pi.setPageNumber(1);
         productRequest.setPaginationInput(pi);
         productRequest.setSortOrder(order);
         if (TextUtil.isNotNull(condition)) {
             if (condition.contains(";")) {
-                productRequest.add(buildFulter(ItemFilterType.CONDITION, condition.split(";")));
+                productRequest.addFilter(buildFulter(ItemFilterType.CONDITION, condition.split(";")));
             } else {
-                productRequest.add(buildFulter(ItemFilterType.CONDITION, condition));
+                productRequest.addFilter(buildFulter(ItemFilterType.CONDITION, condition));
             }
         }
         if (TextUtil.isNotNull(listingType)) {
-            productRequest.add(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
+            productRequest.addFilter(buildFulter(ItemFilterType.LISTING_TYPE, listingType));
         }
         if (TextUtil.isNotNull(daysLeft)) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, daysLeft);
-            productRequest.add(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(cal)));
+            productRequest.addFilter(buildFulter(ItemFilterType.END_TIME_TO, FormatterText.buildDate(cal)));
         }
 
         ProductId product = new ProductId();

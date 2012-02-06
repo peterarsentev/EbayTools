@@ -60,7 +60,7 @@ public class AveragePriceActionListener implements ActionListener {
         for (Map.Entry<Rang, List<Item>> entry : sortMap(rangByHour).entrySet()) {
             float averagePrice = 0F;
             for (Item item : entry.getValue()) {
-                Map<Fields, ItemProperties> prs = ProductDAOImpl.buildProperties(item.getProperties());
+                Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
                 averagePrice += Float.valueOf(prs.get(Fields.AUCTION_PRICE).getValue());
             }
 //            sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");

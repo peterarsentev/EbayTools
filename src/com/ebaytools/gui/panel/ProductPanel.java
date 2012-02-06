@@ -7,6 +7,7 @@ import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
+import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.*;
 
 import javax.swing.*;
@@ -160,27 +161,11 @@ public class ProductPanel extends JPanel {
                 JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder sb = new StringBuilder();
+                List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
                 for (Object[] objects : selectData) {
                     sb.append("Reference ID : " + objects[2] + "\n");
-                    List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]); 
-                    for (Item item : items) {
-                        sb.append("itemID : ").append(item.getEbayItemId()).append("\n");
-                        sb.append("count_bid : ").append(item.getTotalBid()).append("\n");
-                        sb.append("auction_close_date : ").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\n");
-                        sb.append("auction_status : ").append(item.getCloseAuction() ? "completed" : "active").append("\n");
-                        sb.append("is_golden : ").append(item.getGolden()).append("\n");
-                        List<ItemProperties> list = new ArrayList<ItemProperties>(item.getProperties());
-                        Collections.sort(list);
-                        for (ItemProperties properties : list) {
-                            String value = properties.getValue();
-                            if (TextUtil.isNotNull(properties.getType())) {
-                                value += " " + properties.getType();
-                            }
-                            sb.append(properties.getName()).append(" : ").append(value).append("\n");
-                        }
-                        sb.append("\n");
-                    }
-                    sb.append("Total items : ").append(items.size()).append("\n");
+                    List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]);
+                    sb.append(FormatterText.formatShowFields(items, showField));
                     data.getText().setText(data.getText().getText() + sb.toString());
                 }
             }

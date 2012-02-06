@@ -1,6 +1,7 @@
 package com.ebaytools.gui.panel;
 
 import com.ebaytools.gui.model.Data;
+import com.ebaytools.start.AppContextManager;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -24,7 +25,6 @@ public class EbayGUI extends JFrame {
 
     public void init() {
         this.gui = this;
-        gui.setTitle("Ebay tools");
         gui.setResizable(false);
         gui.add(new SearchPanel(gui, data), BorderLayout.CENTER);
         gui.setSize(1000, 700);
@@ -53,7 +53,7 @@ public class EbayGUI extends JFrame {
     }
 
     /**
-     * This map consists from options which we can see, if i's needed I can add new options
+     * This map consists from options which we can see, if i's needed I can addFilter new options
      */
     public final static Map<String, Boolean> fields = new LinkedHashMap<String, Boolean>();
     static {

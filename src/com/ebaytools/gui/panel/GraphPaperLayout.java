@@ -18,17 +18,17 @@ import java.util.Hashtable;
  *     public void init() {
  *         setLayout(new GraphPaperLayout(new Dimension(5,5)));
  *         // Add a 1x1 Rect at (0,0)
- *         add(new Button("1"), new Rectangle(0,0,1,1));
+ *         addFilter(new Button("1"), new Rectangle(0,0,1,1));
  *         // Add a 2x1 Rect at (2,0)
- *         add(new Button("2"), new Rectangle(2,0,2,1));
+ *         addFilter(new Button("2"), new Rectangle(2,0,2,1));
  *         // Add a 1x2 Rect at (1,1)
- *         add(new Button("3"), new Rectangle(1,1,1,2));
+ *         addFilter(new Button("3"), new Rectangle(1,1,1,2));
  *         // Add a 2x2 Rect at (3,2)
- *         add(new Button("4"), new Rectangle(3,2,2,2));
+ *         addFilter(new Button("4"), new Rectangle(3,2,2,2));
  *         // Add a 1x1 Rect at (0,4)
- *         add(new Button("5"), new Rectangle(0,4,1,1));
+ *         addFilter(new Button("5"), new Rectangle(0,4,1,1));
  *         // Add a 1x2 Rect at (2,3)
- *         add(new Button("6"), new Rectangle(2,3,1,2));
+ *         addFilter(new Button("6"), new Rectangle(2,3,1,2));
  *     }
  * }
  * </pre></code>
@@ -228,16 +228,16 @@ public class GraphPaperLayout implements LayoutManager2 {
             Rectangle rect = (Rectangle) constraints;
             if (rect.width <= 0 || rect.height <= 0) {
                 throw new IllegalArgumentException(
-                        "cannot add to layout: rectangle must have positive width and height");
+                        "cannot addFilter to layout: rectangle must have positive width and height");
             }
             if (rect.x < 0 || rect.y < 0) {
                 throw new IllegalArgumentException(
-                        "cannot add to layout: rectangle x and y must be >= 0");
+                        "cannot addFilter to layout: rectangle x and y must be >= 0");
             }
             setConstraints(comp, rect);
         } else if (constraints != null) {
             throw new IllegalArgumentException(
-                    "cannot add to layout: constraint must be a Rectangle");
+                    "cannot addFilter to layout: constraint must be a Rectangle");
         }
     }
 

@@ -77,4 +77,8 @@
         <property name="sessionFactory"><ref local="sessionFactory"/></property>
     </bean>
 
+    <bean id="ebaytoolsVersion" class="java.lang.String">
+        <constructor-arg value="${ebaytools.version}"/>
+    </bean>
+
 </beans>

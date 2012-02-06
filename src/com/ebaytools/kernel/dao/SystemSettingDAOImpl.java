@@ -50,4 +50,14 @@ public class SystemSettingDAOImpl extends HibernateDaoSupport implements SystemS
             }
         }
     }
+
+    @Override
+    public List<SystemSetting> getShowFields() {
+        return getHibernateTemplate().find("from " + SystemSetting.class.getName() + " as sysSet where sysSet.name=?", Fields.SHOW_FIELDS.getKey());
+    }
+
+    @Override
+    public List<String> getShowFieldsValue() {
+        return getHibernateTemplate().find("select sysSet.value from " + SystemSetting.class.getName() + " as sysSet where sysSet.name=?", Fields.SHOW_FIELDS.getKey());
+    }
 }

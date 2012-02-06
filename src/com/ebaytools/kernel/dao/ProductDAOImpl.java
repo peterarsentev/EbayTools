@@ -1,6 +1,7 @@
 package com.ebaytools.kernel.dao;
 
 import com.ebay.services.finding.SearchItem;
+import com.ebay.services.finding.SellerInfo;
 import com.ebay.soap.eBLBaseComponents.ItemType;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
@@ -71,12 +72,9 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
             if (product == null) {
                 product = new Product();
                 product.setReferenceId(entry.getKey().getKey());
-                if (isItems) {
-                    String title = entry.getValue().entrySet().iterator().next().getKey().getTitle();
-                    product.setName(title);
-                }
+                product.setName(SearchUtil.getInstance().getTitle(entry.getKey().getKey()));
                 productId = (Long) session.save(product);
-                
+
             } else {
                 productId = product.getId();
             }
@@ -106,30 +104,21 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState(), null));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.CONDITIONS, String.valueOf(searchItem.getCondition().getConditionId()), null));
+
+                        SellerInfo sellerInfo = searchItem.getSellerInfo();
+                        if (sellerInfo != null) {
+                            session.save(ManagerDAO.buildItemProperties(itemId, Fields.POSITIVE_FEEDBACK_PERCENT, String.valueOf(sellerInfo.getPositiveFeedbackPercent()), null));
+                            session.save(ManagerDAO.buildItemProperties(itemId, Fields.FEEDBACK_SCORE, String.valueOf(sellerInfo.getFeedbackScore()), null));
+                            session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOP_RATED_SELLER, String.valueOf(sellerInfo.isTopRatedSeller()), null));
+                        }
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.SHIP_TO_LOCATION, String.valueOf(searchItem.getShippingInfo().getShipToLocations()), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.HANDLING_TIME, String.valueOf(searchItem.getShippingInfo().getHandlingTime()), null));
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.LISTING_TYPE, String.valueOf(searchItem.getListingInfo().getListingType()), null));
                     }
                 }
             }
         }
         tx.commit();
         session.close();
-    }
-    
-    public static Map<Fields, ItemProperties> buildProperties(Set<ItemProperties> propertiesSet) {
-        Map<Fields, ItemProperties> map = new LinkedHashMap<Fields, ItemProperties>();
-        for (ItemProperties properties : propertiesSet) {
-            fullingValue(Fields.AUCTION_STATUS, properties, map);
-            fullingValue(Fields.AUCTION_PRICE, properties, map);
-            fullingValue(Fields.SHIPPING_COST, properties, map);
-            fullingValue(Fields.TOTAL_COST, properties, map);
-            fullingValue(Fields.CONDITIONS, properties, map);
-            fullingValue(Fields.AUCTION_PRICE, properties, map);
-        }
-        return map;
-    }
-
-    private static void fullingValue(Fields fields, ItemProperties properties, Map<Fields, ItemProperties> map) {
-        if (fields.getKey().equals(properties.getName())) {
-            map.put(fields, properties);
-        }
     }
 }
