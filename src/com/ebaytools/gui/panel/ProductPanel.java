@@ -30,13 +30,14 @@ public class ProductPanel extends JPanel {
         this.data = data;
         JPanel panel = this;
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setLayout(new GraphPaperLayout(new Dimension(16, 20), 1, 1));
+        panel.setLayout(new GraphPaperLayout(new Dimension(20, 20), 1, 1));
         java.util.List<Product> productList = ManagerDAO.getInstance().getProductDAO().getAllProduct();
         ProductDataImpl productData = new ProductDataImpl(productList);
         TableModelCheckBox productModelTable = new TableModelCheckBox(productData);
         JTable tableProduct =  new JTable(productModelTable);
         TableCheckBox.buildTable(tableProduct);
-        panel.add(new JScrollPane(tableProduct), new Rectangle(0, 0, 12, 16));
+        productData.resizeColumnsByName(tableProduct);
+        panel.add(new JScrollPane(tableProduct), new Rectangle(0, 0, 16, 16));
         JButton createProduct = new JButton("Create");
         createProduct.setForeground(ColorUtil.IndianRed);
         JButton editProduct = new JButton("Edit");
@@ -52,13 +53,18 @@ public class ProductPanel extends JPanel {
         loadReferenceIDList.setForeground(ColorUtil.IndianRed);
         showItems.setForeground(ColorUtil.IndianRed);
         showItems.setForeground(ColorUtil.IndianRed);
-        panel.add(loadReferenceIDList, new Rectangle(12, 0, 4, 1));
-        panel.add(createProduct, new Rectangle(12, 4, 4, 1));
-        panel.add(editProduct, new Rectangle(12, 5, 4, 1));
-        panel.add(refreshTable, new Rectangle(12, 6, 4, 1));
-        panel.add(searchItem, new Rectangle(12, 7, 4, 1));
-        panel.add(showItems, new Rectangle(12, 8, 4, 1));
-        panel.add(deleteProduct, new Rectangle(12, 10, 4, 1));
+        JButton export = new JButton("Export");
+
+        panel.add(loadReferenceIDList, new Rectangle(16, 0, 4, 1));
+        panel.add(createProduct, new Rectangle(16, 4, 4, 1));
+        panel.add(editProduct, new Rectangle(16, 5, 4, 1));
+        panel.add(refreshTable, new Rectangle(16, 6, 4, 1));
+        panel.add(searchItem, new Rectangle(16, 7, 4, 1));
+        panel.add(showItems, new Rectangle(16, 8, 4, 1));
+        panel.add(deleteProduct, new Rectangle(16, 10, 4, 1));
+
+        panel.add(export, new Rectangle(16, 16, 4, 1));
+
         RefreshTableListenter refresAction = new RefreshTableListenter(tableProduct, productModelTable, RefreshTableListenter.TypeTable.PRODUCT);
         data.setRefresProductTable(refresAction);
         createProduct.addActionListener(new OpenProductIDDialogListener(main, data));
@@ -69,6 +75,8 @@ public class ProductPanel extends JPanel {
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
         loadReferenceIDList.addActionListener(new OpenFileSearchingDialogAcitonListener(main, data));
         data.setProductTable(productModelTable);
+
+        export.addActionListener(new ExportItemActionListener(main, data));
     }
 
     private class DeleteProductListenter implements ActionListener {

@@ -2,13 +2,15 @@ package com.ebaytools.util;
 
 import com.ebaytools.kernel.entity.Product;
 
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ProductDataImpl implements TableModelCheckBox.IData {
     private List<Product> products;
-    private static final List<String> nameColumn = Arrays.asList("ID", "Reference ID", "Name");
+    private static final List<String> nameColumn = Arrays.asList("ID", "Ref ID", "Name");
 
     public ProductDataImpl(List<Product> products) {
         this.products = products;
@@ -31,5 +33,14 @@ public class ProductDataImpl implements TableModelCheckBox.IData {
     @Override
     public List<String> getNameColumn() {
         return nameColumn;
+    }
+
+    public void resizeColumnsByName(JTable table) {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnModel tcm = table.getColumnModel();
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(20);
+        tcm.getColumn(2).setPreferredWidth(75);
+        tcm.getColumn(3).setPreferredWidth(400);
     }
 }

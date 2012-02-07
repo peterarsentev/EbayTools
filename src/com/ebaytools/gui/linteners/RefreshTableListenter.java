@@ -40,6 +40,9 @@ public class RefreshTableListenter implements ActionListener {
         }
         modelCheckBox.setIDate(iData);
         TableCheckBox.buildTable(tableProduct);
+        if (iData != null) {
+            iData.resizeColumnsByName(tableProduct);
+        }
         tableProduct.updateUI();
     }
 }

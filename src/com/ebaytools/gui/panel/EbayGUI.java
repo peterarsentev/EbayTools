@@ -27,7 +27,7 @@ public class EbayGUI extends JFrame {
         this.gui = this;
         gui.setResizable(false);
         gui.add(new SearchPanel(gui, data), BorderLayout.CENTER);
-        gui.setSize(1000, 700);
+        gui.setSize(1200, 700);
         centre(this);
         gui.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         gui.addWindowListener(new WindowAdapter() {

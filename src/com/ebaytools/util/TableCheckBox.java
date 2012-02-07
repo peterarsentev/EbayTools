@@ -11,6 +11,5 @@ public class TableCheckBox {
         tc.setCellEditor(productTable.getDefaultEditor(Boolean.class));
         tc.setCellRenderer(productTable.getDefaultRenderer(Boolean.class));
         tc.setHeaderRenderer(new CheckBoxHeader(new CheckBoxListener(productTable)));
-        TableModelCheckBox.resizeColumnsByName(productTable);
     }
 }

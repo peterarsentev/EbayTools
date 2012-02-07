@@ -3,8 +3,10 @@ package com.ebaytools.gui.linteners;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.dao.ProductDAOImpl;
+import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
+import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
 import org.apache.log4j.Logger;
 
@@ -29,17 +31,24 @@ public class AveragePriceActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         List<Object[]> selectData = data.getProductTable().getDataSelect();
         Long productId = null;
-        if (selectData.size() > 1) {
-            JOptionPane.showMessageDialog(main, "You must select only one product or nothing!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (!selectData.isEmpty()) {
-            productId = (Long) selectData.get(0)[1];
+        List<Long> prsids = new ArrayList<Long>();
+        if (!selectData.isEmpty()) {
+            for (Object[] object : selectData) {
+                prsids.add((Long) object[1]);
+            }
         }
         StringBuilder sb = new StringBuilder();
         List<Item> items;
-        if (productId == null) {
+        if (prsids.isEmpty()) {
             items = ManagerDAO.getInstance().getItemDAO().getAllCloseItems();
         } else {
-            items = ManagerDAO.getInstance().getItemDAO().getAllCloseItemsByProductId(productId);
+            SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
+            if (setting == null) {
+                items = ManagerDAO.getInstance().getItemDAO().getAllCloseItems();
+            } else {
+                Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
+                items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prsids);
+            }
         }
         Map<Rang, List<Item>> rangByHour = new LinkedHashMap<Rang, List<Item>>();
         Collections.sort(items, new Comparator<Item>() {

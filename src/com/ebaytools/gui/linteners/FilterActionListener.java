@@ -36,13 +36,13 @@ public class FilterActionListener implements ActionListener {
             Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
             StringBuilder sb = new StringBuilder();
             List<Object[]> selectData = data.getProductTable().getDataSelect();
-            Long productId = null;
-            if (selectData.size() > 1) {
-                JOptionPane.showMessageDialog(main, "You must select only one product or nothing!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (!selectData.isEmpty()) {
-                productId = (Long) selectData.get(0)[1];
+            List<Long> prs = new ArrayList<Long>();
+            if (!selectData.isEmpty()) {
+                for (Object[] object : selectData) {
+                    prs.add((Long) object[1]);
+                }
             }
-            List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, productId);
+            List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prs);
             List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
             sb.append(FormatterText.formatShowFields(items, showField));
             data.getText().setText(data.getText().getText() + sb.toString());

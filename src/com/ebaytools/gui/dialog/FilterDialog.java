@@ -52,6 +52,7 @@ public class FilterDialog extends JDialog {
         TableModelCheckBox filterModelTable = new TableModelCheckBox(filterData);
         JTable filterProduct =  new JTable(filterModelTable);
         TableCheckBox.buildTable(filterProduct);
+        filterData.resizeColumnsByName(filterProduct);
         panel.add(new JScrollPane(filterProduct), new Rectangle(0, 0, 12, 15));
         JButton create = new JButton("Create");
         JButton delete = new JButton("Delete");

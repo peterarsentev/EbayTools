@@ -2,6 +2,8 @@ package com.ebaytools.util;
 
 import com.ebaytools.kernel.entity.FileSearching;
 
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,5 +39,18 @@ public class FileSearchingDataImpl implements TableModelCheckBox.IData {
     @Override
     public List<String> getNameColumn() {
         return nameColumn;
+    }
+
+    public void resizeColumnsByName(JTable table) {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnModel tcm = table.getColumnModel();
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(20);
+        tcm.getColumn(2).setPreferredWidth(150);
+        tcm.getColumn(3).setPreferredWidth(50);
+        tcm.getColumn(4).setPreferredWidth(50);
+        tcm.getColumn(5).setPreferredWidth(50);
+        tcm.getColumn(6).setPreferredWidth(50);
+        tcm.getColumn(7).setPreferredWidth(50);
     }
 }

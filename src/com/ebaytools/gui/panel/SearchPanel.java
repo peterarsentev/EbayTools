@@ -93,8 +93,8 @@ public class SearchPanel extends JPanel {
         panel.add(new JLabel("List Type"), new Rectangle(0, 3, 5, 1));
         panel.add(listTypeField, new Rectangle(4, 3, 6, 1));
         panel.add(showResultFilter, new Rectangle(11, 4, 5, 1));
-        panel.add(new JScrollPane(text), new Rectangle(0, 5, 16, 21));
-        panel.add(new ProductPanel(main, data), new Rectangle(16, 5, 12, 26));
+        panel.add(new JScrollPane(text), new Rectangle(0, 5, 13, 21));
+        panel.add(new ProductPanel(main, data), new Rectangle(13, 5, 15, 26));
         panel.add(clear, new Rectangle(0, 26, 3, 1));
         panel.add(save, new Rectangle(24, 0, 3, 1));
         panel.add(new JLabel("Sorted type"), new Rectangle(0, 4, 5, 1));

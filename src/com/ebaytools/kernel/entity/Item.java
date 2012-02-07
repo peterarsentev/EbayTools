@@ -1,5 +1,6 @@
 package com.ebaytools.kernel.entity;
 
+import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.util.FormatterText;
 
 import java.io.Serializable;
@@ -89,6 +90,10 @@ public class Item implements Comparable<Item>, Serializable {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public Product getProduct() {
+        return ManagerDAO.getInstance().getProductDAO().find(productId);
     }
 
     public void setProductId(Long productId) {

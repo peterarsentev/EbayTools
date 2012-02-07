@@ -6,6 +6,9 @@ import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.FilterConditions;
 import com.ebaytools.kernel.entity.FilterValue;
 
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+
 public class FilterDataImpl implements TableModelCheckBox.IData {
     private List<Filter> filters;
     private static final List<String> nameColumn = Arrays.asList("ID", "Name", "Conditions", "Golden", "Time of day");
@@ -57,5 +60,16 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
     @Override
     public List<String> getNameColumn() {
         return nameColumn;
+    }
+
+    public void resizeColumnsByName(JTable table) {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnModel tcm = table.getColumnModel();
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(20);
+        tcm.getColumn(2).setPreferredWidth(50);
+        tcm.getColumn(3).setPreferredWidth(50);
+        tcm.getColumn(4).setPreferredWidth(50);
+        tcm.getColumn(5).setPreferredWidth(50);
     }
 }

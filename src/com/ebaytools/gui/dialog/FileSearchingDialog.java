@@ -49,6 +49,7 @@ public class FileSearchingDialog extends JDialog {
         TableModelCheckBox fileSearchingModelTable = new TableModelCheckBox(fileSearchingData);
         JTable fileSearchingTable =  new JTable(fileSearchingModelTable);
         TableCheckBox.buildTable(fileSearchingTable);
+        fileSearchingData.resizeColumnsByName(fileSearchingTable);
         panel.add(new JScrollPane(fileSearchingTable), new Rectangle(0, 0, 12, 15));
         RefreshTableListenter refresAction = new RefreshTableListenter(fileSearchingTable, fileSearchingModelTable, RefreshTableListenter.TypeTable.FILE_SEARCHING);
         data.setRefresFileSearchingTable(refresAction);

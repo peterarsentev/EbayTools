@@ -10,6 +10,7 @@ public class TableModelCheckBox extends AbstractTableModel {
     public interface IData {
         public List<Object[]> getData();
         public List<String> getNameColumn();
+        public void resizeColumnsByName(JTable table);
     }
 
     private List<String> nameColumn;
@@ -70,18 +71,5 @@ public class TableModelCheckBox extends AbstractTableModel {
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         data.get(rowIndex)[columnIndex] = value;
         super.fireTableCellUpdated(rowIndex, columnIndex);
-    }
-
-    public static TableColumnModel resizeColumnsByName(JTable table) {
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableColumnModel tcm = table.getColumnModel();
-        int addedSize = table.getFont().getSize() + 160;
-        tcm.getColumn(0).setPreferredWidth(20);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        for (int i = 1; i < table.getColumnCount(); i++) {
-            String hvalue = tcm.getColumn(i).getHeaderValue().toString();
-            tcm.getColumn(i).setPreferredWidth(table.getFontMetrics(table.getFont()).stringWidth(hvalue) + addedSize);
-        }
-        return tcm;
     }
 }

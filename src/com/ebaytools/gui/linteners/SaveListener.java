@@ -3,6 +3,7 @@ package com.ebaytools.gui.linteners;
 import com.ebay.services.finding.SearchItem;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.gui.panel.SearchPanel;
+import com.ebaytools.util.FileUtil;
 import com.ebaytools.util.Pair;
 
 import javax.swing.*;
@@ -43,22 +44,11 @@ public class SaveListener implements ActionListener {
                         }
                     }
                 }
-                save(file, sb.toString());
+                FileUtil.save(file, sb.toString());
                 text.setText(text.getText() + "Save was done. file : " + file.getAbsolutePath() + "\n") ;
 
             } else {
             }
-        }
-    }
-
-    public static void save(File file, String text) {
-        try{
-            FileWriter fstream = new FileWriter(file);
-            BufferedWriter out = new BufferedWriter(fstream);
-            out.write(text);
-            out.close();
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
         }
     }
 }

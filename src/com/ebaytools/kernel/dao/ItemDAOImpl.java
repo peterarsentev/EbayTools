@@ -47,35 +47,46 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getProductByFilter(Filter filter, Long productId) {
+    public List<Item> getProductByFilter(Filter filter, List<Long> productId) {
         Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         List<Object> params = new ArrayList<Object>();
+        List<String> names = new ArrayList<String>();
         StringBuilder query = new StringBuilder(" from com.ebaytools.kernel.entity.Item as item, com.ebaytools.kernel.entity.ItemProperties as prs where item.id = prs.itemId ");
-        if (productId != null) {
-            query.append(" and item.productId=?");
+        if (productId != null && !productId.isEmpty()) {
+            query.append(" and item.productId in (:prsids)");
+            names.add("prsids");
             params.add(productId);
         }
-        query.append(" and item.closeAuction=?");
+        query.append(" and item.closeAuction=:closeAuction");
+        names.add("closeAuction");
         params.add(true);
+        query.append(" and item.state!=:state");
+        names.add("state");
+        params.add(-1);
         if (TextUtil.isNotNull(conditions.get(Fields.CONDITIONS))) {
             String[] values = conditions.get(Fields.CONDITIONS).split(";");
             if (TextUtil.isNotNull(values[0])) {
-                query.append(" and (prs.name=? ");
+                query.append(" and (prs.name=:condName");
+                names.add("condName");
                 params.add(Fields.CONDITIONS.getKey());
                 if (values.length > 1) {
                     query.append(" and (");
                     Iterator<String> it = new ArrayList<String>(Arrays.asList(values)).iterator();
+                    int inx = 0;
                     while (it.hasNext()) {
                         String data = it.next();
-                        query.append(" prs.value=? ");
+                        query.append(" prs.value=:condValue").append(inx);
+                        names.add("condValue"+inx);
                         params.add(data);
+                        ++inx;
                         if (it.hasNext()) {
                             query.append(" or ");
                         }
                     }
                     query.append(") ");
                 } else {
-                    query.append(" and prs.value=?");
+                    query.append(" and prs.value=:condValue");
+                    names.add("condValue");
                     params.add(values[0]);
                 }
                 query.append(") ");
@@ -86,9 +97,10 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             String[] values = conditions.get(Fields.TIME_OF_DAY).split(";");
             if (values.length > 0) {
                 String value = values[0];
-                query.append(" and item.closeDate<?");
+                query.append(" and item.closeDate<:closeDate");
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.HOUR, Integer.valueOf(value));
+                names.add("closeDate");
                 params.add(calendar);
             }
         }
@@ -97,13 +109,14 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             String[] values = conditions.get(Fields.IS_GOLDEN_FILTER_FIELD).split(";");
             if (values.length > 0) {
                 String value = values[0];
-                query.append(" and item.golden=?");
+                query.append(" and item.golden=:golden");
                 params.add(Boolean.valueOf(value));
+                names.add("golden");
             }
         }
 
         query.append(" order by item.closeDate");
-        List<Object[]> objectArray = getHibernateTemplate().find(query.toString(), params.toArray(new Object[params.size()]));
+        List<Object[]> objectArray = getHibernateTemplate().findByNamedParam(query.toString(), names.toArray(new String[names.size()]), params.toArray(new Object[params.size()]));
         List<Item> items = new ArrayList<Item>();
         for (Object[] array : objectArray) {
             Item item = (Item) array[0];
@@ -116,7 +129,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public synchronized List<Item> getAllCloseItems() {
-        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=?", true);
+        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=? and item.state!=", true, -1);
     }
 
     @Override
@@ -131,5 +144,10 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     @Override
     public synchronized List<Item> getItemsAuctionDateExpare() {
         return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction=?", Calendar.getInstance(), false);
+    }
+
+    @Override
+    public List<Item> getAllItems() {
+        return getHibernateTemplate().find("from " + Item.class.getName() + " as item order by item.productId");
     }
 }
