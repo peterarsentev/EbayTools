@@ -42,7 +42,7 @@ public class ExportItemActionListener implements ActionListener {
             sb.append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append(";");
             sb.append("\n");
         }
-        File file = new File("./"+FormatterText.dateformatter.format(Calendar.getInstance().getTime())+".csv");
+        File file = new File(FormatterText.dateformatter.format(Calendar.getInstance().getTime())+".csv");
         FileUtil.save(file, sb.toString());
         data.getText().append("\nFile was saved successful part : " + file.getAbsolutePath());
     }
