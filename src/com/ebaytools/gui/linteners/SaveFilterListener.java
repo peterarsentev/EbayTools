@@ -21,14 +21,16 @@ public class SaveFilterListener implements ActionListener {
     private JList<Pair<String>> valueConditions;
     private JTextField timeOfDay;
     private Data data;
+    private JCheckBox sold;
 
-    public SaveFilterListener(JDialog dialog, JTextField name, JCheckBox golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data) {
+    public SaveFilterListener(JDialog dialog, JTextField name, JCheckBox golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data, JCheckBox sold) {
         this.dialog = dialog;
         this.name = name;
         this.golden = golden;
         this.valueConditions = valueConditions;
         this.timeOfDay = timeOfDay;
         this.data = data;
+        this.sold = sold;
     }
 
     @Override
@@ -50,6 +52,12 @@ public class SaveFilterListener implements ActionListener {
         FilterConditions conditionsConditions = new FilterConditions();
         conditionsConditions.setName(Fields.CONDITIONS.getKey());
         conditionsConditions.setValues(conditionsValues);
+
+        FilterValue soldValue = new FilterValue();
+        soldValue.setValue(String.valueOf(sold.isSelected()));
+        FilterConditions soldCond = new FilterConditions();
+        soldCond.setName(Fields.SOLD.getKey());
+        goldenConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(soldValue)));
 
         FilterConditions timeOfDayConditions = new FilterConditions();
         timeOfDayConditions.setName(Fields.TIME_OF_DAY.getKey());

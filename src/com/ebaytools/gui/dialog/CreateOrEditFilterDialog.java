@@ -65,9 +65,11 @@ public class CreateOrEditFilterDialog extends JDialog {
         panel.add(new JLabel("Time of day (in hours) : "), new Rectangle(0, 6, 6, 1));
         JTextField timeOfDay = new JTextField();
         panel.add(timeOfDay, new Rectangle(6, 6, 6, 1));
+        JCheckBox soldCheckBox = new JCheckBox();
+        panel.add(soldCheckBox, new Rectangle(3, 7, 1, 1));
         JButton save = new JButton("Save");
-        panel.add(save, new Rectangle(5, 8, 3, 1));
-        save.addActionListener(new SaveFilterListener(dialog, name, golden, valueConditions, timeOfDay, data));
+        panel.add(save, new Rectangle(5, 9, 3, 1));
+        save.addActionListener(new SaveFilterListener(dialog, name, golden, valueConditions, timeOfDay, data, soldCheckBox));
         return panel;
     }
 }

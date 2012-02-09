@@ -79,16 +79,21 @@ public class UpdateAuctionClosePriceJob {
                 prAuction.setType(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getCurrencyID()));
                 ManagerDAO.getInstance().getItemPropetiesDAO().update(prAuction);
 
+//                ItemProperties prTotalBid = prMap.get(Fields.TOTAL_BID);
+//                prTotalBid.setValue(String.valueOf(itemType.getSellingStatus().getBidCount()));
+//                ManagerDAO.getInstance().getItemPropetiesDAO().update(prTotalBid);
+
                 ItemProperties prStatus = prMap.get(Fields.AUCTION_STATUS);
                 prStatus.setValue(itemType.getSellingStatus().getListingStatus().name());
-                ManagerDAO.getInstance().getItemPropetiesDAO().update(prAuction);
+                ManagerDAO.getInstance().getItemPropetiesDAO().update(prStatus);
 
-                ItemProperties prTotal = prMap.get(Fields.TOTAL_COST);
+                ItemProperties prTotalCost = prMap.get(Fields.TOTAL_COST);
                 String shippingValue = prMap.get(Fields.SHIPPING_COST).getValue();
                 String priceCost = prMap.get(Fields.AUCTION_PRICE).getValue();
                 float cost = TextUtil.getFloarOrZero(shippingValue) + TextUtil.getFloarOrZero(priceCost);
-                prTotal.setValue(String.valueOf(cost));
-                ManagerDAO.getInstance().getItemPropetiesDAO().update(prAuction);
+                prTotalCost.setValue(String.valueOf(cost));
+                ManagerDAO.getInstance().getItemPropetiesDAO().update(prTotalCost);
+                
                 item.setCloseAuction(true);
                 item.setState(Item.Status.CLOSE.key);
                 ManagerDAO.getInstance().getItemDAO().update(item);

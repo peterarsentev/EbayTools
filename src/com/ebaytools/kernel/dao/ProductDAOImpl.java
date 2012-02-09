@@ -104,7 +104,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_COST, FormatterText.addAmount(searchItem.getShippingInfo().getShippingServiceCost(), searchItem.getSellingStatus().getCurrentPrice()), FormatterText.getCurrency(searchItem.getShippingInfo().getShippingServiceCost())));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.AUCTION_STATUS, searchItem.getSellingStatus().getSellingState(), null));
                         session.save(ManagerDAO.buildItemProperties(itemId, Fields.CONDITIONS, String.valueOf(searchItem.getCondition().getConditionId()), null));
-
+                        session.save(ManagerDAO.buildItemProperties(itemId, Fields.TOTAL_BID, String.valueOf(searchItem.getSellingStatus().getBidCount()), null));
                         SellerInfo sellerInfo = searchItem.getSellerInfo();
                         if (sellerInfo != null) {
                             session.save(ManagerDAO.buildItemProperties(itemId, Fields.POSITIVE_FEEDBACK_PERCENT, String.valueOf(sellerInfo.getPositiveFeedbackPercent()), null));

@@ -40,7 +40,7 @@ public class ExportItemActionListener implements ActionListener {
             sb.append(values.get(Fields.CONDITIONS).getValue()).append(";");
             sb.append(values.get(Fields.LISTING_TYPE).getValue()).append(";");
             sb.append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append(";");
-            sb.append("\n");
+            sb.append("\r\n");
         }
         File file = new File(Calendar.getInstance().getTimeInMillis()+".csv");
         FileUtil.save(file, sb.toString());
