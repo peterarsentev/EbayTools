@@ -17,13 +17,13 @@ import java.util.TreeSet;
 public class SaveFilterListener implements ActionListener {
     private JDialog dialog;
     private JTextField name;
-    private JCheckBox golden;
+    private JComboBox<Pair<String>> golden;
     private JList<Pair<String>> valueConditions;
     private JTextField timeOfDay;
     private Data data;
     private JCheckBox sold;
 
-    public SaveFilterListener(JDialog dialog, JTextField name, JCheckBox golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data, JCheckBox sold) {
+    public SaveFilterListener(JDialog dialog, JTextField name, JComboBox<Pair<String>> golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data, JCheckBox sold) {
         this.dialog = dialog;
         this.name = name;
         this.golden = golden;
@@ -37,7 +37,7 @@ public class SaveFilterListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         FilterValue goldenValue = new FilterValue();
-        goldenValue.setValue(String.valueOf(golden.isSelected()));
+        goldenValue.setValue(String.valueOf(golden.getItemAt(golden.getSelectedIndex()).getValue()));
         FilterConditions goldenConditions = new FilterConditions();
         goldenConditions.setName(Fields.IS_GOLDEN_FILTER_FIELD.getKey());
         goldenConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(goldenValue)));
@@ -57,7 +57,7 @@ public class SaveFilterListener implements ActionListener {
         soldValue.setValue(String.valueOf(sold.isSelected()));
         FilterConditions soldCond = new FilterConditions();
         soldCond.setName(Fields.SOLD.getKey());
-        goldenConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(soldValue)));
+        soldCond.setValues(new TreeSet<FilterValue>(Arrays.asList(soldValue)));
 
         FilterConditions timeOfDayConditions = new FilterConditions();
         timeOfDayConditions.setName(Fields.TIME_OF_DAY.getKey());
@@ -67,7 +67,8 @@ public class SaveFilterListener implements ActionListener {
 
         Filter filter = new Filter();
         filter.setName(name.getText());
-        filter.setConditions(new TreeSet<FilterConditions>(Arrays.asList(goldenConditions, conditionsConditions, timeOfDayConditions)));
+        filter.setConditions(new TreeSet<FilterConditions>(Arrays.asList(goldenConditions, conditionsConditions, timeOfDayConditions, soldCond)));
+
         ManagerDAO.getInstance().getFilterDAO().create(filter);
         dialog.setVisible(false);
         dialog.dispose();

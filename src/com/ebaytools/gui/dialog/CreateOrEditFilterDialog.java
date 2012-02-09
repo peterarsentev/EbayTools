@@ -46,8 +46,11 @@ public class CreateOrEditFilterDialog extends JDialog {
         JTextField name = new JTextField();
         panel.add(name, new Rectangle(3, 1, 9, 1));
         panel.add(new JLabel("Golder : "), new Rectangle(0, 2, 3, 1));
-        JCheckBox golden = new JCheckBox();
-        panel.add(golden, new Rectangle(3, 2, 1, 1));
+        JComboBox<Pair<String>> golden = new JComboBox<Pair<String>>();
+        golden.addItem(new Pair<String>("All", null));
+        golden.addItem(new Pair<String>("Golden", "true"));
+        golden.addItem(new Pair<String>("Not golden", "false"));
+        panel.add(golden, new Rectangle(3, 2, 6, 1));
         panel.add(new JLabel("Conditions : "), new Rectangle(0, 3, 3, 1));
         java.util.List<Pair<String>> pairs = new ArrayList< Pair<String>>();
         pairs.add(new Pair<String>("New", "1000"));
@@ -66,6 +69,7 @@ public class CreateOrEditFilterDialog extends JDialog {
         JTextField timeOfDay = new JTextField();
         panel.add(timeOfDay, new Rectangle(6, 6, 6, 1));
         JCheckBox soldCheckBox = new JCheckBox();
+        panel.add(new JLabel("Sold : "), new Rectangle(0, 7, 3, 1));
         panel.add(soldCheckBox, new Rectangle(3, 7, 1, 1));
         JButton save = new JButton("Save");
         panel.add(save, new Rectangle(5, 9, 3, 1));

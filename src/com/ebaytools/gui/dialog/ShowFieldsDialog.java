@@ -57,6 +57,7 @@ public class ShowFieldsDialog  extends JDialog {
         java.util.List<CheckBoxID> boxList = new ArrayList<CheckBoxID>();
         java.util.List<String> showOpts = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
 
+        CheckBoxID soldState = new CheckBoxID("Sold state", "sold_state");
         CheckBoxID ebayItemId = new CheckBoxID("Ebay ItemId", "ebay_item_id");
         CheckBoxID closeAuction = new CheckBoxID("Close Date", "close_date");
         CheckBoxID auctionPrice = new CheckBoxID("Auction Price", "auction_price");
@@ -73,7 +74,7 @@ public class ShowFieldsDialog  extends JDialog {
         CheckBoxID handlingTime = new CheckBoxID("Handling time", "handling_time");
         CheckBoxID listingType = new CheckBoxID("Listing type", "listing_type");
 
-        boxList.addAll(Arrays.asList(ebayItemId, closeAuction, auctionPrice,
+        boxList.addAll(Arrays.asList(soldState, ebayItemId, closeAuction, auctionPrice,
                 totalCost, shippingCost, auctionStatus, totalBid,
                 golden, condition, positiveFeedbackPercent, feedbackScore,
                 topratedseller, shipToLocation, handlingTime, listingType));
@@ -83,6 +84,7 @@ public class ShowFieldsDialog  extends JDialog {
                 box.setSelected(true);
             }
         }
+        panel.add(soldState, new Rectangle(0, 0, 19, 1));
         panel.add(ebayItemId, new Rectangle(0, 1, 19, 1));
         panel.add(closeAuction, new Rectangle(0, 2, 19, 1));
         panel.add(auctionPrice, new Rectangle(0, 3, 19, 1));

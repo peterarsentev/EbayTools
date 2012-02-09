@@ -53,6 +53,9 @@ public class FormatterText {
         StringBuilder sb = new StringBuilder();
         for (Item item : items) {
             Map<Fields, ItemProperties> fields = Fields.buildProperties(item.getProperties());
+            if (showFields.contains(Fields.SOLD.getKey())) {
+                sb.append(Fields.SOLD.getKey()).append(" ").append(item.getState()).append("\n");
+            }
             if (showFields.contains(Fields.EBAY_ITEM_ID.getKey())) {
                 sb.append(Fields.EBAY_ITEM_ID.getKey()).append(" ").append(item.getEbayItemId()).append("\n");
             }
@@ -75,8 +78,7 @@ public class FormatterText {
                 sb.append(Fields.CLOSE_DATE.getKey()).append(" ").append(dateformatter.format(item.getCloseDate().getTime())).append("\n");
             }
             if (showFields.contains(Fields.TOTAL_BID.getKey())) {
-                ItemProperties ips = fields.get(Fields.TOTAL_BID);
-                sb.append(Fields.TOTAL_BID.getKey()).append(" ").append(ips != null ? ips.getValue() : 0).append("\n");
+                sb.append(Fields.TOTAL_BID.getKey()).append(" ").append(item.getTotalBid()).append("\n");
             }
             if (showFields.contains(Fields.GOLDEN.getKey())) {
                 sb.append(Fields.GOLDEN.getKey()).append(" ").append(item.getGolden()).append("\n");

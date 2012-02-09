@@ -35,7 +35,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     public synchronized List<Item> getItemsByProductId(Long productId) {
         return getHibernateTemplate().find("from "+Item.class.getName()+" as item where item.productId=? order by item.closeDate", productId);
     }
-    
+
 
     @Override
     public Map<String, Item> getItemEbayIdByProductId(Long productId) {
@@ -108,10 +108,12 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
         if (TextUtil.isNotNull(conditions.get(Fields.IS_GOLDEN_FILTER_FIELD))) {
             String[] values = conditions.get(Fields.IS_GOLDEN_FILTER_FIELD).split(";");
             if (values.length > 0) {
-                String value = values[0];
-                query.append(" and item.golden=:golden");
-                params.add(Boolean.valueOf(value));
-                names.add("golden");
+                Boolean value = "true".equals(values[0]) && "false".equals(values[0]) ? Boolean.valueOf(values[0]) : null;
+                if (value != null) {
+                    query.append(" and item.golden=:golden");
+                    params.add(value);
+                    names.add("golden");
+                }
             }
         }
 
