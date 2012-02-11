@@ -82,18 +82,24 @@ public class FilterDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             List<Object[]> objects = model.getDataSelect();
-            if (objects.isEmpty() || objects.size() > 1) {
-                JOptionPane.showMessageDialog(main, "You must select only one filter for Apply", "Error", JOptionPane.ERROR_MESSAGE);
+            if (objects.isEmpty()) {
+                JOptionPane.showMessageDialog(main, "You must select at least one filter for Apply", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
-                if (setting == null) {
-                    setting = new SystemSetting();
-                    ManagerDAO.getInstance().getSystemSettingDAO().create(setting);
+                List<SystemSetting> settings = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
+                if (!settings.isEmpty()) {
+                    for (SystemSetting setting : settings) {
+                        ManagerDAO.getInstance().getSystemSettingDAO().delete(setting.getId());
+                    }
                 }
-                setting.setName(Fields.APPLY_FILTER.getKey());
-                setting.setValue(objects.get(0)[1].toString());
-                ManagerDAO.getInstance().getSystemSettingDAO().update(setting);
-                data.getButtonFilter().setText("Filter : " + objects.get(0)[2].toString());
+                StringBuilder sb = new StringBuilder();
+                for (Object[] objArray : objects) {
+                    SystemSetting setting = new SystemSetting();
+                    setting.setName(Fields.APPLY_FILTER.getKey());
+                    setting.setValue(objArray[1].toString());
+                    ManagerDAO.getInstance().getSystemSettingDAO().create(setting);
+                    sb.append(objArray[2].toString()).append(";");
+                }
+                data.getButtonFilter().setText(sb.toString());
                 dialog.setVisible(false);
                 dialog.dispose();
             }

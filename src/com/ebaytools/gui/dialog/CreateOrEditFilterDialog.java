@@ -69,7 +69,7 @@ public class CreateOrEditFilterDialog extends JDialog {
         JTextField timeOfDay = new JTextField();
         panel.add(timeOfDay, new Rectangle(6, 6, 6, 1));
         JCheckBox soldCheckBox = new JCheckBox();
-        panel.add(new JLabel("Sold : "), new Rectangle(0, 7, 3, 1));
+        panel.add(new JLabel("Unsold : "), new Rectangle(0, 7, 3, 1));
         panel.add(soldCheckBox, new Rectangle(3, 7, 1, 1));
         JButton save = new JButton("Save");
         panel.add(save, new Rectangle(5, 9, 3, 1));

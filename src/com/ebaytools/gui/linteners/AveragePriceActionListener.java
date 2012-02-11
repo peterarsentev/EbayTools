@@ -26,11 +26,10 @@ public class AveragePriceActionListener implements ActionListener {
         this.main = main;
         this.data = data;
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         List<Object[]> selectData = data.getProductTable().getDataSelect();
-        Long productId = null;
         List<Long> prsids = new ArrayList<Long>();
         if (!selectData.isEmpty()) {
             for (Object[] object : selectData) {
@@ -38,50 +37,49 @@ public class AveragePriceActionListener implements ActionListener {
             }
         }
         StringBuilder sb = new StringBuilder();
-        List<Item> items;
-        if (prsids.isEmpty()) {
-            items = ManagerDAO.getInstance().getItemDAO().getAllCloseItems();
-        } else {
-            SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
-            if (setting == null) {
-                items = ManagerDAO.getInstance().getItemDAO().getAllCloseItems();
-            } else {
-                Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
-                items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prsids);
-            }
+        List<Filter> filters = new ArrayList<Filter>();
+        List<SystemSetting> settings = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
+        for (SystemSetting setting : settings) {
+            filters.add(ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())));
         }
-        Map<Rang, List<Item>> rangByHour = new LinkedHashMap<Rang, List<Item>>();
-        Collections.sort(items, new Comparator<Item>() {
-            @Override
-            public int compare(Item o1, Item o2) {
-                return o1.getCreateDate().compareTo(o2.getCreateDate());
-            }
-        });
-        for (Item item : items) {
-            Rang rang = Rang.createRang(item.getCloseDate());
-            List<Item> rangItems = rangByHour.get(rang);
-            if (rangItems == null) {
-                rangByHour.put(rang, new ArrayList<Item>(Arrays.asList(item)));
-            } else {
-                rangItems.add(item);
-            }
+        if (filters.isEmpty()) {
+            filters.add(new Filter());
         }
-        for (Map.Entry<Rang, List<Item>> entry : sortMap(rangByHour).entrySet()) {
-            float averagePrice = 0F;
-            for (Item item : entry.getValue()) {
-                Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
-                averagePrice += Float.valueOf(prs.get(Fields.AUCTION_PRICE).getValue());
+        for (Filter filter : filters) {
+            sb.append("Filter : ").append(filter.getName()).append("\n");
+            List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prsids);
+            Map<Rang, List<Item>> rangByHour = new LinkedHashMap<Rang, List<Item>>();
+            Collections.sort(items, new Comparator<Item>() {
+                @Override
+                public int compare(Item o1, Item o2) {
+                    return o1.getCreateDate().compareTo(o2.getCreateDate());
+                }
+            });
+            for (Item item : items) {
+                Rang rang = Rang.createRang(item.getCloseDate());
+                List<Item> rangItems = rangByHour.get(rang);
+                if (rangItems == null) {
+                    rangByHour.put(rang, new ArrayList<Item>(Arrays.asList(item)));
+                } else {
+                    rangItems.add(item);
+                }
             }
-//            sb.append((entry.getKey().month+1) +":"+entry.getKey().day + ":" + entry.getKey().year + "\t");
-            sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ":\t");
-            DecimalFormat twoDForm = new DecimalFormat("#.##");
-            sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
-            sb.append("\n");
+            for (Map.Entry<Rang, List<Item>> entry : sortMap(rangByHour).entrySet()) {
+                float averagePrice = 0F;
+                for (Item item : entry.getValue()) {
+                    Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
+                    averagePrice += Float.valueOf(prs.get(Fields.TOTAL_COST).getValue());
+                }
+                sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ":\t");
+                DecimalFormat twoDForm = new DecimalFormat("#.##");
+                sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
+                sb.append("\n");
+            }
+            sb.append("Total items : ").append(items.size()).append("\n\n");
         }
-        sb.append("Total items : ").append(items.size()).append("\n");
-        data.getText().setText(data.getText().getText() + sb.toString());
+        data.getText().append(sb.toString());
     }
-    
+
     public Map<Rang, List<Item>> sortMap(Map<Rang, List<Item>> map) {
         List<Rang> keys = new ArrayList<Rang>(map.keySet());
         Collections.sort(keys, new Comparator<Rang>() {
@@ -91,15 +89,15 @@ public class AveragePriceActionListener implements ActionListener {
                     if (o1.month == o2.month) {
                         if (o1.day == o2.day) {
                             if (o1.hour == o2.hour) {
-                                return 0;  
+                                return 0;
                             } else {
                                 return o1.hour > o2.hour ? 1 : -1;
                             }
                         } else {
-                            return o1.day > o2.day ? 1 : -1;   
+                            return o1.day > o2.day ? 1 : -1;
                         }
                     } else {
-                        return o1.month > o2.month ? 1 : -1;    
+                        return o1.month > o2.month ? 1 : -1;
                     }
                 } else {
                     return o1.year > o2.year ? 1 : -1;
@@ -118,7 +116,7 @@ public class AveragePriceActionListener implements ActionListener {
         private int month;
         private int day;
         private int hour;
-        
+
         private static Rang createRang(Calendar calendar) {
             Rang rang = new Rang();
             rang.year = 0;//calendar.get(Calendar.YEAR);

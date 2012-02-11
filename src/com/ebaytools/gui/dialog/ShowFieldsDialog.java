@@ -1,16 +1,13 @@
 package com.ebaytools.gui.dialog;
 
-import com.ebaytools.gui.linteners.CollectChooseOptsListener;
 import com.ebaytools.gui.linteners.SaveShowFieldsListenerAction;
 import com.ebaytools.gui.model.Data;
-import com.ebaytools.gui.panel.EbayGUI;
 import com.ebaytools.gui.panel.GraphPaperLayout;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.util.Fields;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
@@ -55,7 +52,7 @@ public class ShowFieldsDialog  extends JDialog {
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.setLayout(new GraphPaperLayout(new Dimension(10, 18), 1, 1));
         java.util.List<CheckBoxID> boxList = new ArrayList<CheckBoxID>();
-        java.util.List<String> showOpts = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
+        java.util.List<String> showOpts = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.SHOW_FIELDS.getKey());
 
         CheckBoxID soldState = new CheckBoxID("Sold state", "sold_state");
         CheckBoxID ebayItemId = new CheckBoxID("Ebay ItemId", "ebay_item_id");

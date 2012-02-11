@@ -5,19 +5,13 @@ import com.ebaytools.gui.linteners.*;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Item;
-import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.Product;
-import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.*;
 
 import javax.swing.*;
-import javax.xml.datatype.DatatypeConstants;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.List;
 
@@ -169,7 +163,7 @@ public class ProductPanel extends JPanel {
                 JOptionPane.showMessageDialog(main, "You must select at least one product", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder sb = new StringBuilder();
-                List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getShowFieldsValue();
+                List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.SHOW_FIELDS.getKey());
                 for (Object[] objects : selectData) {
                     sb.append("Reference ID : " + objects[2] + "\n");
                     List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsByProductId((Long) objects[1]);

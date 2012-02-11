@@ -4,6 +4,7 @@ import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SystemSettingDAOImpl extends HibernateDaoSupport implements SystemSettingDAO {
@@ -38,26 +39,17 @@ public class SystemSettingDAOImpl extends HibernateDaoSupport implements SystemS
     }
 
     @Override
-    public SystemSetting getSystemSettingByName(String name) {
-        List<SystemSetting> setting = getHibernateTemplate().find("from com.ebaytools.kernel.entity.SystemSetting as sysSet where sysSet.name=?", name);
-        if (setting.isEmpty()) {
-            return null;
-        } else {
-            if (setting.size() > 1) {
-                throw new IllegalStateException("This setting has multi values : " + name);
-            } else {
-                return setting.get(0);
-            }
-        }
+    public List<SystemSetting> getSystemSettingByName(String name) {
+        return getHibernateTemplate().find("from com.ebaytools.kernel.entity.SystemSetting as sysSet where sysSet.name=?", name);
     }
 
     @Override
-    public List<SystemSetting> getShowFields() {
+    public synchronized List<SystemSetting> getShowFields() {
         return getHibernateTemplate().find("from " + SystemSetting.class.getName() + " as sysSet where sysSet.name=?", Fields.SHOW_FIELDS.getKey());
     }
 
     @Override
-    public List<String> getShowFieldsValue() {
-        return getHibernateTemplate().find("select sysSet.value from " + SystemSetting.class.getName() + " as sysSet where sysSet.name=?", Fields.SHOW_FIELDS.getKey());
+    public synchronized List<String> getSystemsValue(String field) {
+        return getHibernateTemplate().find("select sysSet.value from " + SystemSetting.class.getName() + " as sysSet where sysSet.name=?", field);
     }
 }

@@ -31,6 +31,18 @@ public class Item implements Comparable<Item>, Serializable {
             this.key = key;
         }
     }
+    
+    public String getNameStatus() {
+        if (state == null) {
+            return "undetected";
+        } else if (state == 1) {
+            return "sold";
+        } else if (state == -1) {
+            return "unsold";
+        } else {
+            return "auction active";
+        }
+    }
 
     public Integer getState() {
         return state;

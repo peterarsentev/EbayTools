@@ -108,11 +108,23 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
         if (TextUtil.isNotNull(conditions.get(Fields.IS_GOLDEN_FILTER_FIELD))) {
             String[] values = conditions.get(Fields.IS_GOLDEN_FILTER_FIELD).split(";");
             if (values.length > 0) {
-                Boolean value = "true".equals(values[0]) && "false".equals(values[0]) ? Boolean.valueOf(values[0]) : null;
+                Boolean value = "true".equals(values[0]) || "false".equals(values[0]) ? Boolean.valueOf(values[0]) : null;
                 if (value != null) {
                     query.append(" and item.golden=:golden");
                     params.add(value);
                     names.add("golden");
+                }
+            }
+        }
+
+        if (TextUtil.isNotNull(conditions.get(Fields.SOLD))) {
+            String[] values = conditions.get(Fields.SOLD).split(";");
+            if (values.length > 0) {
+                boolean value = "true".equals(values[0]);
+                if (value) {
+                    query.append(" and item.state=:state");
+                    params.add(Item.Status.UNSOLD.key);
+                    names.add("state");
                 }
             }
         }

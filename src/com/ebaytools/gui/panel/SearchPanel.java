@@ -55,8 +55,14 @@ public class SearchPanel extends JPanel {
         this.goldenSearch = new JCheckBox("Search single item");
         goldenSearch.setForeground(ColorUtil.LightSlateGray);
         this.daysLeft = new JTextField();
-        SystemSetting setting = ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey());
-        JButton buttonFilter = new JButton((setting != null ? ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue())).getName() : "-"));
+        StringBuilder sb = new StringBuilder();
+        for (SystemSetting setting : ManagerDAO.getInstance().getSystemSettingDAO().getSystemSettingByName(Fields.APPLY_FILTER.getKey())) {
+            com.ebaytools.kernel.entity.Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
+            if (filter != null) {
+                sb.append(filter.getName()).append(";");
+            }
+        }
+        JButton buttonFilter = new JButton(sb.toString());
         JButton averagePrice = new JButton("Average price");
         JButton filters = new JButton("Filters");
         JButton showFields = new JButton("Show fields");

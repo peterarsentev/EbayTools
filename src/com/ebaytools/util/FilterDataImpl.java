@@ -2,9 +2,11 @@ package com.ebaytools.util;
 
 import java.util.*;
 
+import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.FilterConditions;
 import com.ebaytools.kernel.entity.FilterValue;
+import com.ebaytools.kernel.entity.SystemSetting;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -20,9 +22,10 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
     @Override
     public List<Object[]> getData() {
         List<Object[]> filterFields = new ArrayList<Object[]>();
+        List<String> settings = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.APPLY_FILTER.getKey());
         for (Filter filter : filters) {
             Object[] objects = new Object[7];
-            objects[0] = Boolean.FALSE;
+            objects[0] = settings.contains(String.valueOf(filter.getId()));
             objects[1] = filter.getId();
             objects[2] = filter.getName();
             Map<Fields, String> conditionsMap = buildConditions(filter.getConditions());

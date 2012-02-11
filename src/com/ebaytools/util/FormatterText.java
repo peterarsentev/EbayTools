@@ -54,7 +54,7 @@ public class FormatterText {
         for (Item item : items) {
             Map<Fields, ItemProperties> fields = Fields.buildProperties(item.getProperties());
             if (showFields.contains(Fields.SOLD.getKey())) {
-                sb.append(Fields.SOLD.getKey()).append(" ").append(item.getState()).append("\n");
+                sb.append(Fields.SOLD.getKey()).append(" ").append(item.getNameStatus()).append("\n");
             }
             if (showFields.contains(Fields.EBAY_ITEM_ID.getKey())) {
                 sb.append(Fields.EBAY_ITEM_ID.getKey()).append(" ").append(item.getEbayItemId()).append("\n");
