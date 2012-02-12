@@ -5,6 +5,7 @@ import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.FileSearching;
 import com.ebaytools.kernel.entity.FilterValue;
 import com.ebaytools.util.Pair;
+import com.ebaytools.util.TextUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -40,8 +41,8 @@ public class SaveFileSearchingAction implements ActionListener {
         }
         fileSearching.setCondition(conditions.toString());
         fileSearching.setListType(listType.getText());
-        fileSearching.setDayLeft(Integer.valueOf(timeOfDay.getText()));
-        fileSearching.setTimeInterval(Integer.valueOf(intervalUpdate.getText()));
+        fileSearching.setDayLeft(TextUtil.getIntegerOrNull(timeOfDay.getText()));
+        fileSearching.setTimeInterval(TextUtil.getIntegerOrNull(intervalUpdate.getText()));
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, Integer.valueOf(intervalUpdate.getText()));
         fileSearching.setRunTime(cal);

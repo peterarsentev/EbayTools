@@ -39,7 +39,7 @@ public class SystemSettingDAOImpl extends HibernateDaoSupport implements SystemS
     }
 
     @Override
-    public List<SystemSetting> getSystemSettingByName(String name) {
+    public synchronized List<SystemSetting> getSystemSettingByName(String name) {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.SystemSetting as sysSet where sysSet.name=?", name);
     }
 

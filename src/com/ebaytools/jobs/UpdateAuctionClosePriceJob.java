@@ -24,17 +24,17 @@ public class UpdateAuctionClosePriceJob {
                 WorkerPool pool = new WorkerPool(1, 0, 4, 30);
                 while (true) {
                     log.debug("start");
-                    List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsAuctionDateExpare();
-                    for (Item item : items) {
-                        int result = pool.process(new ItemWorker(item.getId(), item));
-                        if (result == 1) {
-                            item.setState(Item.Status.PROCESS_UPDATE.key);
-                            ManagerDAO.getInstance().getItemDAO().update(item);
-                        }
-                    }
                     try {
+                        List<Item> items = ManagerDAO.getInstance().getItemDAO().getItemsAuctionDateExpare();
+                        for (Item item : items) {
+                            int result = pool.process(new ItemWorker(item.getId(), item));
+                            if (result == 1) {
+                                item.setState(Item.Status.PROCESS_UPDATE.key);
+                                ManagerDAO.getInstance().getItemDAO().update(item);
+                            }
+                        }
                         Thread.sleep(5 * 60 * 1000); //wait 5 min
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         log.error("Error", e);
                     }
@@ -43,7 +43,7 @@ public class UpdateAuctionClosePriceJob {
             }
         }.start();
     }
-    
+
     private static class ItemWorker extends WorkerPool.Worker {
         private Item item;
         private Long id;
@@ -59,7 +59,12 @@ public class UpdateAuctionClosePriceJob {
 
         @Override
         public void run() {
-            updateAuctionClosePrice(item);
+            try {
+                updateAuctionClosePrice(item);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Error", e);
+            }
         }
     }
 
@@ -77,19 +82,19 @@ public class UpdateAuctionClosePriceJob {
                 ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
                 prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));
                 prAuction.setType(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getCurrencyID()));
-                ManagerDAO.getInstance().getItemPropetiesDAO().update(prAuction);
+                //ManagerDAO.getInstance().getItemPropetiesDAO().update(prAuction);
 
                 ItemProperties prStatus = prMap.get(Fields.AUCTION_STATUS);
                 prStatus.setValue(itemType.getSellingStatus().getListingStatus().name());
-                ManagerDAO.getInstance().getItemPropetiesDAO().update(prStatus);
+                //ManagerDAO.getInstance().getItemPropetiesDAO().update(prStatus);
 
                 ItemProperties prTotalCost = prMap.get(Fields.TOTAL_COST);
                 String shippingValue = prMap.get(Fields.SHIPPING_COST).getValue();
                 String priceCost = prMap.get(Fields.AUCTION_PRICE).getValue();
                 float cost = TextUtil.getFloarOrZero(shippingValue) + TextUtil.getFloarOrZero(priceCost);
                 prTotalCost.setValue(String.valueOf(cost));
-                ManagerDAO.getInstance().getItemPropetiesDAO().update(prTotalCost);
-                
+                //ManagerDAO.getInstance().getItemPropetiesDAO().update(prTotalCost);
+
                 item.setCloseAuction(true);
                 item.setState(Item.Status.CLOSE.key);
                 ManagerDAO.getInstance().getItemDAO().update(item);

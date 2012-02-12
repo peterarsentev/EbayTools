@@ -12,12 +12,12 @@ import java.util.*;
 
 public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     @Override
-    public Long create(Item item) {
+    public synchronized Long create(Item item) {
         return (Long) getHibernateTemplate().save(item);
     }
 
     @Override
-    public void update(Item item) {
+    public synchronized void update(Item item) {
         getHibernateTemplate().update(item);
     }
 
@@ -38,7 +38,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
 
     @Override
-    public Map<String, Item> getItemEbayIdByProductId(Long productId) {
+    public synchronized Map<String, Item> getItemEbayIdByProductId(Long productId) {
         Map<String, Item> map = new LinkedHashMap<String, Item>();
         for (Item item : getItemsByProductId(productId)) {
             map.put(item.getEbayItemId(), item);
@@ -47,7 +47,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getProductByFilter(Filter filter, List<Long> productId) {
+    public synchronized List<Item> getProductByFilter(Filter filter, List<Long> productId) {
         Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
         List<Object> params = new ArrayList<Object>();
         List<String> names = new ArrayList<String>();
@@ -161,7 +161,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public synchronized List<Item> getAllItems() {
         return getHibernateTemplate().find("from " + Item.class.getName() + " as item order by item.productId");
     }
 }
