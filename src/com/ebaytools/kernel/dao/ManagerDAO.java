@@ -6,7 +6,11 @@ import com.ebaytools.util.Fields;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class ManagerDAO {
+    protected static final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+
     private static ManagerDAO instance;
     private ProductDAO productDAO;
     private ItemDAO itemDAO;
@@ -36,35 +40,35 @@ public class ManagerDAO {
         return instance;
     }
 
-    public synchronized FilterConditionsDAO getFilterConditionsDAO() {
+    public FilterConditionsDAO getFilterConditionsDAO() {
         return filterConditionsDAO;
     }
 
-    public synchronized FilterDAO getFilterDAO() {
+    public FilterDAO getFilterDAO() {
         return filterDAO;
     }
 
-    public synchronized FilterValueDAO getFilterValueDAO() {
+    public FilterValueDAO getFilterValueDAO() {
         return filterValueDAO;
     }
 
-    public synchronized ProductDAO getProductDAO() {
+    public ProductDAO getProductDAO() {
         return productDAO;
     }
 
-    public synchronized ItemDAO getItemDAO() {
+    public ItemDAO getItemDAO() {
         return itemDAO;
     }
 
-    public synchronized ItemPropertiesDAO getItemPropetiesDAO() {
+    public ItemPropertiesDAO getItemPropetiesDAO() {
         return itemPropetiesDAO;
     }
 
-    public synchronized SystemSettingDAO getSystemSettingDAO() {
+    public SystemSettingDAO getSystemSettingDAO() {
         return systemSettingDAO;
     }
 
-    public synchronized FileSearchingDAO getFileSearchingDAO() {
+    public FileSearchingDAO getFileSearchingDAO() {
         return fileSearchingDAO;
     }
 

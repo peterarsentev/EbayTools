@@ -9,17 +9,32 @@ import java.util.List;
 public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSearchingDAO {
     @Override
     public Long create(FileSearching fileSearching) {
-        return (Long) getHibernateTemplate().save(fileSearching);
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            return (Long) getHibernateTemplate().save(fileSearching);
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override
-    public synchronized void update(FileSearching fileSearching) {
-        getHibernateTemplate().update(fileSearching);
+    public void update(FileSearching fileSearching) {
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            getHibernateTemplate().update(fileSearching);
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override
     public void delete(Long id) {
-        getHibernateTemplate().delete(find(id));
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            getHibernateTemplate().delete(find(id));
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override
@@ -28,20 +43,25 @@ public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSea
     }
 
     @Override
-    public synchronized List<FileSearching> getAllFileSearching() {
+    public List<FileSearching> getAllFileSearching() {
         return getHibernateTemplate().find("from " + FileSearching.class.getName());
     }
 
     @Override
-    public synchronized List<FileSearching> getFileSearchingCurrentTime() {
+    public List<FileSearching> getFileSearchingCurrentTime() {
         return getHibernateTemplate().find("from " + FileSearching.class.getName() + " as fs where fs.runTime<=?", Calendar.getInstance());
     }
 
     @Override
-    public synchronized void updateRunTime(FileSearching fileSearch) {
-        Calendar cal =  Calendar.getInstance();
-        cal.add(Calendar.MINUTE, fileSearch.getTimeInterval());
-        fileSearch.setRunTime(cal);
-        update(fileSearch);
+    public void updateRunTime(FileSearching fileSearch) {
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            Calendar cal =  Calendar.getInstance();
+            cal.add(Calendar.MINUTE, fileSearch.getTimeInterval());
+            fileSearch.setRunTime(cal);
+            getHibernateTemplate().update(fileSearch);
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 }

@@ -7,18 +7,28 @@ import java.util.List;
 
 public class ItemPropertiesDAOImpl extends HibernateDaoSupport implements ItemPropertiesDAO {
     @Override
-    public synchronized Long create(ItemProperties itemProperties) {
-        return (Long) getHibernateTemplate().save(itemProperties);
+    public Long create(ItemProperties itemProperties) {
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            return (Long) getHibernateTemplate().save(itemProperties);
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override
-    public synchronized  List<ItemProperties> getItemPropetiesForItemId(Long itemId) {
+    public List<ItemProperties> getItemPropetiesForItemId(Long itemId) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public synchronized void update(ItemProperties itemProperties) {
-        getHibernateTemplate().update(itemProperties);
+    public void update(ItemProperties itemProperties) {
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            getHibernateTemplate().update(itemProperties);
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override

@@ -41,18 +41,17 @@ public class ExportItemActionListener implements ActionListener {
             sb.append("\"").append(FormatterText.dateformatter.format(item.getCloseDate().getTime())).append("\"").append(";");
             sb.append("\"").append(values.get(Fields.AUCTION_PRICE).getValue()).append("\"").append(";");
             sb.append("\"").append(values.get(Fields.CONDITIONS).getValue()).append("\"").append(";");
-            sb.append("\"").append(values.get(Fields.LISTING_TYPE).getValue()).append("\"").append(";");
+            sb.append("\"").append(values.get(Fields.LISTING_TYPE) != null ? values.get(Fields.LISTING_TYPE).getValue() : "-").append("\"").append(";");
             sb.append("\"").append(FormatterText.dateformatter.format(item.getCreateDate().getTime())).append("\"").append(";");
             sb.append("\"").append(item.getNameStatus()).append("\"").append(";");
             sb.append("\"").append(values.get(Fields.TOTAL_COST).getValue()).append("\"").append(";");
             sb.append("\"").append(values.get(Fields.SHIPPING_COST).getValue()).append("\"").append(";");
             sb.append("\"").append(values.get(Fields.AUCTION_STATUS).getValue()).append("\"").append(";");
-            sb.append("\"").append(item.getTotalBid()).append(";");
-            sb.append("\"").append(values.get(Fields.POSITIVE_FEEDBACK_PERCENT).getValue()).append("\"").append(";");
-            sb.append("\"").append(values.get(Fields.FEEDBACK_SCORE).getValue()).append("\"").append(";");
-            sb.append("\"").append(values.get(Fields.TOP_RATED_SELLER).getValue()).append("\"").append(";");
-            sb.append("\"").append(values.get(Fields.SHIP_TO_LOCATION).getValue()).append("\"").append(";");
-            sb.append("\"").append(values.get(Fields.HANDLING_TIME).getValue()).append("\"").append(";");
+            sb.append("\"").append(item.getTotalBid()).append("\"").append(";");
+            sb.append("\"").append(values.get(Fields.POSITIVE_FEEDBACK_PERCENT) != null ? values.get(Fields.POSITIVE_FEEDBACK_PERCENT).getValue() : "-").append("\"").append(";");
+            sb.append("\"").append(values.get(Fields.FEEDBACK_SCORE) != null ? values.get(Fields.FEEDBACK_SCORE).getValue() : "-").append("\"").append(";");
+            sb.append("\"").append(values.get(Fields.SHIP_TO_LOCATION) != null ? values.get(Fields.SHIP_TO_LOCATION).getValue() : "-").append("\"").append(";");
+            sb.append("\"").append(values.get(Fields.HANDLING_TIME) != null ? values.get(Fields.HANDLING_TIME).getValue() : "-").append("\"").append(";");
             sb.append("\r\n");
         }
         File file = new File(Calendar.getInstance().getTimeInMillis()+".csv");

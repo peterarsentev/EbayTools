@@ -13,24 +13,29 @@ import java.util.Set;
 public class FilterDAOImpl extends HibernateDaoSupport implements FilterDAO {
     @Override
     public Long create(Filter filter) {
-        Session session = getSession();
-        Transaction tx = session.beginTransaction();
-        Set<FilterConditions> conditionsSet = filter.getConditions();
-        filter.setConditions(null);
-        Long filterId = (Long) session.save(filter);
-        for (FilterConditions conditions : conditionsSet) {
-            conditions.setFilterId(filterId);
-            Set<FilterValue> filterValues = conditions.getValues();
-            conditions.setValues(null);
-            Long filterConditionsId = (Long) session.save(conditions);
-            for (FilterValue value : filterValues) {
-                value.setFilterConditionsId(filterConditionsId);
-                session.save(value);
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            Session session = getSession();
+            Transaction tx = session.beginTransaction();
+            Set<FilterConditions> conditionsSet = filter.getConditions();
+            filter.setConditions(null);
+            Long filterId = (Long) session.save(filter);
+            for (FilterConditions conditions : conditionsSet) {
+                conditions.setFilterId(filterId);
+                Set<FilterValue> filterValues = conditions.getValues();
+                conditions.setValues(null);
+                Long filterConditionsId = (Long) session.save(conditions);
+                for (FilterValue value : filterValues) {
+                    value.setFilterConditionsId(filterConditionsId);
+                    session.save(value);
+                }
             }
+            tx.commit();
+            session.close();
+            return filterId;
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
         }
-        tx.commit();
-        session.close();
-        return filterId;
     }
 
     @Override
@@ -40,16 +45,21 @@ public class FilterDAOImpl extends HibernateDaoSupport implements FilterDAO {
 
     @Override
     public void delete(Long id) {
-        getHibernateTemplate().delete(find(id));
+        ManagerDAO.lock.writeLock().lock();
+        try {
+            getHibernateTemplate().delete(find(id));
+        } finally {
+            ManagerDAO.lock.writeLock().unlock();
+        }
     }
 
     @Override
-    public synchronized Filter find(Long id) {
+    public Filter find(Long id) {
         return getHibernateTemplate().get(Filter.class, id);
     }
 
     @Override
-    public synchronized List<Filter> getAllFilters() {
+    public List<Filter> getAllFilters() {
         return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Filter");
     }
 }
