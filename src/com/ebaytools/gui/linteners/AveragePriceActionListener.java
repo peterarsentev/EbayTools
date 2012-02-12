@@ -55,6 +55,13 @@ public class AveragePriceActionListener implements ActionListener {
                     return o1.getCreateDate().compareTo(o2.getCreateDate());
                 }
             });
+            if (!selectData.isEmpty()) {
+                sb.append("For reference ids : ");
+                for (Object[] object : selectData) {
+                    sb.append(object[2]).append(";");
+                }
+                sb.append("\n");
+            }
             for (Item item : items) {
                 Rang rang = Rang.createRang(item.getCloseDate());
                 List<Item> rangItems = rangByHour.get(rang);

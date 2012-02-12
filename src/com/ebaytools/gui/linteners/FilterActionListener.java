@@ -40,6 +40,13 @@ public class FilterActionListener implements ActionListener {
                         prs.add((Long) object[1]);
                     }
                 }
+                if (!selectData.isEmpty()) {
+                    sb.append("For reference ids : ");
+                    for (Object[] object : selectData) {
+                        sb.append(object[2]).append(";");
+                    }
+                    sb.append("\n");
+                }
                 List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prs);
                 List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.SHOW_FIELDS.getKey());
                 sb.append(FormatterText.formatShowFields(items, showField)).append("\n");

@@ -40,8 +40,6 @@ public class ProductPanel extends JPanel {
         deleteProduct.setForeground(ColorUtil.IndianRed);
         JButton refreshTable = new JButton("Refresh");
         refreshTable.setForeground(ColorUtil.IndianRed);
-        JButton searchItem = new JButton("Search");
-        searchItem.setForeground(ColorUtil.IndianRed);
         JButton showItems = new JButton("Items");
         JButton loadReferenceIDList = new JButton("Add files");
         loadReferenceIDList.setForeground(ColorUtil.IndianRed);
@@ -53,7 +51,6 @@ public class ProductPanel extends JPanel {
         panel.add(createProduct, new Rectangle(16, 4, 4, 1));
         panel.add(editProduct, new Rectangle(16, 5, 4, 1));
         panel.add(refreshTable, new Rectangle(16, 6, 4, 1));
-        panel.add(searchItem, new Rectangle(16, 7, 4, 1));
         panel.add(showItems, new Rectangle(16, 8, 4, 1));
         panel.add(deleteProduct, new Rectangle(16, 10, 4, 1));
 
@@ -65,7 +62,6 @@ public class ProductPanel extends JPanel {
         editProduct.addActionListener(new UpdateProductListenter(main, productModelTable, data));
         deleteProduct.addActionListener(new DeleteProductListenter(main, productModelTable));
         refreshTable.addActionListener(refresAction);
-        searchItem.addActionListener(new SearchListenter(main, productModelTable));
         showItems.addActionListener(new ShowItemsListenter(main, productModelTable));
         loadReferenceIDList.addActionListener(new OpenFileSearchingDialogAcitonListener(main, data));
         data.setProductTable(productModelTable);

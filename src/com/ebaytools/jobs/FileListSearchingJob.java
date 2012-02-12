@@ -71,7 +71,11 @@ public class FileListSearchingJob  {
 
         @Override
         public void run() {
-            execute(fileSearching);
+            try {
+                execute(fileSearching);
+            } catch (Exception e) {
+                log.debug("Error", e);
+            }
         }
     }
 

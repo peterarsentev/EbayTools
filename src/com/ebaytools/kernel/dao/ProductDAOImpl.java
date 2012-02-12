@@ -5,6 +5,7 @@ import com.ebay.services.finding.SellerInfo;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.Product;
 import com.ebaytools.util.*;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -12,6 +13,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import java.util.*;
 
 public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
+    private static final Logger log = Logger.getLogger(ProductDAOImpl.class);
+
     @Override
     public Long create(Product product) {
         ManagerDAO.lock.writeLock().lock();
@@ -64,8 +67,9 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
         if (products.isEmpty()) {
             return null;
         } else if (products.size() > 1) {
-            throw new IllegalMonitorStateException("System has multi products with refereceId = " + referenceId);
-        }  else {
+            log.error("Error. System has multi products with refereceId = " + referenceId);
+            return products.get(0);
+        } else {
             return products.get(0);
         }
     }

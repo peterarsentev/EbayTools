@@ -17,9 +17,9 @@ import java.util.*;
 
 public class ItemsSearchListener implements ActionListener {
     private static final Logger log = Logger.getLogger(ItemsSearchListener.class);
-    
+
     private JTextArea text;
-	private JTextField product;
+    private JTextField product;
     private JTextField condition;
     private JTextField listingType;
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
@@ -29,8 +29,8 @@ public class ItemsSearchListener implements ActionListener {
     private JFrame main;
 
     public ItemsSearchListener(SearchPanel panel) {
-		this.text = panel.getText();
-		this.product = panel.getReferenceId();
+        this.text = panel.getText();
+        this.product = panel.getReferenceId();
         this.condition = panel.getConditionsField();
         this.listingType = panel.getListTypeField();
         this.sortedTypeField = panel.getSortedTypeField();
@@ -38,31 +38,47 @@ public class ItemsSearchListener implements ActionListener {
         this.data = panel.getData();
         this.daysLeft = panel.getDaysLeft();
         this.main = panel.getMain();
-	}
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		try {
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        try {
             Pair<SortOrderType> pairSorted = sortedTypeField.getItemAt(sortedTypeField.getSelectedIndex());
-			StringBuilder sb = new StringBuilder("GoldenItems : \n");
+            StringBuilder sb = new StringBuilder();
             Map<SearchItem, Boolean> items;
-            log.debug(product.getText()+" "+condition.getText()+ " " +listingType.getText() + " " +pairSorted.getValue()+ " " +"ReferenceID"+ " " +TextUtil.convertDayToHours(daysLeft.getText()));
-            List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(product.getText(), condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.convertDayToHours(daysLeft.getText()));
-            log.debug("total : " + searchItems.size());
-            if (golderSearch.isSelected()) {
-                items = SearchUtil.getGoldenItems(searchItems);
+            List<String> refs = new ArrayList<String>();
+            if (!TextUtil.isNotNull(product.getText())) {
+                List<Object[]> selectData = data.getProductTable().getDataSelect();
+                if (!selectData.isEmpty()) {
+                    sb.append("For reference ids : ");
+                    for (Object[] object : selectData) {
+                        sb.append(object[2]).append(";");
+                        refs.add((String) object[2]);
+                    }
+                    sb.append("\n");
+                }
             } else {
-                items = SearchUtil.fullingGoldenItems(searchItems);
+                refs.add(product.getText());
             }
-            data.setItems(items);
-            sb.append(FormatterText.formatForConsole(data.getItems(), product.getText(), "ReferenceID"));
-            sb.append("Total items : ").append(items.size());
-            text.setText(text.getText() + sb.toString() + "\n");
-            Map<Pair, Map<SearchItem, Boolean>> saveData = new LinkedHashMap<Pair, Map<SearchItem, Boolean>>();
-            saveData.put(new Pair<String>(product.getText(), "ReferenceID"), items);
-            data.setSaveData(saveData);
+            for (String ref : refs) {
+                log.debug(ref+" "+condition.getText()+ " " +listingType.getText() + " " +pairSorted.getValue()+ " " +"ReferenceID"+ " " +TextUtil.convertDayToHours(daysLeft.getText()));
+                List<SearchItem> searchItems = SearchUtil.getInstance().getItemsBySortedType(ref, condition.getText(), listingType.getText(), pairSorted.getValue(), "ReferenceID", TextUtil.convertDayToHours(daysLeft.getText()));
+                log.debug("total : " + searchItems.size());
+                if (golderSearch.isSelected()) {
+                    items = SearchUtil.getGoldenItems(searchItems);
+                } else {
+                    items = SearchUtil.fullingGoldenItems(searchItems);
+                }
+                data.setItems(items);
+                sb.append(FormatterText.formatForConsole(data.getItems(), ref, "ReferenceID"));
+                sb.append("Total items : ").append(items.size());
+                text.setText(text.getText() + sb.toString() + "\n");
+                Map<Pair, Map<SearchItem, Boolean>> saveData = new LinkedHashMap<Pair, Map<SearchItem, Boolean>>();
+                saveData.put(new Pair<String>(ref, "ReferenceID"), items);
+                data.setSaveData(saveData);
+            }
         } catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            e.printStackTrace();
+        }
+    }
 }
