@@ -36,35 +36,35 @@ public class ManagerDAO {
         return instance;
     }
 
-    public  FilterConditionsDAO getFilterConditionsDAO() {
+    public synchronized FilterConditionsDAO getFilterConditionsDAO() {
         return filterConditionsDAO;
     }
 
-    public FilterDAO getFilterDAO() {
+    public synchronized FilterDAO getFilterDAO() {
         return filterDAO;
     }
 
-    public FilterValueDAO getFilterValueDAO() {
+    public synchronized FilterValueDAO getFilterValueDAO() {
         return filterValueDAO;
     }
 
-    public ProductDAO getProductDAO() {
+    public synchronized ProductDAO getProductDAO() {
         return productDAO;
     }
 
-    public ItemDAO getItemDAO() {
+    public synchronized ItemDAO getItemDAO() {
         return itemDAO;
     }
 
-    public ItemPropertiesDAO getItemPropetiesDAO() {
+    public synchronized ItemPropertiesDAO getItemPropetiesDAO() {
         return itemPropetiesDAO;
     }
 
-    public SystemSettingDAO getSystemSettingDAO() {
+    public synchronized SystemSettingDAO getSystemSettingDAO() {
         return systemSettingDAO;
     }
 
-    public FileSearchingDAO getFileSearchingDAO() {
+    public synchronized FileSearchingDAO getFileSearchingDAO() {
         return fileSearchingDAO;
     }
 
