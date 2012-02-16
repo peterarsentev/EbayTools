@@ -84,7 +84,7 @@ public class AveragePriceActionListener implements ActionListener {
             }
             sb.append("Total items : ").append(items.size()).append("\n\n");
         }
-        data.getText().append(sb.toString());
+        data.getText().setText(data.getText().getText() + sb.toString());
     }
 
     public Map<Rang, List<Item>> sortMap(Map<Rang, List<Item>> map) {

@@ -18,7 +18,7 @@ import java.util.Map;
 public class SaveListener implements ActionListener {
     private JFileChooser fc;
     private JFrame main;
-    private JTextArea text;
+    private JEditorPane text;
     private Data data;
 
     public SaveListener(SearchPanel panel) {

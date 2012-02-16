@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UPCSearchListener implements ActionListener {
-    private JTextArea text;
+    private JEditorPane text;
     private JTextField field;
 
     public UPCSearchListener(SearchPanel panel) {

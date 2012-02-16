@@ -18,7 +18,7 @@ public class SearchPanel extends JPanel {
     private JTextField referenceId;
     private JTextField conditionsField;
     private JTextField listTypeField;
-    private JTextArea text;
+    private JEditorPane text;
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox goldenSearch;
     private JTextField daysLeft;
@@ -47,7 +47,7 @@ public class SearchPanel extends JPanel {
         conditionsField.setText("3000;7000");
         this.listTypeField = new JTextField();
         listTypeField.setText("Auction");
-        this.text = new JTextArea();
+        this.text = new JEditorPane();
         this.sortedTypeField = new JComboBox<Pair<SortOrderType>>();
         for (SortOrderType sortedType : SortOrderType.values()) {
             sortedTypeField.addItem(new Pair<SortOrderType>(sortedType.value(), sortedType));
@@ -153,7 +153,7 @@ public class SearchPanel extends JPanel {
         return listTypeField;
     }
 
-    public JTextArea getText() {
+    public JEditorPane getText() {
         return text;
     }
 

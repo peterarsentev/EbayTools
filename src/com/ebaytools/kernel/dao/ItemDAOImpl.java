@@ -74,12 +74,6 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
                 names.add("prsids");
                 params.add(productId);
             }
-            query.append(" and item.closeAuction=:closeAuction");
-            names.add("closeAuction");
-            params.add(true);
-            query.append(" and item.state!=:state");
-            names.add("state");
-            params.add(-1);
             if (TextUtil.isNotNull(conditions.get(Fields.CONDITIONS))) {
                 String[] values = conditions.get(Fields.CONDITIONS).split(";");
                 if (TextUtil.isNotNull(values[0])) {
@@ -142,8 +136,16 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
                         query.append(" and item.state=:state");
                         params.add(Item.Status.UNSOLD.key);
                         names.add("state");
+                    } else {
+                        query.append(" and item.state=:state");
+                        params.add(Item.Status.CLOSE.key);
+                        names.add("state");
                     }
                 }
+            } else {
+                query.append(" and item.closeAuction=:closeAuction");
+                names.add("closeAuction");
+                params.add(true);
             }
 
             query.append(" order by item.closeDate");

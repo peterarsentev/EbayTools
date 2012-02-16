@@ -21,7 +21,7 @@ public class Data {
     private JTextField referenceId;
     private JTextField conditionsField;
     private JTextField listTypeField;
-    private JTextArea text;
+    private JEditorPane text;
     private JComboBox<Pair<SortOrderType>> sortedTypeField;
     private JCheckBox goldenSearch;
     private JTextField daysLeft;
@@ -79,11 +79,11 @@ public class Data {
         this.listTypeField = listTypeField;
     }
 
-    public JTextArea getText() {
+    public JEditorPane getText() {
         return text;
     }
 
-    public void setText(JTextArea text) {
+    public void setText(JEditorPane text) {
         this.text = text;
     }
 

@@ -62,6 +62,6 @@ public class ExportItemActionListener implements ActionListener {
         writer.writeAll(datas);
         File file = new File(Calendar.getInstance().getTimeInMillis()+".csv");
         FileUtil.save(file, sw.toString());
-        data.getText().append("\nFile was saved successful part : " + file.getAbsolutePath());
+        data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + file.getAbsolutePath());
     }
 }

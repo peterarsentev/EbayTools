@@ -50,7 +50,7 @@ public class FilterActionListener implements ActionListener {
                 List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prs);
                 List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.SHOW_FIELDS.getKey());
                 sb.append(FormatterText.formatShowFields(items, showField)).append("\n");
-                data.getText().append(sb.toString());
+                data.getText().setText(data.getText().getText() + sb.toString());
             }
         }
     }

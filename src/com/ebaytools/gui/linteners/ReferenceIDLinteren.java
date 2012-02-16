@@ -10,7 +10,7 @@ import com.ebaytools.gui.panel.SearchPanel;
 import com.ebaytools.util.*;
 
 public class ReferenceIDLinteren implements ActionListener {
-    private JTextArea text;
+    private JEditorPane text;
     private JTextField field;
 
     public ReferenceIDLinteren(SearchPanel panel) {

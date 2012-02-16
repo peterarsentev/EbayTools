@@ -12,10 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 public class ClearListener implements ActionListener {
-	private JTextArea text;
+	private JEditorPane text;
     private Data data;
 	
 	public ClearListener(SearchPanel panel) {

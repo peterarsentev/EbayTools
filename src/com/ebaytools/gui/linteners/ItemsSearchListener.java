@@ -18,7 +18,7 @@ import java.util.*;
 public class ItemsSearchListener implements ActionListener {
     private static final Logger log = Logger.getLogger(ItemsSearchListener.class);
 
-    private JTextArea text;
+    private JEditorPane text;
     private JTextField product;
     private JTextField condition;
     private JTextField listingType;

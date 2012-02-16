@@ -18,7 +18,7 @@ import java.util.List;
 public class LoadFileSearchItemActionListener implements ActionListener {
     private JFileChooser fc;
     private JFrame main;
-    private JTextArea text;
+    private JEditorPane text;
     private Data dataModel;
 
     public LoadFileSearchItemActionListener(JFrame main, Data data) {
