@@ -13,7 +13,7 @@ import javax.swing.table.TableColumnModel;
 
 public class FilterDataImpl implements TableModelCheckBox.IData {
     private List<Filter> filters;
-    private static final List<String> nameColumn = Arrays.asList("ID", "Name", "Conditions", "Golden", "Time of day", "Sold");
+    private static final List<String> nameColumn = Arrays.asList("ID", "Name", "Conditions", "Golden", "Time of day", "Sold", "Period");
 
     public FilterDataImpl(List<Filter> filters) {
         this.filters = filters;
@@ -24,7 +24,7 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
         List<Object[]> filterFields = new ArrayList<Object[]>();
         List<String> settings = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.APPLY_FILTER.getKey());
         for (Filter filter : filters) {
-            Object[] objects = new Object[7];
+            Object[] objects = new Object[8];
             objects[0] = settings.contains(String.valueOf(filter.getId()));
             objects[1] = filter.getId();
             objects[2] = filter.getName();
@@ -33,6 +33,7 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
             objects[4]  = conditionsMap.get(Fields.IS_GOLDEN_FILTER_FIELD);
             objects[5]  = conditionsMap.get(Fields.TIME_OF_DAY);
             objects[6]  = conditionsMap.get(Fields.SOLD);
+            objects[7]  = conditionsMap.get(Fields.PERIOD);
             filterFields.add(objects);
         }
         return filterFields;
@@ -47,6 +48,7 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
                 fullingData(conditions, Fields.IS_GOLDEN_FILTER_FIELD, conditionMap);
                 fullingData(conditions, Fields.TIME_OF_DAY, conditionMap);
                 fullingData(conditions, Fields.SOLD, conditionMap);
+                fullingData(conditions, Fields.PERIOD, conditionMap);
             }
         }
         return conditionMap;
@@ -72,10 +74,11 @@ public class FilterDataImpl implements TableModelCheckBox.IData {
         TableColumnModel tcm = table.getColumnModel();
         tcm.getColumn(0).setPreferredWidth(20);
         tcm.getColumn(1).setPreferredWidth(20);
-        tcm.getColumn(2).setPreferredWidth(100);
+        tcm.getColumn(2).setPreferredWidth(150);
         tcm.getColumn(3).setPreferredWidth(100);
         tcm.getColumn(4).setPreferredWidth(50);
         tcm.getColumn(5).setPreferredWidth(100);
         tcm.getColumn(6).setPreferredWidth(50);
+        tcm.getColumn(7).setPreferredWidth(50);
     }
 }

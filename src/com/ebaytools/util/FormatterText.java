@@ -83,22 +83,22 @@ public class FormatterText {
             if (showFields.contains(Fields.GOLDEN.getKey())) {
                 sb.append(Fields.GOLDEN.getKey()).append(" ").append(item.getGolden()).append("\n");
             }
-            if (showFields.contains(Fields.POSITIVE_FEEDBACK_PERCENT.getKey())) {
+            if (showFields.contains(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()) && fields.get(Fields.POSITIVE_FEEDBACK_PERCENT) != null) {
                 sb.append(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()).append(" ").append(fields.get(Fields.POSITIVE_FEEDBACK_PERCENT).getValue()).append("\n");
             }
-            if (showFields.contains(Fields.FEEDBACK_SCORE.getKey())) {
+            if (showFields.contains(Fields.FEEDBACK_SCORE.getKey()) && fields.get(Fields.FEEDBACK_SCORE) != null) {
                 sb.append(Fields.FEEDBACK_SCORE.getKey()).append(" ").append(fields.get(Fields.FEEDBACK_SCORE).getValue()).append("\n");
             }
-            if (showFields.contains(Fields.TOP_RATED_SELLER.getKey())) {
+            if (showFields.contains(Fields.TOP_RATED_SELLER.getKey()) && fields.get(Fields.TOP_RATED_SELLER) != null) {
                 sb.append(Fields.TOP_RATED_SELLER.getKey()).append(" ").append(fields.get(Fields.TOP_RATED_SELLER).getValue()).append("\n");
             }
-            if (showFields.contains(Fields.SHIP_TO_LOCATION.getKey())) {
+            if (showFields.contains(Fields.SHIP_TO_LOCATION.getKey()) && fields.get(Fields.SHIP_TO_LOCATION) != null) {
                 sb.append(Fields.SHIP_TO_LOCATION.getKey()).append(" ").append(fields.get(Fields.SHIP_TO_LOCATION).getValue()).append("\n");
             }
-            if (showFields.contains(Fields.HANDLING_TIME.getKey())) {
+            if (showFields.contains(Fields.HANDLING_TIME.getKey()) && fields.get(Fields.HANDLING_TIME) != null) {
                 sb.append(Fields.HANDLING_TIME.getKey()).append(" ").append(fields.get(Fields.HANDLING_TIME).getValue()).append("\n");
             }
-            if (showFields.contains(Fields.LISTING_TYPE.getKey())) {
+            if (showFields.contains(Fields.LISTING_TYPE.getKey()) && fields.get(Fields.LISTING_TYPE) != null) {
                 sb.append(Fields.LISTING_TYPE.getKey()).append(" ").append(fields.get(Fields.LISTING_TYPE).getValue()).append("\n");
             }
             sb.append("\n");

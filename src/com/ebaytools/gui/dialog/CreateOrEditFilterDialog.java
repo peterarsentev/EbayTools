@@ -68,12 +68,23 @@ public class CreateOrEditFilterDialog extends JDialog {
         panel.add(new JLabel("Time of day (in hours) : "), new Rectangle(0, 6, 6, 1));
         JTextField timeOfDay = new JTextField();
         panel.add(timeOfDay, new Rectangle(6, 6, 6, 1));
-        JCheckBox soldCheckBox = new JCheckBox();
+
+        JComboBox<Pair<String>> soldCheck = new JComboBox<Pair<String>>();
+        soldCheck.addItem(new Pair<String>("All", null));
+        soldCheck.addItem(new Pair<String>("Unsold", "false"));
+        soldCheck.addItem(new Pair<String>("Sold", "true"));
         panel.add(new JLabel("Unsold : "), new Rectangle(0, 7, 3, 1));
-        panel.add(soldCheckBox, new Rectangle(3, 7, 1, 1));
+        panel.add(soldCheck, new Rectangle(3, 7, 6, 1));
+
+        JComboBox<Pair<String>> period = new JComboBox<Pair<String>>();
+        period.addItem(new Pair<String>("Hour", "hour"));
+        period.addItem(new Pair<String>("Day", "day"));
+        panel.add(new JLabel("Period (only for average) : "), new Rectangle(0, 8, 7, 1));
+        panel.add(period, new Rectangle(7, 8, 4, 1));
+
         JButton save = new JButton("Save");
         panel.add(save, new Rectangle(5, 9, 3, 1));
-        save.addActionListener(new SaveFilterListener(dialog, name, golden, valueConditions, timeOfDay, data, soldCheckBox));
+        save.addActionListener(new SaveFilterListener(dialog, name, golden, valueConditions, timeOfDay, data, soldCheck, period));
         return panel;
     }
 }

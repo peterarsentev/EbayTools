@@ -58,4 +58,9 @@ public class FilterValue implements Serializable, Comparable<FilterValue> {
     public int compareTo(FilterValue o) {
         return this.value.compareTo(o.value);
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

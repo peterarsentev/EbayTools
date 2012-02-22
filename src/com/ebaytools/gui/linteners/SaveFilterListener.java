@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeSet;
 
 public class SaveFilterListener implements ActionListener {
@@ -21,9 +22,10 @@ public class SaveFilterListener implements ActionListener {
     private JList<Pair<String>> valueConditions;
     private JTextField timeOfDay;
     private Data data;
-    private JCheckBox sold;
+    private JComboBox<Pair<String>> sold;
+    private JComboBox<Pair<String>> period;
 
-    public SaveFilterListener(JDialog dialog, JTextField name, JComboBox<Pair<String>> golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data, JCheckBox sold) {
+    public SaveFilterListener(JDialog dialog, JTextField name, JComboBox<Pair<String>> golden, JList<Pair<String>> valueConditions, JTextField timeOfDay, Data data, JComboBox<Pair<String>> sold, JComboBox<Pair<String>> period) {
         this.dialog = dialog;
         this.name = name;
         this.golden = golden;
@@ -31,43 +33,44 @@ public class SaveFilterListener implements ActionListener {
         this.timeOfDay = timeOfDay;
         this.data = data;
         this.sold = sold;
+        this.period = period;
+    }
+    
+    private static FilterConditions addFilterValue(Fields key, List<Pair<String>> pairs) {
+        TreeSet<FilterValue> values = new TreeSet<FilterValue>();
+        for (Pair<String> pair : pairs) {
+            FilterValue conditionValue = new FilterValue();
+            conditionValue.setValue(pair.getValue());
+            values.add(conditionValue);
+        }
+
+        FilterConditions conditionsConditions = new FilterConditions();
+        conditionsConditions.setName(key.getKey());
+        conditionsConditions.setValues(values);
+        return conditionsConditions;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        FilterValue goldenValue = new FilterValue();
-        goldenValue.setValue(String.valueOf(golden.getItemAt(golden.getSelectedIndex()).getValue()));
-        FilterConditions goldenConditions = new FilterConditions();
-        goldenConditions.setName(Fields.IS_GOLDEN_FILTER_FIELD.getKey());
-        goldenConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(goldenValue)));
+        
+        Pair<String> valueGolden = new Pair<String>(null, String.valueOf(golden.getItemAt(golden.getSelectedIndex()).getValue()));
+        FilterConditions filterGolden = addFilterValue(Fields.IS_GOLDEN_FILTER_FIELD, Arrays.asList(valueGolden));
 
-        TreeSet<FilterValue> conditionsValues = new TreeSet<FilterValue>();
-        for (Pair<String> pair : valueConditions.getSelectedValuesList()) {
-            FilterValue conditionValue = new FilterValue();
-            conditionValue.setValue(pair.getValue());
-            conditionsValues.add(conditionValue);
-        }
+        FilterConditions filterConditions = addFilterValue(Fields.CONDITIONS, valueConditions.getSelectedValuesList());
 
-        FilterConditions conditionsConditions = new FilterConditions();
-        conditionsConditions.setName(Fields.CONDITIONS.getKey());
-        conditionsConditions.setValues(conditionsValues);
+        Pair<String> valueSold = new Pair<String>(null, String.valueOf(sold.getItemAt(sold.getSelectedIndex()).getValue()));
+        FilterConditions filterSold = addFilterValue(Fields.SOLD, Arrays.asList(valueSold));
 
-        FilterValue soldValue = new FilterValue();
-        soldValue.setValue(String.valueOf(sold.isSelected()));
-        FilterConditions soldCond = new FilterConditions();
-        soldCond.setName(Fields.SOLD.getKey());
-        soldCond.setValues(new TreeSet<FilterValue>(Arrays.asList(soldValue)));
+        Pair<String> valueTimeOfDay = new Pair<String>(null, String.valueOf(timeOfDay.getText()));
+        FilterConditions filterTimeOfDay = addFilterValue(Fields.TIME_OF_DAY, Arrays.asList(valueTimeOfDay));
 
-        FilterConditions timeOfDayConditions = new FilterConditions();
-        timeOfDayConditions.setName(Fields.TIME_OF_DAY.getKey());
-        FilterValue timeOfDayValue = new FilterValue();
-        timeOfDayValue.setValue(String.valueOf(timeOfDay.getText()));
-        timeOfDayConditions.setValues(new TreeSet<FilterValue>(Arrays.asList(timeOfDayValue)));
+        Pair<String> valuePeriod = new Pair<String>(null, String.valueOf(period.getItemAt(period.getSelectedIndex()).getValue()));
+        FilterConditions filterPeriod = addFilterValue(Fields.PERIOD, Arrays.asList(valuePeriod));
 
         Filter filter = new Filter();
         filter.setName(name.getText());
-        filter.setConditions(new TreeSet<FilterConditions>(Arrays.asList(goldenConditions, conditionsConditions, timeOfDayConditions, soldCond)));
+        filter.setConditions(new TreeSet<FilterConditions>(Arrays.asList(filterGolden, filterConditions, filterSold, filterTimeOfDay, filterPeriod, filterPeriod)));
 
         ManagerDAO.getInstance().getFilterDAO().create(filter);
         dialog.setVisible(false);

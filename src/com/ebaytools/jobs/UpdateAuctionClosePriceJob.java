@@ -76,7 +76,10 @@ public class UpdateAuctionClosePriceJob {
         log.debug("Get close auction price for " + item);
         ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(item.getEbayItemId());
         if (itemType != null) {
-            if (itemType.getSellingStatus().getListingStatus().name().equals("COMPLETED")) {
+            Integer totalBid = itemType.getSellingStatus().getBidCount();
+            totalBid = totalBid != null ? totalBid : 0;
+            String auctionStatus = itemType.getSellingStatus().getListingStatus().name(); 
+            if (totalBid > 0 && "COMPLETED".equalsIgnoreCase(auctionStatus)) {
                 Map<Fields, ItemProperties> prMap = Fields.buildProperties(item.getProperties());
 
                 ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
@@ -97,15 +100,19 @@ public class UpdateAuctionClosePriceJob {
 
                 item.setCloseAuction(true);
                 item.setState(Item.Status.CLOSE.key);
+                item.setTotalBid(totalBid);
+                
                 ManagerDAO.getInstance().getItemDAO().update(item);
                 log.debug("Finish close auction price for " + item);
             } else {
                 item.setState(Item.Status.UNSOLD.key);
+                item.setCloseAuction(false);
                 ManagerDAO.getInstance().getItemDAO().update(item);
                 log.debug("Unsold close auction price for " + item);
             }
         } else {
             item.setState(Item.Status.UNSOLD.key);
+            item.setCloseAuction(false);
             ManagerDAO.getInstance().getItemDAO().update(item);
             log.debug("Unsold close auction price for " + item);
         }

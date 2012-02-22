@@ -51,4 +51,17 @@ public class Filter implements Serializable {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Filter{id=" + id + ", name='" + name);
+        for (FilterConditions filterCond : getConditions()) {
+            if (filterCond.getValues() != null) {
+                sb.append(filterCond.getName()).append(" ").append(filterCond.getValues()).append(" ");
+            }
+        }
+        sb.append('}');
+        return sb.toString();
+    }
 }

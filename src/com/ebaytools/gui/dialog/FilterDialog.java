@@ -38,7 +38,7 @@ public class FilterDialog extends JDialog {
         });
         dialog.add(buildChoosePanel(), BorderLayout.CENTER);
         dialog.pack();
-        dialog.setSize(600, 400);
+        dialog.setSize(800, 400);
         dialog.setLocationRelativeTo(main);
         dialog.setVisible(true);
     }
@@ -46,20 +46,20 @@ public class FilterDialog extends JDialog {
     private JPanel buildChoosePanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setLayout(new GraphPaperLayout(new Dimension(15, 15), 1, 1));
+        panel.setLayout(new GraphPaperLayout(new Dimension(18, 15), 1, 1));
         List<Filter> filters = ManagerDAO.getInstance().getFilterDAO().getAllFilters();
         FilterDataImpl filterData = new FilterDataImpl(filters);
         TableModelCheckBox filterModelTable = new TableModelCheckBox(filterData);
         JTable filterProduct =  new JTable(filterModelTable);
         TableCheckBox.buildTable(filterProduct);
         filterData.resizeColumnsByName(filterProduct);
-        panel.add(new JScrollPane(filterProduct), new Rectangle(0, 0, 12, 15));
+        panel.add(new JScrollPane(filterProduct), new Rectangle(0, 0, 15, 15));
         JButton create = new JButton("Create");
         JButton delete = new JButton("Delete");
         JButton apply = new JButton("Apply");
-        panel.add(create, new Rectangle(12, 0, 3, 1));
-        panel.add(delete, new Rectangle(12, 1, 3, 1));
-        panel.add(apply, new Rectangle(12, 2, 3, 1));
+        panel.add(create, new Rectangle(15, 0, 3, 1));
+        panel.add(delete, new Rectangle(15, 1, 3, 1));
+        panel.add(apply, new Rectangle(15, 2, 3, 1));
         RefreshTableListenter refresAction = new RefreshTableListenter(filterProduct, filterModelTable, RefreshTableListenter.TypeTable.FILTER);
         data.setRefresFilterTable(refresAction);
         create.addActionListener(new OpenFilterActionListener(main, data));

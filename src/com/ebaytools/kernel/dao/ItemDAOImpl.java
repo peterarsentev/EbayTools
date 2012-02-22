@@ -131,14 +131,14 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             if (TextUtil.isNotNull(conditions.get(Fields.SOLD))) {
                 String[] values = conditions.get(Fields.SOLD).split(";");
                 if (values.length > 0) {
-                    boolean value = "true".equals(values[0]);
-                    if (value) {
+                    Boolean value = "true".equals(values[0]) || "false".equals(values[0]) ? Boolean.valueOf(values[0]) : null;
+                    if (value != null) {
                         query.append(" and item.state=:state");
-                        params.add(Item.Status.UNSOLD.key);
-                        names.add("state");
-                    } else {
-                        query.append(" and item.state=:state");
-                        params.add(Item.Status.CLOSE.key);
+                        if (value) {
+                            params.add(Item.Status.CLOSE.key);
+                        } else {
+                            params.add(Item.Status.UNSOLD.key);
+                        }
                         names.add("state");
                     }
                 }

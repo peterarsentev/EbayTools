@@ -8,6 +8,7 @@ import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
+import com.ebaytools.util.FilterDataImpl;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -62,8 +63,10 @@ public class AveragePriceActionListener implements ActionListener {
                 }
                 sb.append("\n");
             }
+            Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
+            String type = conditions.get(Fields.PERIOD);
             for (Item item : items) {
-                Rang rang = Rang.createRang(item.getCloseDate());
+                Rang rang = Rang.createRang(item.getCloseDate(), type);
                 List<Item> rangItems = rangByHour.get(rang);
                 if (rangItems == null) {
                     rangByHour.put(rang, new ArrayList<Item>(Arrays.asList(item)));
@@ -77,7 +80,7 @@ public class AveragePriceActionListener implements ActionListener {
                     Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
                     averagePrice += Float.valueOf(prs.get(Fields.TOTAL_COST).getValue());
                 }
-                sb.append(entry.getKey().hour + "-" + (entry.getKey().hour+1) + ":\t");
+                sb.append(entry.getKey().getLabel() + "-" + (entry.getKey().getLabel()+1) + ":\t");
                 DecimalFormat twoDForm = new DecimalFormat("#.##");
                 sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
                 sb.append("\n");
@@ -123,15 +126,32 @@ public class AveragePriceActionListener implements ActionListener {
         private int month;
         private int day;
         private int hour;
+        
+        private String type;
 
-        private static Rang createRang(Calendar calendar) {
+        private static Rang createRang(Calendar calendar, String type) {
             Rang rang = new Rang();
+            rang.type = type;
             rang.year = 0;//calendar.get(Calendar.YEAR);
             rang.month = 0;//calendar.get(Calendar.MONTH);
-            rang.day = 0;//calendar.get(Calendar.DAY_OF_MONTH);
-            rang.hour = calendar.get(Calendar.HOUR_OF_DAY);
+            if ("day;".equals(type)) {
+                rang.day = calendar.get(Calendar.DAY_OF_MONTH);
+            }
+            if (type == null || "hour;".equals(type)) {
+                rang.hour = calendar.get(Calendar.HOUR_OF_DAY);
+            }
             return rang;
         }
+        
+         public int getLabel() {
+             if ("day;".equals(type)) {
+                 return day;
+             }
+             if (type == null || "hour;".equals(type)) {
+                 return hour;
+             } 
+             throw new IllegalStateException();
+         }
 
         @Override
         public String toString() {
