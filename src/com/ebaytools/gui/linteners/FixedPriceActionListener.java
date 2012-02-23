@@ -6,7 +6,6 @@ import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.gui.model.Data;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.FileSearching;
-import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.util.FileUtil;
 import com.ebaytools.util.FormatterText;
 import com.ebaytools.util.SearchUtil;
@@ -19,13 +18,13 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.*;
 
-public class FidexPriceActionListener implements ActionListener {
-    private static final Logger log = Logger.getLogger(FidexPriceActionListener.class);
+public class FixedPriceActionListener implements ActionListener {
+    private static final Logger log = Logger.getLogger(FixedPriceActionListener.class);
 
     private Data data;
     private JFrame main;
 
-    public FidexPriceActionListener(JFrame main, Data data) {
+    public FixedPriceActionListener(JFrame main, Data data) {
         this.main = main;
         this.data = data;
     }
@@ -100,8 +99,8 @@ public class FidexPriceActionListener implements ActionListener {
                 item.getPostalCode(),
                 item.getProductId().toString(),
                 item.isReturnsAccepted().toString(),
-                item.getSecondaryCategory().getCategoryId(),
-                item.getSecondaryCategory().getCategoryName(),
+                item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryId() : "",
+                item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryName() : "",
                 item.getSellerInfo() != null ? item.getSellerInfo().getFeedbackRatingStar() : "",
                 item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getFeedbackScore()) : "",
                 item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getPositiveFeedbackPercent()) : "",
@@ -118,8 +117,8 @@ public class FidexPriceActionListener implements ActionListener {
                 FormatterText.getPrice(item.getShippingInfo().getShippingServiceCost()),
                 item.getShippingInfo().getShippingType(),
                 item.getShippingInfo().getShipToLocations().toString(),
-                item.getStoreInfo().getStoreName(),
-                item.getStoreInfo().getStoreURL(),
+                item.getStoreInfo() != null ? item.getStoreInfo().getStoreName() : "",
+                item.getStoreInfo() != null ? item.getStoreInfo().getStoreURL() : "",
                 item.getSubtitle(),
                 item.getTitle(),
                 item.getViewItemURL()};

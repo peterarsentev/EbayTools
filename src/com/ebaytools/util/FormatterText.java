@@ -196,10 +196,10 @@ public class FormatterText {
                 if ("returnsAccepted".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(item.isReturnsAccepted()).append("\n");
                 }
-                if ("secondaryCategoryId".equals(valueOpt)) {
+                if ("secondaryCategoryId".equals(valueOpt) && item.getSecondaryCategory() != null) {
                     sb.append(valueOpt).append(" : ").append(item.getSecondaryCategory().getCategoryId()).append("\n");
                 }
-                if ("secondaryCategoryName".equals(valueOpt)) {
+                if ("secondaryCategoryName".equals(valueOpt) && item.getSecondaryCategory() != null) {
                     sb.append(valueOpt).append(" : ").append(item.getSecondaryCategory().getCategoryName()).append("\n");
                 }
                 if ("feedbackRatingStar".equals(valueOpt)) {
@@ -258,10 +258,10 @@ public class FormatterText {
                 if ("shipToLocations".equals(valueOpt)) {
                     sb.append(valueOpt).append(" : ").append(item.getShippingInfo().getShipToLocations()).append("\n");
                 }
-                if ("storeName".equals(valueOpt)) {
+                if ("storeName".equals(valueOpt) && item.getStoreInfo() != null) {
                     sb.append(valueOpt).append(" : ").append(item.getStoreInfo().getStoreName()).append("\n");
                 }
-                if ("storeURL".equals(valueOpt)) {
+                if ("storeURL".equals(valueOpt) && item.getStoreInfo() != null) {
                     sb.append(valueOpt).append(" : ").append(item.getStoreInfo().getStoreURL()).append("\n");
                 }
                 if ("subtitle".equals(valueOpt)) {
