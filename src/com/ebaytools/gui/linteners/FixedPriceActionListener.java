@@ -32,6 +32,8 @@ public class FixedPriceActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         List<FileSearching> files = ManagerDAO.getInstance().getFileSearchingDAO().getFileSearchingFixedPrice();
+        List<String[]> datas = new ArrayList<String[]>();
+        datas.add(buildHeader());
         for (FileSearching fileSearch : files) {
             List<String> loadId = new ArrayList<String>();
             File file = new File(fileSearch.getPath());
@@ -51,8 +53,9 @@ public class FixedPriceActionListener implements ActionListener {
                 relevantItems.put("E", detectCheapestPriceWithTopRate(items3000));
                 relevantItems.put("F", detectCheapestPriceWithShippingOverWorld(items3000));
 
-                List<String[]> datas = new ArrayList<String[]>();
-                datas.add(buildHeader());
+                String[] emptyLineWithRefId = new String[48];
+                emptyLineWithRefId[0] = reference;
+                datas.add(emptyLineWithRefId);
                 for (Map.Entry<String, SearchItem> entry : relevantItems.entrySet()) {
                     SearchItem item = entry.getValue();
                     if (item == null) {
@@ -62,14 +65,14 @@ public class FixedPriceActionListener implements ActionListener {
                     }
                 }
 
-                StringWriter sw = new StringWriter();
-                CSVWriter writer = new CSVWriter(sw);
-                writer.writeAll(datas);
-                File save = new File("FixedPrice_Ref_" + reference + "_time_"+Calendar.getInstance().getTimeInMillis()+".csv");
-                FileUtil.save(save, sw.toString());
-                data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
             }
         }
+        StringWriter sw = new StringWriter();
+        CSVWriter writer = new CSVWriter(sw);
+        writer.writeAll(datas);
+        File save = new File("FixedPrice_"+Calendar.getInstance().getTimeInMillis()+".csv");
+        FileUtil.save(save, sw.toString());
+        data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
     }
 
     private String[] buildField(SearchItem item) {
