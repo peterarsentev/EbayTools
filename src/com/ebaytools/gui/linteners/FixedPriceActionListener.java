@@ -67,61 +67,62 @@ public class FixedPriceActionListener implements ActionListener {
                 writer.writeAll(datas);
                 File save = new File("FixedPrice_Ref_" + reference + "_time_"+Calendar.getInstance().getTimeInMillis()+".csv");
                 FileUtil.save(save, sw.toString());
-                data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + file.getAbsolutePath());
+                data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
             }
         }
     }
 
     private String[] buildField(SearchItem item) {
-        return new String[] {
-                item.isAutoPay().toString(),
-                item.getCharityId(),
-                item.getCompatibility(),
-                item.getCondition().getConditionDisplayName(),
-                item.getCountry(),
-                item.getDistance().toString(),
-                item.getGalleryURL(),
-                item.getGalleryPlusPictureURL().toString(),
-                item.getGlobalId(),
-                item.getItemId(),
-                item.getListingInfo().isBestOfferEnabled().toString(),
-                item.getListingInfo().isBuyItNowAvailable().toString(),
-                item.getListingInfo().getBuyItNowPrice().toString(),
-                item.getListingInfo().getConvertedBuyItNowPrice().toString(),
-                FormatterText.dateformatter.format(item.getListingInfo().getEndTime().getTime()),
-                item.getListingInfo().isGift().toString(),
-                item.getListingInfo().getListingType(),
-                FormatterText.dateformatter.format(item.getListingInfo().getStartTime().getTime()),
-                item.getPrimaryCategory().getCategoryId(),
-                item.getPrimaryCategory().getCategoryName(),
-                item.getLocation(),
-                item.getPaymentMethod().toString(),
-                item.getPostalCode(),
-                item.getProductId().toString(),
-                item.isReturnsAccepted().toString(),
-                item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryId() : "",
-                item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryName() : "",
-                item.getSellerInfo() != null ? item.getSellerInfo().getFeedbackRatingStar() : "",
-                item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getFeedbackScore()) : "",
-                item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getPositiveFeedbackPercent()) : "",
-                item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo()) : "",
-                item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().isTopRatedSeller()) : "",
-                item.getSellingStatus().getBidCount().toString(),
-                item.getSellingStatus().getConvertedCurrentPrice().toString(),
-                String.valueOf(item.getSellingStatus().getCurrentPrice().getValue()),
-                item.getSellingStatus().getSellingState(),
-                FormatterText.buildTime(item.getSellingStatus().getTimeLeft()),
-                item.getShippingInfo().isExpeditedShipping().toString(),
-                item.getShippingInfo().getHandlingTime().toString(),
-                item.getShippingInfo().isOneDayShippingAvailable().toString(),
-                FormatterText.getPrice(item.getShippingInfo().getShippingServiceCost()),
-                item.getShippingInfo().getShippingType(),
-                item.getShippingInfo().getShipToLocations().toString(),
-                item.getStoreInfo() != null ? item.getStoreInfo().getStoreName() : "",
-                item.getStoreInfo() != null ? item.getStoreInfo().getStoreURL() : "",
-                item.getSubtitle(),
-                item.getTitle(),
-                item.getViewItemURL()};
+        List<String> list = new ArrayList<String>();
+        list.add(String.valueOf(item.isAutoPay()));
+        list.add(item.getCharityId());
+        list.add(item.getCompatibility());
+        list.add(item.getCondition().getConditionDisplayName());
+        list.add(item.getCountry());
+        list.add(String.valueOf(item.getDistance()));
+        list.add(item.getGalleryURL());
+        list.add(String.valueOf(item.getGalleryPlusPictureURL()));
+        list.add(item.getGlobalId());
+        list.add(item.getItemId());
+        list.add(String.valueOf(item.getListingInfo().isBestOfferEnabled()));
+        list.add(String.valueOf(item.getListingInfo().isBuyItNowAvailable()));
+        list.add(String.valueOf(item.getListingInfo().getBuyItNowPrice()));
+        list.add(String.valueOf(item.getListingInfo().getConvertedBuyItNowPrice()));
+        list.add(FormatterText.dateformatter.format(item.getListingInfo().getEndTime().getTime()));
+        list.add(String.valueOf(item.getListingInfo().isGift()));
+        list.add(item.getListingInfo().getListingType());
+        list.add(FormatterText.dateformatter.format(item.getListingInfo().getStartTime().getTime()));
+        list.add(item.getPrimaryCategory().getCategoryId());
+        list.add(item.getPrimaryCategory().getCategoryName());
+        list.add(item.getLocation());
+        list.add(String.valueOf(item.getPaymentMethod()));
+        list.add(item.getPostalCode());
+        list.add(String.valueOf(item.getProductId()));
+        list.add(String.valueOf(item.isReturnsAccepted()));
+        list.add(item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryId() : "");
+        list.add(item.getSecondaryCategory() != null ? item.getSecondaryCategory().getCategoryName() : "");
+        list.add(item.getSellerInfo() != null ? item.getSellerInfo().getFeedbackRatingStar() : "");
+        list.add(item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getFeedbackScore()) : "");
+        list.add(item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().getPositiveFeedbackPercent()) : "");
+        list.add(item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo()) : "");
+        list.add(item.getSellerInfo() != null ? String.valueOf(item.getSellerInfo().isTopRatedSeller()) : "");
+        list.add(String.valueOf(item.getSellingStatus().getBidCount()));
+        list.add(String.valueOf(item.getSellingStatus().getConvertedCurrentPrice()));
+        list.add(String.valueOf(item.getSellingStatus().getCurrentPrice().getValue()));
+        list.add(item.getSellingStatus().getSellingState());
+        list.add(FormatterText.buildTime(item.getSellingStatus().getTimeLeft()));
+        list.add(String.valueOf(item.getShippingInfo().isExpeditedShipping()));
+        list.add(String.valueOf(item.getShippingInfo().getHandlingTime()));
+        list.add(String.valueOf(item.getShippingInfo().isOneDayShippingAvailable()));
+        list.add(FormatterText.getPrice(item.getShippingInfo().getShippingServiceCost()));
+        list.add(item.getShippingInfo().getShippingType());
+        list.add(String.valueOf(item.getShippingInfo().getShipToLocations()));
+        list.add(item.getStoreInfo() != null ? item.getStoreInfo().getStoreName() : "");
+        list.add(item.getStoreInfo() != null ? item.getStoreInfo().getStoreURL() : "");
+        list.add(item.getSubtitle());
+        list.add(item.getTitle());
+        list.add(item.getViewItemURL());
+        return list.toArray(new String[list.size()]);
     }
 
     private String[] buildHeader() {
