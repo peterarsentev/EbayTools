@@ -17,5 +17,6 @@
         <property name="dayLeft" column="dayLeft" type="java.lang.Integer"/>
         <property name="timeInterval" column="timeInterval" type="java.lang.Integer"/>
         <property name="runTime" column="runTime" type="java.util.Calendar"/>
+        <property name="typeSearch" column="typeSearch" type="java.lang.Integer"/>
     </class>
 </hibernate-mapping>

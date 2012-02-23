@@ -3,6 +3,24 @@ package com.ebaytools.kernel.entity;
 import java.util.Calendar;
 
 public class FileSearching {
+
+    public String getValueType() {
+        if (typeSearch == 1) {
+            return "By push button";
+        } else {
+            return "By time";
+        }
+    }
+
+    public enum TypeSearch {
+        BY_TIME(0), BY_PUSH_ON_BUTTON(1);
+        public int key;
+
+        private TypeSearch(int key) {
+            this.key = key;
+        }
+    }
+
     private Long id;
     private String path;
     private String condition;
@@ -10,6 +28,15 @@ public class FileSearching {
     private Integer dayLeft;
     private Integer timeInterval;
     private Calendar runTime;
+    private Integer typeSearch;
+
+    public Integer getTypeSearch() {
+        return typeSearch;
+    }
+
+    public void setTypeSearch(Integer typeSearch) {
+        this.typeSearch = typeSearch;
+    }
 
     public Calendar getRunTime() {
         return runTime;

@@ -67,5 +67,6 @@ create table fileSearching (
   dayLeft integer,
   timeInterval integer,
   runTime timestamp,
+  typeSearch integer,
   constraint fsId primary key (id)
 );

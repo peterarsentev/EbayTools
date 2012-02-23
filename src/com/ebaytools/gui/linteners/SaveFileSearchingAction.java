@@ -20,8 +20,9 @@ public class SaveFileSearchingAction implements ActionListener {
     private JTextField listType;
     private JTextField intervalUpdate;
     private Data data;
+    private JComboBox<Pair<Integer>> typeUpdate;
 
-    public SaveFileSearchingAction(JDialog dialog, JTextField filePart, JList<Pair<String>> valueConditions, JTextField listType, JTextField timeOfDay, JTextField intervalUpdate, Data data) {
+    public SaveFileSearchingAction(JDialog dialog, JTextField filePart, JList<Pair<String>> valueConditions, JTextField listType, JTextField timeOfDay, JTextField intervalUpdate, Data data, JComboBox<Pair<Integer>> typeUpdate) {
         this.dialog = dialog;
         this.filePart = filePart;
         this.intervalUpdate = intervalUpdate;
@@ -30,22 +31,27 @@ public class SaveFileSearchingAction implements ActionListener {
         this.data = data;
         this.timeOfDay = timeOfDay;
         this.listType = listType;
+        this.typeUpdate = typeUpdate;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         FileSearching fileSearching = new FileSearching();
         fileSearching.setPath(filePart.getText());
-        StringBuilder conditions = new StringBuilder();
-        for (Pair<String> pair : valueConditions.getSelectedValuesList()) {
-            conditions.append(pair.getValue()).append(";");
+        Integer type = typeUpdate.getItemAt(typeUpdate.getSelectedIndex()).getValue();
+        fileSearching.setTypeSearch(type);
+        if (type != 1) {
+            StringBuilder conditions = new StringBuilder();
+            for (Pair<String> pair : valueConditions.getSelectedValuesList()) {
+                conditions.append(pair.getValue()).append(";");
+            }
+            fileSearching.setCondition(conditions.toString());
+            fileSearching.setListType(listType.getText());
+            fileSearching.setDayLeft(TextUtil.getIntegerOrNull(timeOfDay.getText()));
+            fileSearching.setTimeInterval(TextUtil.getIntegerOrNull(intervalUpdate.getText()));
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MINUTE, Integer.valueOf(intervalUpdate.getText()));
+            fileSearching.setRunTime(cal);
         }
-        fileSearching.setCondition(conditions.toString());
-        fileSearching.setListType(listType.getText());
-        fileSearching.setDayLeft(TextUtil.getIntegerOrNull(timeOfDay.getText()));
-        fileSearching.setTimeInterval(TextUtil.getIntegerOrNull(intervalUpdate.getText()));
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, Integer.valueOf(intervalUpdate.getText()));
-        fileSearching.setRunTime(cal);
         ManagerDAO.getInstance().getFileSearchingDAO().create(fileSearching);
         dialog.setVisible(false);
         dialog.dispose();

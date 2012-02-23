@@ -9,4 +9,6 @@ public interface FileSearchingDAO extends CrUD<FileSearching> {
     public List<FileSearching> getFileSearchingCurrentTime();
 
     public void updateRunTime(FileSearching fileSearch);
+
+    public List<FileSearching> getFileSearchingFixedPrice();
 }

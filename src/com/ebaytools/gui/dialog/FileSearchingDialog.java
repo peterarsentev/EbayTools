@@ -35,7 +35,7 @@ public class FileSearchingDialog extends JDialog {
         });
         dialog.add(buildChoosePanel(), BorderLayout.CENTER);
         dialog.pack();
-        dialog.setSize(600, 400);
+        dialog.setSize(800, 400);
         dialog.setLocationRelativeTo(main);
         dialog.setVisible(true);
     }
@@ -43,20 +43,20 @@ public class FileSearchingDialog extends JDialog {
     private JPanel buildChoosePanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setLayout(new GraphPaperLayout(new Dimension(15, 15), 1, 1));
+        panel.setLayout(new GraphPaperLayout(new Dimension(18, 18), 1, 1));
         java.util.List<FileSearching> fileSearching = ManagerDAO.getInstance().getFileSearchingDAO().getAllFileSearching();
         FileSearchingDataImpl fileSearchingData = new FileSearchingDataImpl(fileSearching);
         TableModelCheckBox fileSearchingModelTable = new TableModelCheckBox(fileSearchingData);
         JTable fileSearchingTable =  new JTable(fileSearchingModelTable);
         TableCheckBox.buildTable(fileSearchingTable);
         fileSearchingData.resizeColumnsByName(fileSearchingTable);
-        panel.add(new JScrollPane(fileSearchingTable), new Rectangle(0, 0, 12, 15));
+        panel.add(new JScrollPane(fileSearchingTable), new Rectangle(0, 0, 15, 18));
         RefreshTableListenter refresAction = new RefreshTableListenter(fileSearchingTable, fileSearchingModelTable, RefreshTableListenter.TypeTable.FILE_SEARCHING);
         data.setRefresFileSearchingTable(refresAction);
         JButton create = new JButton("Add");
         JButton delete = new JButton("Delete");
-        panel.add(create, new Rectangle(12, 0, 3, 1));
-        panel.add(delete, new Rectangle(12, 1, 3, 1));
+        panel.add(create, new Rectangle(15, 0, 3, 1));
+        panel.add(delete, new Rectangle(15, 1, 3, 1));
         create.addActionListener(new OpenDialogFileSearchingListener(main, data));
         delete.addActionListener(new DeleteFileSearchingActionListener(main, data, fileSearchingModelTable));
         return panel;

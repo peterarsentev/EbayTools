@@ -49,7 +49,7 @@ public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSea
 
     @Override
     public List<FileSearching> getFileSearchingCurrentTime() {
-        return getHibernateTemplate().find("from " + FileSearching.class.getName() + " as fs where fs.runTime<=?", Calendar.getInstance());
+        return getHibernateTemplate().find("from " + FileSearching.class.getName() + " as fs where fs.runTime<=? and fs.typeSearch!=?", Calendar.getInstance(), FileSearching.TypeSearch.BY_PUSH_ON_BUTTON.key);
     }
 
     @Override
@@ -63,5 +63,10 @@ public class FileSearchingDAOImpl extends HibernateDaoSupport implements FileSea
         } finally {
             ManagerDAO.lock.writeLock().unlock();
         }
+    }
+
+    @Override
+    public List<FileSearching> getFileSearchingFixedPrice() {
+        return getHibernateTemplate().find("from " + FileSearching.class.getName() + " as fs where fs.typeSearch=?", FileSearching.TypeSearch.BY_PUSH_ON_BUTTON.key);
     }
 }

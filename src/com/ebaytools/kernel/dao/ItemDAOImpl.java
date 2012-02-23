@@ -191,7 +191,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     public List<Item> getItemsAuctionDateExpare() {
         ManagerDAO.lock.readLock().lock();
         try {
-            return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction=?", Calendar.getInstance(), false);
+            return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction=? and item.state!=?", Calendar.getInstance(), false, Item.Status.UNSOLD.key);
         } finally {
             ManagerDAO.lock.readLock().unlock();
         }
