@@ -79,6 +79,7 @@ public class CreateOrEditFilterDialog extends JDialog {
         JComboBox<Pair<String>> period = new JComboBox<Pair<String>>();
         period.addItem(new Pair<String>("Hour", "hour"));
         period.addItem(new Pair<String>("Day", "day"));
+        period.addItem(new Pair<String>("Ref", "ref"));
         panel.add(new JLabel("Period (only for average) : "), new Rectangle(0, 8, 7, 1));
         panel.add(period, new Rectangle(7, 8, 4, 1));
 

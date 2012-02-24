@@ -16,6 +16,7 @@ public enum Fields {
     DATE_CLOSE_FROM("close_auction_date_from", "close_auction_date_from"),
     DATE_CLOSE_TO("close_auction_date_to", "close_auction_date_from"),
     PERIOD("period", "period"),
+    REF("ref", "ref"),
 
     //items fields
     AUCTION_PRICE("auction_price", "auction price"),

@@ -250,6 +250,16 @@ public class SearchUtil {
         return incorrectDuration;
     }
 
+    public static Map<SearchItem, Boolean> fullingItems(List<SearchItem> sortedItems) {
+        Map<SearchItem, Boolean> incorrectDuration = new LinkedHashMap<SearchItem, Boolean>();
+        if (sortedItems.isEmpty()) {
+            for (SearchItem item : sortedItems) {
+                incorrectDuration.put(item, false);
+            }
+        }
+        return incorrectDuration;
+    }
+
     public static String buildSearchByMultiIDs(Data dataModel) {
         StringBuilder sb = new StringBuilder();
         sb.append("The file is loaded and to be made search.\n");

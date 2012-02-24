@@ -129,7 +129,7 @@ public class SearchPanel extends JPanel {
         averagePrice.addActionListener(new AveragePriceActionListener(main, data));
         filters.addActionListener(new OpenDialogFilterActionListener(main, data));
         showFields.addActionListener(new OpenDialogShowFieldsActionListener(main, data));
-        fidexPrice.addActionListener(new FixedPriceActionListener(main, data));
+        fidexPrice.addActionListener(new FixedPriceActionListener(panel, data));
     }
 
     public JFrame getMain() {

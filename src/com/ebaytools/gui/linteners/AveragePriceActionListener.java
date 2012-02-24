@@ -9,6 +9,7 @@ import com.ebaytools.kernel.entity.ItemProperties;
 import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
 import com.ebaytools.util.FilterDataImpl;
+import com.ebaytools.util.FormatterText;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -48,6 +49,7 @@ public class AveragePriceActionListener implements ActionListener {
         }
         for (Filter filter : filters) {
             sb.append("Filter : ").append(filter.getName()).append("\n");
+            sb.append("-----------------------------------------------------------------------------\n");
             List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prsids);
             Map<Rang, List<Item>> rangByHour = new LinkedHashMap<Rang, List<Item>>();
             Collections.sort(items, new Comparator<Item>() {
@@ -66,7 +68,7 @@ public class AveragePriceActionListener implements ActionListener {
             Map<Fields, String> conditions = FilterDataImpl.buildConditions(filter.getConditions());
             String type = conditions.get(Fields.PERIOD);
             for (Item item : items) {
-                Rang rang = Rang.createRang(item.getCloseDate(), type);
+                Rang rang = Rang.createRang(item.getCloseDate(), type, item.getProduct().getReferenceId());
                 List<Item> rangItems = rangByHour.get(rang);
                 if (rangItems == null) {
                     rangByHour.put(rang, new ArrayList<Item>(Arrays.asList(item)));
@@ -80,11 +82,12 @@ public class AveragePriceActionListener implements ActionListener {
                     Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
                     averagePrice += Float.valueOf(prs.get(Fields.TOTAL_COST).getValue());
                 }
-                sb.append(entry.getKey().getLabel() + "-" + (entry.getKey().getLabel()+1) + ":\t");
+                sb.append(entry.getKey().getLabel()).append(":\t");
                 DecimalFormat twoDForm = new DecimalFormat("#.##");
                 sb.append(twoDForm.format(averagePrice/entry.getValue().size()) + "$\t(" + entry.getValue().size() + ")");
                 sb.append("\n");
             }
+            sb.append("-----------------------------------------------------------------------------\n");
             sb.append("Total items : ").append(items.size()).append("\n\n");
         }
         data.getText().setText(data.getText().getText() + sb.toString());
@@ -95,22 +98,26 @@ public class AveragePriceActionListener implements ActionListener {
         Collections.sort(keys, new Comparator<Rang>() {
             @Override
             public int compare(Rang o1, Rang o2) {
-                if (o1.year == o2.year) {
-                    if (o1.month == o2.month) {
-                        if (o1.day == o2.day) {
-                            if (o1.hour == o2.hour) {
-                                return 0;
+                if ("ref;".equals(o1.type)) {
+                    return o1.ref.compareTo(o2.ref);
+                } else {
+                    if (o1.year == o2.year) {
+                        if (o1.month == o2.month) {
+                            if (o1.day == o2.day) {
+                                if (o1.hour == o2.hour) {
+                                    return 0;
+                                } else {
+                                    return o1.hour > o2.hour ? 1 : -1;
+                                }
                             } else {
-                                return o1.hour > o2.hour ? 1 : -1;
+                                return o1.day > o2.day ? 1 : -1;
                             }
                         } else {
-                            return o1.day > o2.day ? 1 : -1;
+                            return o1.month > o2.month ? 1 : -1;
                         }
                     } else {
-                        return o1.month > o2.month ? 1 : -1;
+                        return o1.year > o2.year ? 1 : -1;
                     }
-                } else {
-                    return o1.year > o2.year ? 1 : -1;
                 }
             }
         });
@@ -126,15 +133,21 @@ public class AveragePriceActionListener implements ActionListener {
         private int month;
         private int day;
         private int hour;
-        
+        private String ref;
+        private Calendar cal;
+
         private String type;
 
-        private static Rang createRang(Calendar calendar, String type) {
+        private static Rang createRang(Calendar calendar, String type, String ref) {
             Rang rang = new Rang();
+            rang.cal = calendar;
             rang.type = type;
-            rang.year = 0;//calendar.get(Calendar.YEAR);
-            rang.month = 0;//calendar.get(Calendar.MONTH);
+            if ("ref;".equals(type)) {
+                rang.ref = ref;
+            }
             if ("day;".equals(type)) {
+                rang.year = calendar.get(Calendar.YEAR);
+                rang.month = calendar.get(Calendar.MONTH);
                 rang.day = calendar.get(Calendar.DAY_OF_MONTH);
             }
             if (type == null || "hour;".equals(type)) {
@@ -142,16 +155,19 @@ public class AveragePriceActionListener implements ActionListener {
             }
             return rang;
         }
-        
-         public int getLabel() {
-             if ("day;".equals(type)) {
-                 return day;
-             }
-             if (type == null || "hour;".equals(type)) {
-                 return hour;
-             } 
-             throw new IllegalStateException();
-         }
+
+        public String getLabel() {
+            if ("ref;".equals(type)) {
+                return "Reference ("+ref+")";
+            }
+            if ("day;".equals(type)) {
+                return FormatterText.dateForAverage.format(cal.getTime());
+            }
+            if (type == null || "hour;".equals(type)) {
+                return hour + "-" + (hour+1);
+            }
+            throw new IllegalStateException();
+        }
 
         @Override
         public String toString() {
@@ -169,17 +185,23 @@ public class AveragePriceActionListener implements ActionListener {
             if (o == null || getClass() != o.getClass()) return false;
 
             Rang rang = (Rang) o;
-
-            if (day != rang.day) return false;
-            if (hour != rang.hour) return false;
-            if (month != rang.month) return false;
-            if (year != rang.year) return false;
-
+            if ("ref;".equals(type)) {
+                return ref.equals(rang.ref);
+            } else {
+                if (day != rang.day) return false;
+                if (hour != rang.hour) return false;
+                if (month != rang.month) return false;
+                if (year != rang.year) return false;
+                if (type != null ? !type.equals(rang.type) : rang.type != null) return false;
+            }
             return true;
         }
 
         @Override
         public int hashCode() {
+            if ("ref;".equals(type)) {
+                return ref.hashCode();
+            }
             int result = year;
             result = 31 * result + month;
             result = 31 * result + day;

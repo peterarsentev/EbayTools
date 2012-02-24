@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
 import com.ebaytools.gui.model.Data;
+import com.ebaytools.gui.panel.SearchPanel;
 import com.ebaytools.kernel.dao.ManagerDAO;
 import com.ebaytools.kernel.entity.FileSearching;
 import com.ebaytools.util.FileUtil;
@@ -22,57 +23,98 @@ public class FixedPriceActionListener implements ActionListener {
     private static final Logger log = Logger.getLogger(FixedPriceActionListener.class);
 
     private Data data;
-    private JFrame main;
+    private SearchPanel main;
 
-    public FixedPriceActionListener(JFrame main, Data data) {
+    public FixedPriceActionListener(SearchPanel main, Data data) {
         this.main = main;
         this.data = data;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<FileSearching> files = ManagerDAO.getInstance().getFileSearchingDAO().getFileSearchingFixedPrice();
-        List<String[]> datas = new ArrayList<String[]>();
-        datas.add(buildHeader());
-        for (FileSearching fileSearch : files) {
-            List<String> loadId = new ArrayList<String>();
-            File file = new File(fileSearch.getPath());
-            if (file.exists()) {
-                List<String> data = LoadFileSearchItemActionListener.readFile(file);
-                loadId.addAll(data);
-            } else {
-                log.error("File " + file.getPath() + " is not exist! ");
-            }
-            Map<String, SearchItem> relevantItems = new LinkedHashMap<String, SearchItem>(5);
-            for (String reference : loadId) {
-                List<SearchItem> items = SearchUtil.getInstance().getItemsBySortedType(reference, "2000;2500", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
-                List<SearchItem> items3000 = SearchUtil.getInstance().getItemsBySortedType(reference, "3000", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
-                relevantItems.put("B", detectCheapestPrice(items));
-                relevantItems.put("C", detectCheapestPriceWithTopRate(items));
-                relevantItems.put("D", detectCheapestPrice(items3000));
-                relevantItems.put("E", detectCheapestPriceWithTopRate(items3000));
-                relevantItems.put("F", detectCheapestPriceWithShippingOverWorld(items3000));
+//        List<FileSearching> files = ManagerDAO.getInstance().getFileSearchingDAO().getFileSearchingFixedPrice();
+//        List<String[]> datas = new ArrayList<String[]>();
+//        datas.add(buildHeader());
+        List<String> loadId = new ArrayList<String>();
+        loadId.add(data.getReferenceId().getText());
+//        for (FileSearching fileSearch : files) {
+//            File file = new File(fileSearch.getPath());
+//            if (file.exists()) {
+//                List<String> data = LoadFileSearchItemActionListener.readFile(file);
+//                loadId.addAll(data);
+//            } else {
+//                log.error("File " + file.getPath() + " is not exist! ");
+//            }
+//        }
+        Map<String, SearchItem> relevantItems = new LinkedHashMap<String, SearchItem>(5);
+        List<String> opts = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue();
+        for (String reference : loadId) {
+            List<SearchItem> items = SearchUtil.getInstance().getItemsBySortedType(reference, "2000;2500", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
+            List<SearchItem> items3000 = SearchUtil.getInstance().getItemsBySortedType(reference, "3000", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
+//            relevantItems.put("B", detectCheapestPrice(items));
+//            relevantItems.put("C", detectCheapestPriceWithTopRate(items));
+//            relevantItems.put("D", detectCheapestPrice(items3000));
+//            relevantItems.put("E", detectCheapestPriceWithTopRate(items3000));
+//            relevantItems.put("F", detectCheapestPriceWithShippingOverWorld(items3000));
+            StringBuilder sb = new StringBuilder();
 
-                String[] emptyLineWithRefId = new String[48];
-                emptyLineWithRefId[0] = reference;
-                datas.add(emptyLineWithRefId);
-                for (Map.Entry<String, SearchItem> entry : relevantItems.entrySet()) {
-                    SearchItem item = entry.getValue();
-                    if (item == null) {
-                        datas.add(new String[48]);
-                    } else {
-                        datas.add(buildField(item));
-                    }
-                }
+            sb.append("cheapest (2000, 2500)\n");
+            SearchItem item = detectCheapestPrice(items);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
 
-            }
+            sb.append("cheapest (top seller = true, cond=2000, 2500)\n");
+            item = detectCheapestPriceWithTopRate(items);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
+
+            sb.append("cheapest (3000)");
+            item = detectCheapestPrice(items3000);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
+
+            sb.append("cheapest (top seller = true, cond=3000)\n");
+            item = detectCheapestPriceWithTopRate(items3000);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
+
+            sb.append("cheapest (worldwide ship, cond 2000,2500)\n");
+            item = detectCheapestPriceWithShippingOverWorld(items);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
+
+            sb.append("cheapest (worldwide ship, cond 3000)\n");
+            item = detectCheapestPriceWithShippingOverWorld(items3000);
+            FormatterText.buildOneItem(sb, item, opts, null);
+            sb.append("Cost : " + costBuild(item) + "\n\n");
+
+            sb.append("Total items : ").append(items.size());
+            data.getText().setText(data.getText().getText() + sb.toString() + "\n");
         }
-        StringWriter sw = new StringWriter();
-        CSVWriter writer = new CSVWriter(sw);
-        writer.writeAll(datas);
-        File save = new File("FixedPrice_"+Calendar.getInstance().getTimeInMillis()+".csv");
-        FileUtil.save(save, sw.toString());
-        data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
+
+
+//                String[] emptyLineWithRefId = new String[48];
+//                emptyLineWithRefId[0] = reference;
+//                datas.add(emptyLineWithRefId);
+//                for (Map.Entry<String, SearchItem> entry : relevantItems.entrySet()) {
+//                    SearchItem item = entry.getValue();
+//                    if (item == null) {
+//                        datas.add(new String[48]);
+//                    } else {
+//                        datas.add(buildField(item));
+//                    }
+//                }
+//
+//        StringWriter sw = new StringWriter();
+//        CSVWriter writer = new CSVWriter(sw);
+//        writer.writeAll(datas);
+//        File save = new File("FixedPrice_"+Calendar.getInstance().getTimeInMillis()+".csv");
+//        FileUtil.save(save, sw.toString());
+//        data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
+    }
+
+    private double costBuild(SearchItem item) {
+        return item.getShippingInfo().getShippingServiceCost().getValue() + item.getSellingStatus().getCurrentPrice().getValue();
     }
 
     private String[] buildField(SearchItem item) {
