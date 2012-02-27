@@ -21,7 +21,7 @@ public class UpdateAuctionClosePriceJob {
         new Thread() {
             @Override
             public void run() {
-                WorkerPool pool = new WorkerPool(1, 0, 4, 30);
+                WorkerPool pool = new WorkerPool(1, 0, 500, 30);
                 while (true) {
                     log.debug("start");
                     try {
@@ -33,7 +33,8 @@ public class UpdateAuctionClosePriceJob {
                                 ManagerDAO.getInstance().getItemDAO().update(item);
                             }
                         }
-                        Thread.sleep(5 * 60 * 1000); //wait 5 min
+                        //Thread.sleep(5 * 60 * 1000); //wait 5 min
+                        Thread.sleep(60 * 1000);
                     } catch (Exception e) {
                         e.printStackTrace();
                         log.error("Error", e);
@@ -75,12 +76,12 @@ public class UpdateAuctionClosePriceJob {
     private static void updateAuctionClosePrice(Item item) {
         log.debug("Get close auction price for " + item);
         ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(item.getEbayItemId());
+        Map<Fields, ItemProperties> prMap = Fields.buildProperties(item.getProperties());
         if (itemType != null) {
             Integer totalBid = itemType.getSellingStatus().getBidCount();
             totalBid = totalBid != null ? totalBid : 0;
             String auctionStatus = itemType.getSellingStatus().getListingStatus().name(); 
             if (totalBid > 0 && "COMPLETED".equalsIgnoreCase(auctionStatus)) {
-                Map<Fields, ItemProperties> prMap = Fields.buildProperties(item.getProperties());
 
                 ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
                 prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));
@@ -105,6 +106,10 @@ public class UpdateAuctionClosePriceJob {
                 ManagerDAO.getInstance().getItemDAO().update(item);
                 log.debug("Finish close auction price for " + item);
             } else {
+                ItemProperties prAuction = prMap.get(Fields.AUCTION_PRICE);
+                prAuction.setValue(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getValue()));
+                prAuction.setType(String.valueOf(itemType.getSellingStatus().getCurrentPrice().getCurrencyID()));
+
                 item.setState(Item.Status.UNSOLD.key);
                 item.setCloseAuction(false);
                 ManagerDAO.getInstance().getItemDAO().update(item);

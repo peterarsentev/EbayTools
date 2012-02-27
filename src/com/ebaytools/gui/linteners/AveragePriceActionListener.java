@@ -10,6 +10,7 @@ import com.ebaytools.kernel.entity.SystemSetting;
 import com.ebaytools.util.Fields;
 import com.ebaytools.util.FilterDataImpl;
 import com.ebaytools.util.FormatterText;
+import com.ebaytools.util.TextUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -79,8 +80,10 @@ public class AveragePriceActionListener implements ActionListener {
             for (Map.Entry<Rang, List<Item>> entry : sortMap(rangByHour).entrySet()) {
                 float averagePrice = 0F;
                 for (Item item : entry.getValue()) {
-                    Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
-                    averagePrice += Float.valueOf(prs.get(Fields.TOTAL_COST).getValue());
+                    if (item.getCloseAuction()) {
+                        Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
+                        averagePrice += TextUtil.getFloarOrZero(prs.get(Fields.TOTAL_COST).getValue());
+                    }
                 }
                 sb.append(entry.getKey().getLabel()).append(":\t");
                 DecimalFormat twoDForm = new DecimalFormat("#.##");

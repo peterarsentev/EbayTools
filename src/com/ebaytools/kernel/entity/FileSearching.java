@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class FileSearching {
 
     public String getValueType() {
-        if (typeSearch == 1) {
+        if (typeSearch != null && typeSearch == 1) {
             return "By push button";
         } else {
             return "By time";

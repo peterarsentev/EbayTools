@@ -10,6 +10,7 @@ import com.ebaytools.kernel.entity.FileSearching;
 import com.ebaytools.util.FileUtil;
 import com.ebaytools.util.FormatterText;
 import com.ebaytools.util.SearchUtil;
+import com.ebaytools.util.TextUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -36,7 +37,16 @@ public class FixedPriceActionListener implements ActionListener {
 //        List<String[]> datas = new ArrayList<String[]>();
 //        datas.add(buildHeader());
         List<String> loadId = new ArrayList<String>();
-        loadId.add(data.getReferenceId().getText());
+        if (!TextUtil.isNotNull(main.getReferenceId().getText())) {
+            List<Object[]> selectData = data.getProductTable().getDataSelect();
+            if (!selectData.isEmpty()) {
+                for (Object[] object : selectData) {
+                    loadId.add((String) object[2]);
+                }
+            }
+        } else {
+            loadId.add(main.getReferenceId().getText());
+        }
 //        for (FileSearching fileSearch : files) {
 //            File file = new File(fileSearch.getPath());
 //            if (file.exists()) {
@@ -48,7 +58,9 @@ public class FixedPriceActionListener implements ActionListener {
 //        }
         Map<String, SearchItem> relevantItems = new LinkedHashMap<String, SearchItem>(5);
         List<String> opts = ManagerDAO.getInstance().getSystemSettingDAO().getChooseOptsValue();
+        StringBuilder sb = new StringBuilder();
         for (String reference : loadId) {
+            sb.append("\n\nReference ID :").append(reference).append("\n");
             List<SearchItem> items = SearchUtil.getInstance().getItemsBySortedType(reference, "2000;2500", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
             List<SearchItem> items3000 = SearchUtil.getInstance().getItemsBySortedType(reference, "3000", "FixedPrice", SortOrderType.CURRENT_PRICE_HIGHEST, "ReferenceID", null);
 //            relevantItems.put("B", detectCheapestPrice(items));
@@ -56,32 +68,31 @@ public class FixedPriceActionListener implements ActionListener {
 //            relevantItems.put("D", detectCheapestPrice(items3000));
 //            relevantItems.put("E", detectCheapestPriceWithTopRate(items3000));
 //            relevantItems.put("F", detectCheapestPriceWithShippingOverWorld(items3000));
-            StringBuilder sb = new StringBuilder();
 
             sb.append("cheapest (2000, 2500)\n");
             SearchItem item = detectCheapestPrice(items);
+            sb.append("Cost : " + costBuild(item) + "\n");
             FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
 
             sb.append("cheapest (top seller = true, cond=2000, 2500)\n");
             item = detectCheapestPriceWithTopRate(items);
+            sb.append("Cost : " + costBuild(item) + "\n");
             FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
 
-            sb.append("cheapest (3000)");
+            sb.append("cheapest (3000)\n");
             item = detectCheapestPrice(items3000);
+            sb.append("Cost : " + costBuild(item) + "\n");
             FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
 
             sb.append("cheapest (top seller = true, cond=3000)\n");
             item = detectCheapestPriceWithTopRate(items3000);
+            sb.append("Cost : " + costBuild(item) + "\n");
             FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
 
             sb.append("cheapest (worldwide ship, cond 2000,2500)\n");
             item = detectCheapestPriceWithShippingOverWorld(items);
+            sb.append("Cost : " + costBuild(item) + "\n");
             FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
 
             sb.append("cheapest (worldwide ship, cond 3000)\n");
             item = detectCheapestPriceWithShippingOverWorld(items3000);
@@ -89,8 +100,9 @@ public class FixedPriceActionListener implements ActionListener {
             sb.append("Cost : " + costBuild(item) + "\n\n");
 
             sb.append("Total items : ").append(items.size());
-            data.getText().setText(data.getText().getText() + sb.toString() + "\n");
         }
+
+        data.getText().setText(data.getText().getText() + sb.toString() + "\n");
 
 
 //                String[] emptyLineWithRefId = new String[48];
@@ -114,7 +126,10 @@ public class FixedPriceActionListener implements ActionListener {
     }
 
     private double costBuild(SearchItem item) {
-        return item.getShippingInfo().getShippingServiceCost().getValue() + item.getSellingStatus().getCurrentPrice().getValue();
+        if (item.getShippingInfo().getShippingServiceCost() != null) {
+            return item.getShippingInfo().getShippingServiceCost().getValue() + item.getSellingStatus().getCurrentPrice().getValue();
+        }
+        return item.getSellingStatus().getCurrentPrice().getValue();
     }
 
     private String[] buildField(SearchItem item) {

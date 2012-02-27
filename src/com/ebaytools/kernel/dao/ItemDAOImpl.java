@@ -167,7 +167,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     public List<Item> getAllCloseItems() {
         ManagerDAO.lock.readLock().lock();
         try {
-            return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=? and item.state!=", true, -1);
+            return getHibernateTemplate().find("from com.ebaytools.kernel.entity.Item as item where item.closeAuction=? and item.state=?", true, 1);
         } finally {
             ManagerDAO.lock.readLock().unlock();
         }
@@ -191,7 +191,7 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
     public List<Item> getItemsAuctionDateExpare() {
         ManagerDAO.lock.readLock().lock();
         try {
-            return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction=? and item.state!=?", Calendar.getInstance(), false, Item.Status.UNSOLD.key);
+            return getHibernateTemplate().find("from " + Item.class.getName() + " as item where item.closeDate<=? and item.closeAuction!=? and (item.state=? or item.state is null)", Calendar.getInstance(), true, Item.Status.PROCESS_UPDATE.key);
         } finally {
             ManagerDAO.lock.readLock().unlock();
         }

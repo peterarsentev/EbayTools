@@ -21,6 +21,7 @@ public class Item implements Comparable<Item>, Serializable {
     private Integer state;
 
     public enum Status {
+        NEW(0),
         CLOSE(1),
         PROCESS_UPDATE(2),
         UNSOLD(-1);

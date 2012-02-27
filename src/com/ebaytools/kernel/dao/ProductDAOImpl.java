@@ -113,6 +113,7 @@ public class ProductDAOImpl extends HibernateDaoSupport implements ProductDAO {
                             item.setTotalBid(totalBid != null ? totalBid : 0);
                             boolean closeAuction = "COMPLETED".equals(searchItem.getSellingStatus().getSellingState());
                             item.setCloseAuction(closeAuction);
+                            item.setState(closeAuction ? Item.Status.PROCESS_UPDATE.key : Item.Status.CLOSE.key);
                             item.setGolden(innerEntry.getValue());
                             Long itemId = (Long) session.save(item);
                             if (closeAuction) {
