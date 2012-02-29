@@ -73,7 +73,7 @@ public class CreateOrEditFilterDialog extends JDialog {
         soldCheck.addItem(new Pair<String>("All", null));
         soldCheck.addItem(new Pair<String>("Unsold", "false"));
         soldCheck.addItem(new Pair<String>("Sold", "true"));
-        panel.add(new JLabel("Unsold : "), new Rectangle(0, 7, 3, 1));
+        panel.add(new JLabel("State : "), new Rectangle(0, 7, 3, 1));
         panel.add(soldCheck, new Rectangle(3, 7, 6, 1));
 
         JComboBox<Pair<String>> period = new JComboBox<Pair<String>>();

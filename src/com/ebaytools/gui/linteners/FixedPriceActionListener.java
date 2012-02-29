@@ -71,33 +71,27 @@ public class FixedPriceActionListener implements ActionListener {
 
             sb.append("cheapest (2000, 2500)\n");
             SearchItem item = detectCheapestPrice(items);
-            sb.append("Cost : " + costBuild(item) + "\n");
-            FormatterText.buildOneItem(sb, item, opts, null);
+            buildAnswer(item, sb, opts);
 
             sb.append("cheapest (top seller = true, cond=2000, 2500)\n");
             item = detectCheapestPriceWithTopRate(items);
-            sb.append("Cost : " + costBuild(item) + "\n");
-            FormatterText.buildOneItem(sb, item, opts, null);
+            buildAnswer(item, sb, opts);
 
             sb.append("cheapest (3000)\n");
             item = detectCheapestPrice(items3000);
-            sb.append("Cost : " + costBuild(item) + "\n");
-            FormatterText.buildOneItem(sb, item, opts, null);
+            buildAnswer(item, sb, opts);
 
             sb.append("cheapest (top seller = true, cond=3000)\n");
             item = detectCheapestPriceWithTopRate(items3000);
-            sb.append("Cost : " + costBuild(item) + "\n");
-            FormatterText.buildOneItem(sb, item, opts, null);
+            buildAnswer(item, sb, opts);
 
             sb.append("cheapest (worldwide ship, cond 2000,2500)\n");
             item = detectCheapestPriceWithShippingOverWorld(items);
-            sb.append("Cost : " + costBuild(item) + "\n");
-            FormatterText.buildOneItem(sb, item, opts, null);
+            buildAnswer(item, sb, opts);
 
             sb.append("cheapest (worldwide ship, cond 3000)\n");
             item = detectCheapestPriceWithShippingOverWorld(items3000);
-            FormatterText.buildOneItem(sb, item, opts, null);
-            sb.append("Cost : " + costBuild(item) + "\n\n");
+            buildAnswer(item, sb, opts);
 
             sb.append("Total items : ").append(items.size());
         }
@@ -123,6 +117,15 @@ public class FixedPriceActionListener implements ActionListener {
 //        File save = new File("FixedPrice_"+Calendar.getInstance().getTimeInMillis()+".csv");
 //        FileUtil.save(save, sw.toString());
 //        data.getText().setText(data.getText().getText() + "\nFile was saved successful part : " + save.getAbsolutePath());
+    }
+    
+    private void buildAnswer(SearchItem item, final StringBuilder sb, final List<String> opts) {
+        if (item != null) {
+            sb.append("Cost : " + costBuild(item) + "\n");
+            FormatterText.buildOneItem(sb, item, opts, null);
+        } else {
+            sb.append("Could not find appropriate item!\n\n");
+        }
     }
 
     private double costBuild(SearchItem item) {
