@@ -12,7 +12,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FilterActionListener implements ActionListener {
     private JFrame main;
@@ -29,6 +31,7 @@ public class FilterActionListener implements ActionListener {
         if (settings.isEmpty()) {
             JOptionPane.showMessageDialog(main, "First of all you must apply filter!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
+            Map<Filter, List<Item>> filterItems = new LinkedHashMap<Filter, List<Item>>();
             for (SystemSetting setting : settings) {
                 Filter filter = ManagerDAO.getInstance().getFilterDAO().find(Long.valueOf(setting.getValue()));
                 StringBuilder sb = new StringBuilder();
@@ -48,10 +51,12 @@ public class FilterActionListener implements ActionListener {
                     sb.append("\n");
                 }
                 List<Item> items = ManagerDAO.getInstance().getItemDAO().getProductByFilter(filter, prs);
+                filterItems.put(filter, items);
                 List<String> showField = ManagerDAO.getInstance().getSystemSettingDAO().getSystemsValue(Fields.SHOW_FIELDS.getKey());
                 sb.append(FormatterText.formatShowFields(items, showField)).append("\n");
                 data.getText().setText(data.getText().getText() + sb.toString());
             }
+            data.setFilterItems(filterItems);
         }
     }
 }

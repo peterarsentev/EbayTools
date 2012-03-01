@@ -1,5 +1,6 @@
 package com.ebaytools.kernel.dao;
 
+import com.ebaytools.kernel.entity.FileSearching;
 import com.ebaytools.kernel.entity.Filter;
 import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.kernel.entity.ItemProperties;
@@ -33,12 +34,12 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
 
     @Override
     public void delete(Long id) {
-        throw new UnsupportedOperationException();
+        getHibernateTemplate().delete(find(id));
     }
 
     @Override
     public Item find(Long id) {
-        throw new UnsupportedOperationException();
+        return getHibernateTemplate().get(Item.class, id);
     }
 
     @Override
@@ -128,6 +129,18 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
                 }
             }
 
+            if (TextUtil.isNotNull(conditions.get(Fields.TOTAL_BID))) {
+                String[] values = conditions.get(Fields.TOTAL_BID).split(";");
+                if (values.length > 0) {
+                    String[] conds = values[0].split("\\|");
+                    if (TextUtil.getIntegerOrNull(conds[1]) != null) {
+                        query.append(" and item.totalBid").append(conds[0]).append(":totalBid");
+                        params.add(TextUtil.getIntegerOrNull(conds[1]));
+                        names.add("totalBid");
+                    }
+                }
+            }
+
             if (TextUtil.isNotNull(conditions.get(Fields.SOLD))) {
                 String[] values = conditions.get(Fields.SOLD).split(";");
                 if (values.length > 0) {
@@ -151,10 +164,26 @@ public class ItemDAOImpl extends HibernateDaoSupport implements ItemDAO {
             query.append(" order by item.closeDate");
             List<Object[]> objectArray = getHibernateTemplate().findByNamedParam(query.toString(), names.toArray(new String[names.size()]), params.toArray(new Object[params.size()]));
             List<Item> items = new ArrayList<Item>();
+            List<String> exist = new ArrayList<String>();
+            String auctionStatus = null;
+            if (TextUtil.isNotNull(conditions.get(Fields.AUCTION_STATUS))) {
+                String[] values = conditions.get(Fields.AUCTION_STATUS).split(";");
+                if (values.length > 0 && TextUtil.isNotNull(values[0])) {
+                    auctionStatus = values[0];
+                }
+            }
             for (Object[] array : objectArray) {
                 Item item = (Item) array[0];
-                if (!items.contains(item)) {
-                    items.add((Item) array[0]);
+                if (!exist.contains(item.getEbayItemId())) {
+                    exist.add(item.getEbayItemId());
+                    if (auctionStatus != null) {
+                        Map<Fields, ItemProperties> prs = Fields.buildProperties(item.getProperties());
+                        if (auctionStatus.equalsIgnoreCase(prs.get(Fields.AUCTION_STATUS) != null ? prs.get(Fields.AUCTION_STATUS).getValue() : null)) {
+                            items.add(item);
+                        }
+                    } else {
+                        items.add(item);
+                    }
                 }
             }
             return items;

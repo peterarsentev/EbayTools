@@ -2,6 +2,8 @@ package com.ebaytools.gui.model;
 
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SortOrderType;
+import com.ebaytools.kernel.entity.Filter;
+import com.ebaytools.kernel.entity.Item;
 import com.ebaytools.util.Pair;
 import com.ebaytools.util.TableModelCheckBox;
 
@@ -30,6 +32,15 @@ public class Data {
     private ActionListener refresFileSearchingTable;
     private JButton buttonFilter;
     private TableModelCheckBox productTable;
+    private Map<Filter, List<Item>> filterItems;
+
+    public Map<Filter, List<Item>> getFilterItems() {
+        return filterItems;
+    }
+
+    public void setFilterItems(Map<Filter, List<Item>> filterItems) {
+        this.filterItems = filterItems;
+    }
 
     public TableModelCheckBox getProductTable() {
         return productTable;
