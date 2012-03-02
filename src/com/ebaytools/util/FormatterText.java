@@ -53,64 +53,68 @@ public class FormatterText {
     public static String formatShowFields(List<Item> items, List<String> showFields) {
         StringBuilder sb = new StringBuilder();
         for (Item item : items) {
-            Map<Fields, ItemProperties> fields = Fields.buildProperties(item.getProperties());
-            if (showFields.contains(Fields.REF.getKey())) {
-                sb.append(Fields.REF.getKey()).append(" ").append(item.getProduct().getReferenceId()).append("\n");
-            }
-            if (showFields.contains(Fields.SOLD.getKey())) {
-                sb.append(Fields.SOLD.getKey()).append(" ").append(item.getNameStatus()).append("\n");
-            }
-            if (showFields.contains(Fields.EBAY_ITEM_ID.getKey())) {
-                sb.append(Fields.EBAY_ITEM_ID.getKey()).append(" ").append(item.getEbayItemId()).append("\n");
-            }
-            if (showFields.contains(Fields.AUCTION_PRICE.getKey())) {
-                sb.append(Fields.AUCTION_PRICE.getKey()).append(" ").append(fields.get(Fields.AUCTION_PRICE).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.CONDITIONS.getKey())) {
-                sb.append(Fields.CONDITIONS.getKey()).append(" ").append(fields.get(Fields.CONDITIONS).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.SHIPPING_COST.getKey())) {
-                sb.append(Fields.SHIPPING_COST.getKey()).append(" ").append(fields.get(Fields.SHIPPING_COST).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.TOTAL_COST.getKey())) {
-                sb.append(Fields.TOTAL_COST.getKey()).append(" ").append(fields.get(Fields.TOTAL_COST).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.AUCTION_STATUS.getKey())) {
-                sb.append(Fields.AUCTION_STATUS.getKey()).append(" ").append(fields.get(Fields.AUCTION_STATUS).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.CLOSE_DATE.getKey())) {
-                sb.append(Fields.CLOSE_DATE.getKey()).append(" ").append(dateformatter.format(item.getCloseDate().getTime())).append("\n");
-            }
-            if (showFields.contains(Fields.TOTAL_BID.getKey())) {
-                sb.append(Fields.TOTAL_BID.getKey()).append(" ").append(item.getTotalBid()).append("\n");
-            }
-            if (showFields.contains(Fields.GOLDEN.getKey())) {
-                sb.append(Fields.GOLDEN.getKey()).append(" ").append(item.getGolden()).append("\n");
-            }
-            if (showFields.contains(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()) && fields.get(Fields.POSITIVE_FEEDBACK_PERCENT) != null) {
-                sb.append(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()).append(" ").append(fields.get(Fields.POSITIVE_FEEDBACK_PERCENT).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.FEEDBACK_SCORE.getKey()) && fields.get(Fields.FEEDBACK_SCORE) != null) {
-                sb.append(Fields.FEEDBACK_SCORE.getKey()).append(" ").append(fields.get(Fields.FEEDBACK_SCORE).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.TOP_RATED_SELLER.getKey()) && fields.get(Fields.TOP_RATED_SELLER) != null) {
-                sb.append(Fields.TOP_RATED_SELLER.getKey()).append(" ").append(fields.get(Fields.TOP_RATED_SELLER).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.SHIP_TO_LOCATION.getKey()) && fields.get(Fields.SHIP_TO_LOCATION) != null) {
-                sb.append(Fields.SHIP_TO_LOCATION.getKey()).append(" ").append(fields.get(Fields.SHIP_TO_LOCATION).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.HANDLING_TIME.getKey()) && fields.get(Fields.HANDLING_TIME) != null) {
-                sb.append(Fields.HANDLING_TIME.getKey()).append(" ").append(fields.get(Fields.HANDLING_TIME).getValue()).append("\n");
-            }
-            if (showFields.contains(Fields.LISTING_TYPE.getKey()) && fields.get(Fields.LISTING_TYPE) != null) {
-                sb.append(Fields.LISTING_TYPE.getKey()).append(" ").append(fields.get(Fields.LISTING_TYPE).getValue()).append("\n");
-            }
-            sb.append("\n");
+            buildSingleItem(sb, item, showFields);
         }
         sb.append("Total items : ").append(items.size()).append("\n");
         return sb.toString();
     }
-
+    
+    public static void buildSingleItem(final StringBuilder sb, final Item item, final List<String> showFields) {
+        Map<Fields, ItemProperties> fields = Fields.buildProperties(item.getProperties());
+        if (showFields.contains(Fields.REF.getKey())) {
+            sb.append(Fields.REF.getKey()).append(" ").append(item.getProduct().getReferenceId()).append("\n");
+        }
+        if (showFields.contains(Fields.SOLD.getKey())) {
+            sb.append(Fields.SOLD.getKey()).append(" ").append(item.getNameStatus()).append("\n");
+        }
+        if (showFields.contains(Fields.EBAY_ITEM_ID.getKey())) {
+            sb.append(Fields.EBAY_ITEM_ID.getKey()).append(" ").append(item.getEbayItemId()).append("\n");
+        }
+        if (showFields.contains(Fields.AUCTION_PRICE.getKey())) {
+            sb.append(Fields.AUCTION_PRICE.getKey()).append(" ").append(fields.get(Fields.AUCTION_PRICE).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.CONDITIONS.getKey())) {
+            sb.append(Fields.CONDITIONS.getKey()).append(" ").append(fields.get(Fields.CONDITIONS).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.SHIPPING_COST.getKey())) {
+            sb.append(Fields.SHIPPING_COST.getKey()).append(" ").append(fields.get(Fields.SHIPPING_COST).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.TOTAL_COST.getKey())) {
+            sb.append(Fields.TOTAL_COST.getKey()).append(" ").append(fields.get(Fields.TOTAL_COST).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.AUCTION_STATUS.getKey())) {
+            sb.append(Fields.AUCTION_STATUS.getKey()).append(" ").append(fields.get(Fields.AUCTION_STATUS).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.CLOSE_DATE.getKey())) {
+            sb.append(Fields.CLOSE_DATE.getKey()).append(" ").append(dateformatter.format(item.getCloseDate().getTime())).append("\n");
+        }
+        if (showFields.contains(Fields.TOTAL_BID.getKey())) {
+            sb.append(Fields.TOTAL_BID.getKey()).append(" ").append(item.getTotalBid()).append("\n");
+        }
+        if (showFields.contains(Fields.GOLDEN.getKey())) {
+            sb.append(Fields.GOLDEN.getKey()).append(" ").append(item.getGolden()).append("\n");
+        }
+        if (showFields.contains(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()) && fields.get(Fields.POSITIVE_FEEDBACK_PERCENT) != null) {
+            sb.append(Fields.POSITIVE_FEEDBACK_PERCENT.getKey()).append(" ").append(fields.get(Fields.POSITIVE_FEEDBACK_PERCENT).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.FEEDBACK_SCORE.getKey()) && fields.get(Fields.FEEDBACK_SCORE) != null) {
+            sb.append(Fields.FEEDBACK_SCORE.getKey()).append(" ").append(fields.get(Fields.FEEDBACK_SCORE).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.TOP_RATED_SELLER.getKey()) && fields.get(Fields.TOP_RATED_SELLER) != null) {
+            sb.append(Fields.TOP_RATED_SELLER.getKey()).append(" ").append(fields.get(Fields.TOP_RATED_SELLER).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.SHIP_TO_LOCATION.getKey()) && fields.get(Fields.SHIP_TO_LOCATION) != null) {
+            sb.append(Fields.SHIP_TO_LOCATION.getKey()).append(" ").append(fields.get(Fields.SHIP_TO_LOCATION).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.HANDLING_TIME.getKey()) && fields.get(Fields.HANDLING_TIME) != null) {
+            sb.append(Fields.HANDLING_TIME.getKey()).append(" ").append(fields.get(Fields.HANDLING_TIME).getValue()).append("\n");
+        }
+        if (showFields.contains(Fields.LISTING_TYPE.getKey()) && fields.get(Fields.LISTING_TYPE) != null) {
+            sb.append(Fields.LISTING_TYPE.getKey()).append(" ").append(fields.get(Fields.LISTING_TYPE).getValue()).append("\n");
+        }
+        sb.append("\n");
+    }
+    
     /**
      * This method prints result searching with system setting
      * @param items Map searching result

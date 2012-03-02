@@ -73,7 +73,7 @@ public class SearchPanel extends JPanel {
         clear.setForeground(ColorUtil.LightSlateGray);
         optsButton.setForeground(ColorUtil.LightSlateGray);
         save.setForeground(ColorUtil.LightSlateGray);
-        JButton deleteItems = new JButton("Detele items");
+        JButton checkItems = new JButton("Check items");
 
         data.setNumbersItem(numbersItem);
         data.setReferenceId(referenceId);
@@ -117,7 +117,7 @@ public class SearchPanel extends JPanel {
         panel.add(averagePrice, new Rectangle(18, 2, 4, 1));
         panel.add(showFields, new Rectangle(18, 3, 4, 1));
         panel.add(fidexPrice, new Rectangle(18, 4, 4, 1));
-        panel.add(deleteItems, new Rectangle(8, 26, 4, 1));
+        panel.add(checkItems, new Rectangle(8, 26, 4, 1));
 
         // in this section we addFilter listeners in components, We use listeners for handle some action like press on button or change some items in combobox
         searchReference.addActionListener(new ReferenceIDLinteren(panel));
@@ -132,7 +132,7 @@ public class SearchPanel extends JPanel {
         filters.addActionListener(new OpenDialogFilterActionListener(main, data));
         showFields.addActionListener(new OpenDialogShowFieldsActionListener(main, data));
         fidexPrice.addActionListener(new FixedPriceActionListener(panel, data));
-        deleteItems.addActionListener(new DeleteItemActionListener(panel, data));
+        checkItems.addActionListener(new CheckItemActionListener(panel, data));
     }
 
     public JFrame getMain() {

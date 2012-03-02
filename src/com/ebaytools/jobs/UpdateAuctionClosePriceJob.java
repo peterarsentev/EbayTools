@@ -73,7 +73,7 @@ public class UpdateAuctionClosePriceJob {
      * This method updates price for close auction
      * @param item Item
      */
-    private static void updateAuctionClosePrice(Item item) {
+    public static void updateAuctionClosePrice(Item item) {
         log.debug("Get close auction price for " + item);
         ItemType itemType = SearchUtil.getInstance().getProductByItemNumber(item.getEbayItemId());
         Map<Fields, ItemProperties> prMap = Fields.buildProperties(item.getProperties());
