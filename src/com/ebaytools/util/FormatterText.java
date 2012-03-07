@@ -60,6 +60,7 @@ public class FormatterText {
     }
     
     public static void buildSingleItem(final StringBuilder sb, final Item item, final List<String> showFields) {
+        sb.append("create date").append(" ").append(dateformatter.format(item.getCreateDate().getTime())).append("\n");
         Map<Fields, ItemProperties> fields = Fields.buildProperties(item.getProperties());
         if (showFields.contains(Fields.REF.getKey())) {
             sb.append(Fields.REF.getKey()).append(" ").append(item.getProduct().getReferenceId()).append("\n");

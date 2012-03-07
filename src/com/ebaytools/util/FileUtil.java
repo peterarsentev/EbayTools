@@ -51,7 +51,7 @@ public class FileUtil {
                 }
             }
             save(file, sb.toString());
-            log.debug("Save was done. file : " + file.getAbsolutePath() + "\n"); ;
+            log.debug("Save was done. file : " + file.getAbsolutePath() + "\n");
         } else {
         }
     }

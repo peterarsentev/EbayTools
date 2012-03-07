@@ -52,7 +52,7 @@ public class FileSearchingDataImpl implements TableModelCheckBox.IData {
         tcm.getColumn(4).setPreferredWidth(50);
         tcm.getColumn(5).setPreferredWidth(50);
         tcm.getColumn(6).setPreferredWidth(50);
-        tcm.getColumn(7).setPreferredWidth(50);
+        tcm.getColumn(7).setPreferredWidth(100);
         tcm.getColumn(8).setPreferredWidth(100);
     }
 }
